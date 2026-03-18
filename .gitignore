@@ -46,6 +46,9 @@ compile_commands.json
 *.idb
 *.exp
 
+# Dont ignore Wavefront 3D .obj files in assets folder
+!**/assets/**/*.obj
+
 # Other stuff
 *.log
 
