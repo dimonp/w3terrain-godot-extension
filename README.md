@@ -116,12 +116,22 @@ cmake .. -DCMAKE_TOOLCHAIN_FILE=/path/to/vcpkg/scripts/buildsystems/vcpkg.cmake
 ```bash
 cmake --build . --config Release
 ```
+or
+```bash
+cmake --build . --config Debug
+```
 
 The compiled library (`libgdextension_w3terrain.so` on Linux, `.dll` on Windows, `.dylib` on macOS) will be placed in `bin/<platform>/` and automatically copied to `demo/bin/<platform>/`.
 
 ### 4. Run the demo
 
-Open the `demo/` folder in Godot Editor and run `scene_demo.tscn`.
+In the project folder execute:  
+Windows: `\path\to\godot\binary\godot.windows.template_release.x86_64.exe --path demo`  
+Linux: `/path/to/godot/binary/godot.linuxbsd.template_release.x86_64 --path ./demo`  
+
+For the editor, you must first compile the debug version (see Building step 3)
+Open the `demo/` folder in Godot Editor and run `scene_demo_test.tscn`.
+Or open `scene_demo.tscn` if you previously imported resources from the MPQ.
 
 ## Usage
 
