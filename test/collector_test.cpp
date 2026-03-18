@@ -61,34 +61,6 @@ protected:
     void TearDown() override {}
 };
 
-
-// TEST_F(CollectorTestFixture, QQQQQ)
-// {
-//     w3terr::math::bbox3 root_box_ = {
-//     { -100.0f, -50.0f, -100.0f },
-//     { 100.0f, 50.0f, 100.0f }};
-
-//     w3terr::W3MapCollectorImpl sut(&section_manager_, root_box_, kTestTreeDepth2);
-
-//     // Camera positioned far away looking away from the world
-//     godot::Transform3D camera_transform;
-//     godot::Projection camera_projection = {
-//        { 2.41422  ,   0       , 0     , 0       },
-//        { 0        ,   2.41422 , 0     , 0       },
-//        { 0        ,   0       ,-1.001 ,-1       },
-//        { -120.711 ,   0       ,-1.001 , 0       },
-//     };
-
-//     godot::Transform3D node_transform; // identity
-
-//     sut.collect_visible(camera_projection, camera_transform, node_transform);
-
-//     // Expect no visible sections because camera is looking away from the world (sections are at Z between -512 and 512)
-//     // Actually camera is looking along +Z, world is behind camera? Let's assume it's not visible.
-//     EXPECT_TRUE(sut.get_visible_sections().empty());
-// }
-
-
 TEST_F(CollectorTestFixture, InitializeWithValidParameters)
 {
     w3terr::W3MapCollectorImpl sut(
