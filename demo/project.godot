@@ -14,22 +14,10 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 [application]
 
-config/name="My 3D terrain 10"
+config/name="Warcraft 3 terrain demo"
 run/main_scene="uid://dnbcgxltx5ewu"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
-
-[autoload]
-
-DebugMenu="*uid://cggqb75a8w8r"
-
-[debug]
-
-shapes/collision/shape_color=Color(0, 0.6, 0.69803923, 1)
-
-[debug_draw_3d]
-
-settings/addon_root_folder="res://addons/debug_draw_3d"
 
 [display]
 
