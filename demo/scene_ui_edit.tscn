@@ -1,0 +1,70 @@
+[gd_scene format=3 uid="uid://ci65yo853w07a"]
+
+[ext_resource type="Script" uid="uid://d26g60fdv40sp" path="res://scene_ui_edit.gd" id="1_s1s6e"]
+
+[node name="EditorInfoUI" type="Control" unique_id=683298909]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1746.0
+offset_bottom = -958.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_s1s6e")
+
+[node name="FoldableContainer" type="FoldableContainer" parent="." unique_id=1158671688]
+layout_mode = 0
+offset_right = 76.0
+offset_bottom = 65.0
+theme_override_colors/font_color = Color(0, 0.8745098, 0.8745098, 1)
+title = "Cell editor"
+
+[node name="MarginContainer" type="MarginContainer" parent="FoldableContainer" unique_id=151255248]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="FoldableContainer/MarginContainer" unique_id=162142211]
+layout_mode = 2
+
+[node name="HBoxContainerCellHeightLayer" type="HBoxContainer" parent="FoldableContainer/MarginContainer/VBoxContainer" unique_id=141486562]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="FoldableContainer/MarginContainer/VBoxContainer/HBoxContainerCellHeightLayer" unique_id=1275078783]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+size_flags_stretch_ratio = 2.0
+text = "Height layer:"
+
+[node name="ButtonInc" type="Button" parent="FoldableContainer/MarginContainer/VBoxContainer/HBoxContainerCellHeightLayer" unique_id=1189098549]
+layout_mode = 2
+text = " + "
+
+[node name="ButtonDec" type="Button" parent="FoldableContainer/MarginContainer/VBoxContainer/HBoxContainerCellHeightLayer" unique_id=1439827912]
+layout_mode = 2
+text = " - "
+
+[node name="HSeparator" type="HSeparator" parent="FoldableContainer/MarginContainer/VBoxContainer" unique_id=286209290]
+layout_mode = 2
+
+[node name="HBoxContainerCellGroundHeight" type="HBoxContainer" parent="FoldableContainer/MarginContainer/VBoxContainer" unique_id=1279248315]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="FoldableContainer/MarginContainer/VBoxContainer/HBoxContainerCellGroundHeight" unique_id=2094769305]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+size_flags_stretch_ratio = 2.0
+text = "Ground height:"
+
+[node name="ButtonInc" type="Button" parent="FoldableContainer/MarginContainer/VBoxContainer/HBoxContainerCellGroundHeight" unique_id=715402805]
+layout_mode = 2
+text = " + "
+
+[node name="ButtonDec" type="Button" parent="FoldableContainer/MarginContainer/VBoxContainer/HBoxContainerCellGroundHeight" unique_id=1111603294]
+layout_mode = 2
+text = " - "

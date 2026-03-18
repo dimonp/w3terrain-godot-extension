@@ -1,0 +1,10 @@
+[submodule "godot-cpp"]
+	path = godot-cpp
+	url = https://github.com/godotengine/godot-cpp
+[submodule "lru_memory_manager"]
+	path = lru_memory_manager
+	url = https://github.com/dimonp/lru_memory_manager.git
+	branch = no-bins
+[submodule "quadtree"]
+	path = quadtree
+	url = https://github.com/dimonp/quadtree.git

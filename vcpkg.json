@@ -1,0 +1,17 @@
+{
+  "name": "gdextension-w3terrain",
+  "version-string": "0.0.1",
+  "dependencies": [
+    "ms-gsl"
+  ],
+  "features": {
+    "tests": {
+      "description": "Build tests",
+      "dependencies": [
+        "gtest"
+      ]
+    }
+  },
+
+  "builtin-baseline": "3895230f38e498525f2560a281223d12066fa74a"
+}

@@ -1,0 +1,310 @@
+[gd_scene format=4 uid="uid://dwwado7qm2lyb"]
+
+[ext_resource type="Script" uid="uid://sco111ccfd77" path="res://debug_axis.gd" id="1_maetq"]
+[ext_resource type="PackedScene" uid="uid://bkdf7cjgqflpn" path="res://scene_ui_map.tscn" id="2_gedsi"]
+[ext_resource type="PackedScene" uid="uid://dfw3uhng1yff6" path="res://scene_ui_cell.tscn" id="3_lmhsb"]
+[ext_resource type="PackedScene" uid="uid://ci65yo853w07a" path="res://scene_ui_edit.tscn" id="4_0ixds"]
+[ext_resource type="Script" uid="uid://5b4p0xvske7f" path="res://camera.gd" id="5_3fg27"]
+[ext_resource type="Script" uid="uid://cgdmqnmjqc686" path="res://debug_camera.gd" id="6_vsoyl"]
+[ext_resource type="W3eResource" uid="uid://cgg55onvc6j7a" path="res://assets/test/Maps/test_w3e_5x9.w3e" id="7_q6qr3"]
+[ext_resource type="Texture2D" uid="uid://dur4qnv8xgdp7" path="res://assets/test/Ground/Ground1.png" id="8_maetq"]
+[ext_resource type="Texture2D" uid="uid://b71jk1hmt24j6" path="res://assets/test/Ground/Ground0.png" id="9_gedsi"]
+[ext_resource type="ArrayMesh" uid="uid://duus3haeuivrd" path="res://assets/test/Geosets/city_cliffs.obj" id="10_maetq"]
+[ext_resource type="JSON" path="res://assets/test/Geosets/city_keys.json" id="11_gedsi"]
+[ext_resource type="ArrayMesh" uid="uid://d04y68hgom6nw" path="res://assets/test/Geosets/city_ramps.obj" id="12_lmhsb"]
+[ext_resource type="Texture2D" uid="uid://daeh76osj7req" path="res://assets/test/Cliff/Cliff0.png" id="13_0ixds"]
+[ext_resource type="ArrayMesh" uid="uid://1h17aqxktycc" path="res://assets/test/Geosets/ground_cliffs.obj" id="14_3fg27"]
+[ext_resource type="JSON" path="res://assets/test/Geosets/ground_keys.json" id="15_vsoyl"]
+[ext_resource type="ArrayMesh" uid="uid://dsmtl2qx67e7d" path="res://assets/test/Geosets/ground_ramps.obj" id="16_q6qr3"]
+[ext_resource type="Texture2D" uid="uid://uks8qsay3qa5" path="res://assets/test/Cliff/Cliff1.png" id="17_y0tsu"]
+[ext_resource type="Script" uid="uid://clefr3i4v05fs" path="res://w3map_node.gd" id="18_8uhxg"]
+[ext_resource type="Shader" uid="uid://dapke3xfnlcxa" path="res://assets/shaders/water.gdshader" id="19_hq03a"]
+[ext_resource type="Texture2D" uid="uid://cgj68kqe14v38" path="res://assets/textures/water_foam.png" id="20_gdyp6"]
+[ext_resource type="Shader" uid="uid://btgygwwtwjpcm" path="res://assets/shaders/terrain_ground.gdshader" id="21_7to5u"]
+[ext_resource type="Shader" uid="uid://bwccr61ip4qcc" path="res://assets/shaders/terrain_cliff.gdshader" id="22_4xrht"]
+[ext_resource type="Script" uid="uid://di0g2wcmhv174" path="res://map_cell_selector.gd" id="23_g1k8g"]
+[ext_resource type="Shader" uid="uid://dsot73q548dj" path="res://assets/shaders/wireframe.gdshader" id="24_sy8gq"]
+[ext_resource type="Script" uid="uid://ch0rfoo3ylumt" path="res://static_body_3d.gd" id="25_iufuh"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hrm1c"]
+shading_mode = 0
+vertex_color_use_as_albedo = true
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_fnoqs"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_w0q0e"]
+sky_material = SubResource("ProceduralSkyMaterial_fnoqs")
+
+[sub_resource type="Environment" id="Environment_bnct2"]
+background_mode = 2
+sky = SubResource("Sky_w0q0e")
+ambient_light_color = Color(1, 1, 1, 1)
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="W3GeoResource" id="W3GeoResource_6qlrc"]
+geoset_config = ExtResource("11_gedsi")
+texture = ExtResource("13_0ixds")
+cliff_geoset_mesh = ExtResource("10_maetq")
+ramp_geoset_mesh = ExtResource("12_lmhsb")
+
+[sub_resource type="W3GeoResource" id="W3GeoResource_v40a1"]
+geoset_config = ExtResource("15_vsoyl")
+texture = ExtResource("17_y0tsu")
+cliff_geoset_mesh = ExtResource("14_3fg27")
+ramp_geoset_mesh = ExtResource("16_q6qr3")
+ground_id = 4
+
+[sub_resource type="Gradient" id="Gradient_chq4v"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_d7rpo"]
+frequency = 0.0245
+fractal_type = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_fnoqs"]
+width = 256
+height = 256
+noise = SubResource("FastNoiseLite_d7rpo")
+color_ramp = SubResource("Gradient_chq4v")
+seamless = true
+as_normal_map = true
+seamless_blend_skirt = 0.251
+
+[sub_resource type="Gradient" id="Gradient_w0q0e"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_bnct2"]
+fractal_type = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_6hu4v"]
+width = 256
+height = 256
+noise = SubResource("FastNoiseLite_bnct2")
+color_ramp = SubResource("Gradient_w0q0e")
+seamless = true
+as_normal_map = true
+seamless_blend_skirt = 0.295
+
+[sub_resource type="Gradient" id="Gradient_yx6fn"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0, 0.3046683, 0.6953317, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0.28015244, 0.28015244, 0.28015244, 1, 0.7315517, 0.7315517, 0.7315517, 1, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_7a1fw"]
+noise_type = 0
+seed = 700
+frequency = 0.0194
+fractal_type = 2
+fractal_octaves = 1
+fractal_lacunarity = -2.6
+fractal_gain = 2.46
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_1spff"]
+width = 256
+height = 256
+noise = SubResource("FastNoiseLite_7a1fw")
+color_ramp = SubResource("Gradient_yx6fn")
+seamless = true
+normalize = false
+seamless_blend_skirt = 0.564
+
+[sub_resource type="Gradient" id="Gradient_016xl"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_y7pen"]
+noise_type = 0
+seed = -40
+frequency = 0.0228
+fractal_octaves = 10
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_epec2"]
+width = 256
+height = 256
+noise = SubResource("FastNoiseLite_y7pen")
+color_ramp = SubResource("Gradient_016xl")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1spff"]
+resource_local_to_scene = true
+render_priority = 1
+shader = ExtResource("19_hq03a")
+shader_parameter/wave_speed = 0.05
+shader_parameter/edge_fade_power = 2.0
+shader_parameter/transmittence = 0.04
+shader_parameter/h_dist_trans_weight = 3.0
+shader_parameter/transmit_color = Color(0.18039216, 0.21568628, 0.21960784, 1)
+shader_parameter/depth_fade_distance = 5.0
+shader_parameter/surface_albedo = Color(0.0627451, 0.3372549, 0.5686275, 1)
+shader_parameter/surface_bottom = Color(0.29411766, 0.42745098, 0.67058825, 0.6745098)
+shader_parameter/opacity = 0.4
+shader_parameter/opacity_floor = 0.5
+shader_parameter/opacity_ceiling = 0.8
+shader_parameter/pixelate = false
+shader_parameter/roughness = 0.4
+shader_parameter/height_scale = 1.0
+shader_parameter/amplitude1 = 2.0
+shader_parameter/amplitude2 = 0.5
+shader_parameter/vertex_noise_big = SubResource("NoiseTexture2D_1spff")
+shader_parameter/vertex_noise_big2 = SubResource("NoiseTexture2D_epec2")
+shader_parameter/v_noise_tile = 200
+shader_parameter/normal_noise = SubResource("NoiseTexture2D_fnoqs")
+shader_parameter/normal_noise2 = SubResource("NoiseTexture2D_6hu4v")
+shader_parameter/normal_noise_size = 51.2
+shader_parameter/normal_noise_speed = 0.05
+shader_parameter/v_normal_scale = 1.0
+shader_parameter/normal_map_w = 256
+shader_parameter/sky_color = Color(0.19607843, 0.5882353, 0.74509805, 1)
+shader_parameter/high_color = Color(0.031877957, 0.4517346, 0.64659643, 1)
+shader_parameter/low_color = Color(0.2224943, 0.5096545, 0.8677535, 1)
+shader_parameter/wave_color_range = 2.0
+shader_parameter/foamTexture = ExtResource("20_gdyp6")
+shader_parameter/foamScale = 10.0
+shader_parameter/foamScrollSpeed = 0.20000000298024
+shader_parameter/foamEdgeBias = 1.0
+shader_parameter/foamFallOffDistance = 0.30000000447036
+shader_parameter/foamEdgeDistance = 0.2
+shader_parameter/shine_strength = 0.17
+shader_parameter/shine_shininess = 18.0
+shader_parameter/shadow = 0.2000000095
+shader_parameter/shadow_width = 0.18
+shader_parameter/shadow_color = Color(0.705, 0.705, 0.705, 0.705)
+shader_parameter/_specular_smoothness = 0.199
+shader_parameter/_specular_strength = 0.075
+shader_parameter/_glossiness = 0.067
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fnoqs"]
+render_priority = 0
+shader = ExtResource("21_7to5u")
+shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/alpha_scissor_threshold = 0.50000002375
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_w0q0e"]
+render_priority = 0
+shader = ExtResource("22_4xrht")
+shader_parameter/albedo = Color(1, 1, 1, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bnct2"]
+shading_mode = 0
+albedo_color = Color(1, 1, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bnct2"]
+render_priority = 0
+shader = ExtResource("24_sy8gq")
+
+[sub_resource type="HeightMapShape3D" id="HeightMapShape3D_260s1"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3fg27"]
+shading_mode = 0
+vertex_color_use_as_albedo = true
+
+[node name="Main" type="Node3D"]
+
+[node name="DebugAxis3D" type="MeshInstance3D" parent="."]
+visible = false
+material_override = SubResource("StandardMaterial3D_hrm1c")
+skeleton = NodePath("../FreeLookCamera")
+script = ExtResource("1_maetq")
+axis_size = 1000.0
+axis_thickness = 2.0
+
+[node name="MapInfoUI" parent="." instance=ExtResource("2_gedsi")]
+unique_name_in_owner = true
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+grow_horizontal = 1
+grow_vertical = 1
+
+[node name="CellInfoUI" parent="." instance=ExtResource("3_lmhsb")]
+unique_name_in_owner = true
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 1.0
+offset_top = 160.0
+offset_right = 1.0
+offset_bottom = 160.0
+grow_horizontal = 1
+grow_vertical = 1
+
+[node name="EditorInfoUI" parent="." instance=ExtResource("4_0ixds")]
+unique_name_in_owner = true
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 1.0
+offset_top = 352.0
+offset_right = 1.0
+offset_bottom = 352.0
+grow_horizontal = 1
+grow_vertical = 1
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.73845536, -0.16427019, 0.653987, 0, 0.969872, 0.24361502, -0.6743024, -0.17989881, 0.71620715, 89.6339, 1302.8066, 98.16165)
+light_angular_distance = 30.0
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_bnct2")
+
+[node name="FreeLookCamera" type="Camera3D" parent="."]
+transform = Transform3D(-0.996404, 0.0026955388, 0.08468658, 0.002705257, 0.99999636, -9.1448904e-11, -0.084686264, 0.00022909888, -0.9964076, -257.77588, 108.428375, -8.477844)
+top_level = true
+keep_aspect = 0
+current = true
+fov = 55.0
+far = 5000.0
+script = ExtResource("5_3fg27")
+metadata/_custom_type_script = "uid://5b4p0xvske7f"
+
+[node name="CameraDebug" type="Node3D" parent="FreeLookCamera"]
+transform = Transform3D(1, 3.2014214e-10, 0, 8.731149e-11, 1, 0, 1.4901161e-08, 0, 1, 0, 0, 0)
+visible = false
+script = ExtResource("6_vsoyl")
+
+[node name="W3MapNode" type="W3MapNode" parent="." node_paths=PackedStringArray("camera")]
+w3e_map = ExtResource("7_q6qr3")
+ground_textures = Array[Texture2D]([ExtResource("8_maetq"), ExtResource("9_gedsi")])
+geo_resources = Array[W3GeoResource]([SubResource("W3GeoResource_6qlrc"), SubResource("W3GeoResource_v40a1")])
+camera = NodePath("../FreeLookCamera")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -512, 0, 1024)
+top_level = true
+script = ExtResource("18_8uhxg")
+
+[node name="W3SurfaceWater" type="W3SurfaceWater" parent="W3MapNode" node_paths=PackedStringArray("map_node")]
+water_material = SubResource("ShaderMaterial_1spff")
+map_node = NodePath("..")
+
+[node name="W3SurfaceGround" type="W3SurfaceGround" parent="W3MapNode" node_paths=PackedStringArray("map_node")]
+ground_material = SubResource("ShaderMaterial_fnoqs")
+geo_material = SubResource("ShaderMaterial_w0q0e")
+debug_material = SubResource("StandardMaterial3D_bnct2")
+render_normals = true
+map_node = NodePath("..")
+
+[node name="W3MapCellSelector" type="W3Surface" parent="W3MapNode" node_paths=PackedStringArray("map_node")]
+map_node = NodePath("..")
+script = ExtResource("23_g1k8g")
+shader_material = SubResource("ShaderMaterial_bnct2")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="W3MapNode"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 500, 0)
+script = ExtResource("25_iufuh")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="W3MapNode/StaticBody3D"]
+shape = SubResource("HeightMapShape3D_260s1")
+
+[node name="DebugAxis3D" type="MeshInstance3D" parent="W3MapNode/StaticBody3D"]
+material_override = SubResource("StandardMaterial3D_3fg27")
+skeleton = NodePath("../..")
+script = ExtResource("1_maetq")
+axis_size = 1000.0
+axis_thickness = 0.1
+
+[connection signal="button_pressed_create_map" from="MapInfoUI" to="W3MapNode" method="_on_map_info_ui_button_pressed_create_map"]
+[connection signal="height_decrease_button_pressed" from="EditorInfoUI" to="W3MapNode" method="_on_editor_info_ui_height_decrease_button_pressed"]
+[connection signal="height_increase_button_pressed" from="EditorInfoUI" to="W3MapNode" method="_on_editor_info_ui_height_increase_button_pressed"]
+[connection signal="layer_decrease_button_pressed" from="EditorInfoUI" to="W3MapNode" method="_on_editor_info_ui_layer_decrease_button_pressed"]
+[connection signal="layer_increase_button_pressed" from="EditorInfoUI" to="W3MapNode" method="_on_editor_info_ui_layer_increase_button_pressed"]
+[connection signal="map_initialized" from="W3MapNode" to="W3MapNode" method="_on_map_initialized"]
+[connection signal="map_initialized" from="W3MapNode" to="W3MapNode/StaticBody3D" method="_on_w_3_map_node_map_initialized"]
+[connection signal="selector_changed" from="W3MapNode/W3MapCellSelector" to="W3MapNode" method="_on_w_3_map_cell_selector_selector_changed"]

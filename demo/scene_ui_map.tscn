@@ -1,0 +1,69 @@
+[gd_scene load_steps=2 format=3 uid="uid://bkdf7cjgqflpn"]
+
+[ext_resource type="Script" uid="uid://cvhkc37ku16cy" path="res://scene_ui_map.gd" id="1_hj02p"]
+
+[node name="MapInfoUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_hj02p")
+
+[node name="FoldableContainer" type="FoldableContainer" parent="."]
+layout_mode = 0
+offset_right = 76.0
+offset_bottom = 65.0
+theme_override_colors/font_color = Color(0, 0.8745098, 0.8745098, 1)
+title = "Map"
+
+[node name="MarginContainer" type="MarginContainer" parent="FoldableContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="FoldableContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="HBoxContainerCellName" type="HBoxContainer" parent="FoldableContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="FoldableContainer/MarginContainer/VBoxContainer/HBoxContainerCellName"]
+layout_mode = 2
+size_flags_vertical = 0
+size_flags_stretch_ratio = 2.0
+text = "Name:"
+
+[node name="Text" type="Label" parent="FoldableContainer/MarginContainer/VBoxContainer/HBoxContainerCellName"]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+
+[node name="HSeparator" type="HSeparator" parent="FoldableContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="HBoxContainerCellSize" type="HBoxContainer" parent="FoldableContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="FoldableContainer/MarginContainer/VBoxContainer/HBoxContainerCellSize"]
+layout_mode = 2
+size_flags_vertical = 0
+size_flags_stretch_ratio = 2.0
+text = "Size:"
+
+[node name="Text" type="Label" parent="FoldableContainer/MarginContainer/VBoxContainer/HBoxContainerCellSize"]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+
+[node name="HSeparator2" type="HSeparator" parent="FoldableContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="FoldableContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+text = "Create empty"
+
+[connection signal="pressed" from="FoldableContainer/MarginContainer/VBoxContainer/Button" to="." method="_on_button_pressed"]

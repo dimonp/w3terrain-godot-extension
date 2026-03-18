@@ -1,0 +1,115 @@
+[gd_scene format=3 uid="uid://dfw3uhng1yff6"]
+
+[ext_resource type="Script" uid="uid://dyndinqsxbp10" path="res://scene_ui_cell.gd" id="1_xx36f"]
+
+[node name="CellInfoUI" type="Control" unique_id=2108831191]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_xx36f")
+
+[node name="FoldableContainer" type="FoldableContainer" parent="." unique_id=1133149989]
+layout_mode = 0
+offset_right = 76.0
+offset_bottom = 65.0
+theme_override_colors/font_color = Color(0, 0.8745098, 0.8745098, 1)
+title = "Cell info"
+
+[node name="MarginContainer" type="MarginContainer" parent="FoldableContainer" unique_id=1057033060]
+layout_mode = 2
+theme_override_constants/margin_left = 5
+theme_override_constants/margin_top = 5
+theme_override_constants/margin_right = 5
+theme_override_constants/margin_bottom = 5
+
+[node name="VBoxContainer" type="VBoxContainer" parent="FoldableContainer/MarginContainer" unique_id=1396524562]
+layout_mode = 2
+
+[node name="HBoxContainerCellCoord" type="HBoxContainer" parent="FoldableContainer/MarginContainer/VBoxContainer" unique_id=706258836]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="FoldableContainer/MarginContainer/VBoxContainer/HBoxContainerCellCoord" unique_id=754487066]
+layout_mode = 2
+size_flags_vertical = 0
+size_flags_stretch_ratio = 2.0
+text = "coord:"
+
+[node name="Text" type="Label" parent="FoldableContainer/MarginContainer/VBoxContainer/HBoxContainerCellCoord" unique_id=982965223]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+
+[node name="HSeparator" type="HSeparator" parent="FoldableContainer/MarginContainer/VBoxContainer" unique_id=208663495]
+layout_mode = 2
+
+[node name="HBoxContainerCellLayer" type="HBoxContainer" parent="FoldableContainer/MarginContainer/VBoxContainer" unique_id=436052568]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="FoldableContainer/MarginContainer/VBoxContainer/HBoxContainerCellLayer" unique_id=259064358]
+layout_mode = 2
+size_flags_vertical = 0
+size_flags_stretch_ratio = 2.0
+text = "layer:"
+
+[node name="Text" type="Label" parent="FoldableContainer/MarginContainer/VBoxContainer/HBoxContainerCellLayer" unique_id=148345995]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+
+[node name="HSeparator2" type="HSeparator" parent="FoldableContainer/MarginContainer/VBoxContainer" unique_id=1214847156]
+layout_mode = 2
+
+[node name="HBoxContainerCellPosition" type="HBoxContainer" parent="FoldableContainer/MarginContainer/VBoxContainer" unique_id=1044350322]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="FoldableContainer/MarginContainer/VBoxContainer/HBoxContainerCellPosition" unique_id=1866780384]
+layout_mode = 2
+size_flags_vertical = 0
+size_flags_stretch_ratio = 2.0
+text = "pos:"
+
+[node name="Text" type="Label" parent="FoldableContainer/MarginContainer/VBoxContainer/HBoxContainerCellPosition" unique_id=1578154290]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+
+[node name="HSeparator3" type="HSeparator" parent="FoldableContainer/MarginContainer/VBoxContainer" unique_id=1000606156]
+layout_mode = 2
+
+[node name="HBoxContainerCellType" type="HBoxContainer" parent="FoldableContainer/MarginContainer/VBoxContainer" unique_id=374477850]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="FoldableContainer/MarginContainer/VBoxContainer/HBoxContainerCellType" unique_id=100766816]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+size_flags_stretch_ratio = 2.0
+text = "type:"
+
+[node name="Text" type="Label" parent="FoldableContainer/MarginContainer/VBoxContainer/HBoxContainerCellType" unique_id=1581680475]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+justification_flags = 161
+
+[node name="HSeparator4" type="HSeparator" parent="FoldableContainer/MarginContainer/VBoxContainer" unique_id=297295372]
+layout_mode = 2
+
+[node name="HBoxContainerCellTileset" type="HBoxContainer" parent="FoldableContainer/MarginContainer/VBoxContainer" unique_id=1110385034]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="FoldableContainer/MarginContainer/VBoxContainer/HBoxContainerCellTileset" unique_id=275470916]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+size_flags_stretch_ratio = 2.0
+text = "tileset:"
+
+[node name="Text" type="Label" parent="FoldableContainer/MarginContainer/VBoxContainer/HBoxContainerCellTileset" unique_id=813983049]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 0, 1)
+justification_flags = 161

@@ -1,0 +1,404 @@
+[gd_scene format=3 uid="uid://dblkey2q0yi5g"]
+
+[ext_resource type="PackedScene" uid="uid://bkdf7cjgqflpn" path="res://scene_ui_map.tscn" id="1_n8uyd"]
+[ext_resource type="PackedScene" uid="uid://dfw3uhng1yff6" path="res://scene_ui_cell.tscn" id="2_hrm1c"]
+[ext_resource type="PackedScene" uid="uid://ci65yo853w07a" path="res://scene_ui_edit.tscn" id="3_7wi8k"]
+[ext_resource type="Script" uid="uid://5b4p0xvske7f" path="res://camera.gd" id="4_nnb2w"]
+[ext_resource type="Script" uid="uid://cgdmqnmjqc686" path="res://debug_camera.gd" id="5_hrm1c"]
+[ext_resource type="W3eResource" uid="uid://fkieeaahxl43" path="res://assets/imported/legends.w3e" id="6_rbnhm"]
+[ext_resource type="Texture2D" uid="uid://dur4qnv8xgdp7" path="res://assets/test/Ground/Ground1.png" id="8_hrm1c"]
+[ext_resource type="Texture2D" uid="uid://b71jk1hmt24j6" path="res://assets/test/Ground/Ground0.png" id="9_7wi8k"]
+[ext_resource type="ArrayMesh" uid="uid://duus3haeuivrd" path="res://assets/test/Geosets/city_cliffs.obj" id="14_rbnhm"]
+[ext_resource type="JSON" path="res://assets/test/Geosets/city_keys.json" id="15_rbnhm"]
+[ext_resource type="ArrayMesh" uid="uid://d04y68hgom6nw" path="res://assets/test/Geosets/city_ramps.obj" id="16_y01pv"]
+[ext_resource type="Script" uid="uid://clefr3i4v05fs" path="res://w3map_node.gd" id="17_gubeu"]
+[ext_resource type="Texture2D" uid="uid://daeh76osj7req" path="res://assets/test/Cliff/Cliff0.png" id="17_y01pv"]
+[ext_resource type="ArrayMesh" uid="uid://1h17aqxktycc" path="res://assets/test/Geosets/ground_cliffs.obj" id="18_ef6da"]
+[ext_resource type="Script" uid="uid://sco111ccfd77" path="res://debug_axis.gd" id="18_hrm1c"]
+[ext_resource type="Shader" uid="uid://dapke3xfnlcxa" path="res://assets/shaders/water.gdshader" id="18_yphn1"]
+[ext_resource type="Texture2D" uid="uid://cgj68kqe14v38" path="res://assets/textures/water_foam.png" id="19_0nk8v"]
+[ext_resource type="JSON" path="res://assets/test/Geosets/ground_keys.json" id="19_rbnhm"]
+[ext_resource type="ArrayMesh" uid="uid://dsmtl2qx67e7d" path="res://assets/test/Geosets/ground_ramps.obj" id="20_j0v8c"]
+[ext_resource type="Shader" uid="uid://btgygwwtwjpcm" path="res://assets/shaders/terrain_ground.gdshader" id="20_s6ksf"]
+[ext_resource type="Shader" uid="uid://bwccr61ip4qcc" path="res://assets/shaders/terrain_cliff.gdshader" id="21_02nfn"]
+[ext_resource type="Texture2D" uid="uid://uks8qsay3qa5" path="res://assets/test/Cliff/Cliff1.png" id="21_y01pv"]
+[ext_resource type="Script" uid="uid://di0g2wcmhv174" path="res://map_cell_selector.gd" id="22_qfmwi"]
+[ext_resource type="Shader" uid="uid://dsot73q548dj" path="res://assets/shaders/wireframe.gdshader" id="23_i4jk5"]
+[ext_resource type="Script" uid="uid://ch0rfoo3ylumt" path="res://static_body_3d.gd" id="24_laj5i"]
+[ext_resource type="Texture2D" uid="uid://dbx66sovxd1" path="res://icon.svg" id="25_1b0xf"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hrm1c"]
+shading_mode = 0
+vertex_color_use_as_albedo = true
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_fnoqs"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_w0q0e"]
+sky_material = SubResource("ProceduralSkyMaterial_fnoqs")
+
+[sub_resource type="Environment" id="Environment_bnct2"]
+background_mode = 2
+sky = SubResource("Sky_w0q0e")
+ambient_light_color = Color(1, 1, 1, 1)
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="W3GeoResource" id="W3GeoResource_i02fq"]
+geoset_config = ExtResource("15_rbnhm")
+texture = ExtResource("17_y01pv")
+cliff_geoset_mesh = ExtResource("14_rbnhm")
+ramp_geoset_mesh = ExtResource("16_y01pv")
+
+[sub_resource type="W3GeoResource" id="W3GeoResource_v40a1"]
+geoset_config = ExtResource("19_rbnhm")
+texture = ExtResource("21_y01pv")
+cliff_geoset_mesh = ExtResource("18_ef6da")
+ramp_geoset_mesh = ExtResource("20_j0v8c")
+ground_id = 4
+
+[sub_resource type="Gradient" id="Gradient_chq4v"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_d7rpo"]
+frequency = 0.0245
+fractal_type = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_fnoqs"]
+width = 256
+height = 256
+noise = SubResource("FastNoiseLite_d7rpo")
+color_ramp = SubResource("Gradient_chq4v")
+seamless = true
+as_normal_map = true
+seamless_blend_skirt = 0.251
+
+[sub_resource type="Gradient" id="Gradient_w0q0e"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_bnct2"]
+fractal_type = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_6hu4v"]
+width = 256
+height = 256
+noise = SubResource("FastNoiseLite_bnct2")
+color_ramp = SubResource("Gradient_w0q0e")
+seamless = true
+as_normal_map = true
+seamless_blend_skirt = 0.295
+
+[sub_resource type="Gradient" id="Gradient_yx6fn"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0, 0.3046683, 0.6953317, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0.28015244, 0.28015244, 0.28015244, 1, 0.7315517, 0.7315517, 0.7315517, 1, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_7a1fw"]
+noise_type = 0
+seed = 700
+frequency = 0.0194
+fractal_type = 2
+fractal_octaves = 1
+fractal_lacunarity = -2.6
+fractal_gain = 2.46
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_1spff"]
+width = 256
+height = 256
+noise = SubResource("FastNoiseLite_7a1fw")
+color_ramp = SubResource("Gradient_yx6fn")
+seamless = true
+normalize = false
+seamless_blend_skirt = 0.564
+
+[sub_resource type="Gradient" id="Gradient_016xl"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_y7pen"]
+noise_type = 0
+seed = -40
+frequency = 0.0228
+fractal_octaves = 10
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_epec2"]
+width = 256
+height = 256
+noise = SubResource("FastNoiseLite_y7pen")
+color_ramp = SubResource("Gradient_016xl")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1spff"]
+resource_local_to_scene = true
+render_priority = 1
+shader = ExtResource("18_yphn1")
+shader_parameter/wave_speed = 0.05
+shader_parameter/edge_fade_power = 2.0
+shader_parameter/transmittence = 0.04
+shader_parameter/h_dist_trans_weight = 3.0
+shader_parameter/transmit_color = Color(0.18039216, 0.21568628, 0.21960784, 1)
+shader_parameter/depth_fade_distance = 5.0
+shader_parameter/surface_albedo = Color(0.0627451, 0.3372549, 0.5686275, 1)
+shader_parameter/surface_bottom = Color(0.29411766, 0.42745098, 0.67058825, 0.6745098)
+shader_parameter/opacity = 0.4
+shader_parameter/opacity_floor = 0.5
+shader_parameter/opacity_ceiling = 0.8
+shader_parameter/pixelate = false
+shader_parameter/roughness = 0.4
+shader_parameter/height_scale = 1.0
+shader_parameter/amplitude1 = 2.0
+shader_parameter/amplitude2 = 0.5
+shader_parameter/vertex_noise_big = SubResource("NoiseTexture2D_1spff")
+shader_parameter/vertex_noise_big2 = SubResource("NoiseTexture2D_epec2")
+shader_parameter/v_noise_tile = 200
+shader_parameter/normal_noise = SubResource("NoiseTexture2D_fnoqs")
+shader_parameter/normal_noise2 = SubResource("NoiseTexture2D_6hu4v")
+shader_parameter/normal_noise_size = 51.2
+shader_parameter/normal_noise_speed = 0.05
+shader_parameter/v_normal_scale = 1.0
+shader_parameter/normal_map_w = 256
+shader_parameter/sky_color = Color(0.19607843, 0.5882353, 0.74509805, 1)
+shader_parameter/high_color = Color(0.031877957, 0.4517346, 0.64659643, 1)
+shader_parameter/low_color = Color(0.2224943, 0.5096545, 0.8677535, 1)
+shader_parameter/wave_color_range = 2.0
+shader_parameter/foamTexture = ExtResource("19_0nk8v")
+shader_parameter/foamScale = 10.0
+shader_parameter/foamScrollSpeed = 0.20000000298024
+shader_parameter/foamEdgeBias = 1.0
+shader_parameter/foamFallOffDistance = 0.30000000447036
+shader_parameter/foamEdgeDistance = 0.2
+shader_parameter/shine_strength = 0.17
+shader_parameter/shine_shininess = 18.0
+shader_parameter/shadow = 0.2000000095
+shader_parameter/shadow_width = 0.18
+shader_parameter/shadow_color = Color(0.705, 0.705, 0.705, 0.705)
+shader_parameter/_specular_smoothness = 0.199
+shader_parameter/_specular_strength = 0.075
+shader_parameter/_glossiness = 0.067
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fnoqs"]
+render_priority = 0
+shader = ExtResource("20_s6ksf")
+shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/alpha_scissor_threshold = 0.50000002375
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_w0q0e"]
+render_priority = 0
+shader = ExtResource("21_02nfn")
+shader_parameter/albedo = Color(1, 1, 1, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bnct2"]
+shading_mode = 0
+albedo_color = Color(1, 1, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bnct2"]
+render_priority = 0
+shader = ExtResource("23_i4jk5")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7wi8k"]
+shading_mode = 0
+vertex_color_use_as_albedo = true
+
+[sub_resource type="HeightMapShape3D" id="HeightMapShape3D_260s1"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_n51mc"]
+size = Vector3(100, 100, 100)
+
+[sub_resource type="Shader" id="Shader_chq4v"]
+code = "// NOTE: Shader automatically converted from Godot Engine 4.5.2.rc's StandardMaterial3D.
+
+shader_type spatial;
+render_mode blend_mix, depth_draw_always, cull_back, diffuse_burley, specular_schlick_ggx;
+
+uniform vec4 albedo : source_color;
+uniform sampler2D texture_albedo : source_color, filter_linear_mipmap, repeat_enable;
+uniform float alpha_scissor_threshold : hint_range(0.0, 1.0, 0.001);
+uniform ivec2 albedo_texture_size;
+uniform float point_size : hint_range(0.1, 128.0, 0.1);
+
+uniform float roughness : hint_range(0.0, 1.0);
+uniform sampler2D texture_metallic : hint_default_white, filter_linear_mipmap, repeat_enable;
+uniform vec4 metallic_texture_channel;
+uniform sampler2D texture_roughness : hint_roughness_r, filter_linear_mipmap, repeat_enable;
+
+uniform float specular : hint_range(0.0, 1.0, 0.01);
+uniform float metallic : hint_range(0.0, 1.0, 0.01);
+
+uniform vec3 uv1_scale;
+uniform vec3 uv1_offset;
+uniform vec3 uv2_scale;
+uniform vec3 uv2_offset;
+
+void vertex() {
+	UV = UV * uv1_scale.xy + uv1_offset.xy;
+}
+
+void fragment() {
+	vec2 base_uv = UV;
+
+	vec4 albedo_tex = texture(texture_albedo, base_uv);
+	ALBEDO = albedo.rgb * albedo_tex.rgb;
+
+	float metallic_tex = dot(texture(texture_metallic, base_uv), metallic_texture_channel);
+	METALLIC = metallic_tex * metallic;
+	SPECULAR = specular;
+
+	vec4 roughness_texture_channel = vec4(1.0, 0.0, 0.0, 0.0);
+	float roughness_tex = dot(texture(texture_roughness, base_uv), roughness_texture_channel);
+	ROUGHNESS = roughness_tex * roughness;
+	ALPHA *= albedo.a * albedo_tex.a;
+	ALPHA_SCISSOR_THRESHOLD = alpha_scissor_threshold;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_d7rpo"]
+render_priority = 0
+shader = SubResource("Shader_chq4v")
+shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/alpha_scissor_threshold = 0.50000002375
+shader_parameter/albedo_texture_size = Vector2i(256, 256)
+shader_parameter/point_size = 1.0
+shader_parameter/roughness = 1.0
+shader_parameter/metallic_texture_channel = Vector4(1, 0, 0, 0)
+shader_parameter/specular = 0.5
+shader_parameter/metallic = 0.0
+shader_parameter/uv1_scale = Vector3(1, 1, 1)
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
+shader_parameter/uv2_scale = Vector3(1, 1, 1)
+shader_parameter/uv2_offset = Vector3(0, 0, 0)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_fnoqs"]
+radius = 50.0
+height = 200.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d7rpo"]
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+albedo_texture = ExtResource("25_1b0xf")
+
+[node name="Main" type="Node3D" unique_id=370783374]
+
+[node name="DebugAxis3D" type="MeshInstance3D" parent="." unique_id=1195886150]
+visible = false
+material_override = SubResource("StandardMaterial3D_hrm1c")
+ignore_occlusion_culling = true
+skeleton = NodePath("../FreeLookCamera")
+script = ExtResource("18_hrm1c")
+axis_size = 1000.0
+
+[node name="MapInfoUI" parent="." unique_id=187275123 instance=ExtResource("1_n8uyd")]
+unique_name_in_owner = true
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+grow_horizontal = 1
+grow_vertical = 1
+
+[node name="CellInfoUI" parent="." unique_id=1291881064 instance=ExtResource("2_hrm1c")]
+unique_name_in_owner = true
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 1.0
+offset_top = 160.0
+offset_right = 1.0
+offset_bottom = 160.0
+grow_horizontal = 1
+grow_vertical = 1
+
+[node name="EditorInfoUI" parent="." unique_id=1528573039 instance=ExtResource("3_7wi8k")]
+unique_name_in_owner = true
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_top = 387.0
+offset_right = 0.0
+offset_bottom = 387.0
+grow_horizontal = 1
+grow_vertical = 1
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=462441277]
+environment = SubResource("Environment_bnct2")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1872159160]
+transform = Transform3D(0.73845536, -0.16427019, 0.653987, 0, 0.969872, 0.24361502, -0.6743024, -0.17989881, 0.71620715, 89.6339, 1302.8066, 98.16165)
+light_color = Color(0.9019608, 0.9019608, 0.9019608, 1)
+light_angular_distance = 30.0
+shadow_enabled = true
+
+[node name="FreeLookCamera" type="Camera3D" parent="." unique_id=1266543544]
+transform = Transform3D(0.97612214, -0.002640671, 0.21720634, 0.0027052572, 0.99999636, 5.8207484e-11, -0.21720555, 0.00058759894, 0.9761257, 211.56876, 1037.4619, 338.85928)
+top_level = true
+keep_aspect = 0
+current = true
+fov = 55.0
+far = 5000.0
+script = ExtResource("4_nnb2w")
+metadata/_custom_type_script = "uid://5b4p0xvske7f"
+
+[node name="CameraDebug" type="Node3D" parent="FreeLookCamera" unique_id=1584251417]
+transform = Transform3D(1, 3.2014214e-10, 0, 8.731149e-11, 1, 0, 1.4901161e-08, 0, 1, 0, 0, 0)
+visible = false
+script = ExtResource("5_hrm1c")
+
+[node name="FreeLookCamera2" type="Camera3D" parent="." unique_id=216213620]
+fov = 55.0
+script = ExtResource("4_nnb2w")
+metadata/_custom_type_script = "uid://5b4p0xvske7f"
+
+[node name="W3MapNode" type="W3MapNode" parent="." unique_id=815498597 node_paths=PackedStringArray("camera")]
+w3e_map = ExtResource("6_rbnhm")
+ground_textures = Array[Texture2D]([ExtResource("8_hrm1c"), ExtResource("8_hrm1c"), ExtResource("8_hrm1c"), ExtResource("8_hrm1c"), ExtResource("9_7wi8k"), ExtResource("9_7wi8k")])
+geo_resources = Array[W3GeoResource]([SubResource("W3GeoResource_i02fq"), SubResource("W3GeoResource_v40a1")])
+camera = NodePath("../FreeLookCamera")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7936, 0, 8448)
+top_level = true
+script = ExtResource("17_gubeu")
+
+[node name="W3SurfaceWater" type="W3SurfaceWater" parent="W3MapNode" unique_id=2114392250 node_paths=PackedStringArray("map_node")]
+water_material = SubResource("ShaderMaterial_1spff")
+map_node = NodePath("..")
+
+[node name="W3SurfaceGround" type="W3SurfaceGround" parent="W3MapNode" unique_id=776721820 node_paths=PackedStringArray("map_node")]
+ground_material = SubResource("ShaderMaterial_fnoqs")
+geo_material = SubResource("ShaderMaterial_w0q0e")
+debug_material = SubResource("StandardMaterial3D_bnct2")
+render_normals = true
+map_node = NodePath("..")
+
+[node name="W3MapCellSelector" type="W3Surface" parent="W3MapNode" unique_id=2036195894 node_paths=PackedStringArray("map_node")]
+map_node = NodePath("..")
+script = ExtResource("22_qfmwi")
+shader_material = SubResource("ShaderMaterial_bnct2")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="W3MapNode" unique_id=2089522970]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 500, 0)
+script = ExtResource("24_laj5i")
+
+[node name="DebugAxis3D2" type="MeshInstance3D" parent="W3MapNode/StaticBody3D" unique_id=1321353043]
+material_override = SubResource("StandardMaterial3D_7wi8k")
+ignore_occlusion_culling = true
+skeleton = NodePath("../../../FreeLookCamera")
+script = ExtResource("18_hrm1c")
+axis_size = 10.0
+axis_thickness = 0.01
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="W3MapNode/StaticBody3D" unique_id=1510340023]
+shape = SubResource("HeightMapShape3D_260s1")
+
+[node name="Test_MeshInstance3D_0" type="MeshInstance3D" parent="." unique_id=1576235610]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1125.7684, 178.32813, -1390.9862)
+mesh = SubResource("BoxMesh_n51mc")
+skeleton = NodePath("../../..")
+surface_material_override/0 = SubResource("ShaderMaterial_d7rpo")
+
+[node name="Test_MeshInstance3D_1" type="MeshInstance3D" parent="." unique_id=365211858]
+transform = Transform3D(1, 0, 0, 0, 0.38268346, 0.92387956, 0, -0.92387956, 0.38268346, -817.4358, 149.61835, -1397.3643)
+mesh = SubResource("CapsuleMesh_fnoqs")
+surface_material_override/0 = SubResource("StandardMaterial3D_d7rpo")
+
+[connection signal="button_pressed_create_map" from="MapInfoUI" to="W3MapNode" method="_on_map_info_ui_button_pressed_create_map"]
+[connection signal="height_decrease_button_pressed" from="EditorInfoUI" to="W3MapNode" method="_on_editor_info_ui_height_decrease_button_pressed"]
+[connection signal="height_increase_button_pressed" from="EditorInfoUI" to="W3MapNode" method="_on_editor_info_ui_height_increase_button_pressed"]
+[connection signal="layer_decrease_button_pressed" from="EditorInfoUI" to="W3MapNode" method="_on_editor_info_ui_layer_decrease_button_pressed"]
+[connection signal="layer_increase_button_pressed" from="EditorInfoUI" to="W3MapNode" method="_on_editor_info_ui_layer_increase_button_pressed"]
+[connection signal="map_initialized" from="W3MapNode" to="W3MapNode" method="_on_map_initialized"]
+[connection signal="map_initialized" from="W3MapNode" to="W3MapNode/StaticBody3D" method="_on_w_3_map_node_map_initialized"]
+[connection signal="selector_changed" from="W3MapNode/W3MapCellSelector" to="W3MapNode" method="_on_w_3_map_cell_selector_selector_changed"]

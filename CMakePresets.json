@@ -1,0 +1,73 @@
+{
+    "version": 3,
+    "configurePresets": [
+        {
+            "name": "base-multi-config",
+            "hidden": true,
+            "generator": "Ninja Multi-Config",
+            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_CONFIGURATION_TYPES": "Debug;Release;RelWithDebInfo;MinSizeRel"
+            }
+        },
+        {
+            "name": "msbuild-multi-config",
+            "displayName": "MSBUILD Multi-config",
+            "description": "Target Windows with the msvc compiler",
+            "inherits": "base-multi-config",
+            "cacheVariables": {
+                "CMAKE_CXX_COMPILER": "cl"
+            }
+        },
+        {
+            "name": "gcc-multi-config",
+            "displayName": "GCC Multi-config",
+            "description": "Target Unix-like OS with the gcc compiler",
+            "inherits": "base-multi-config",
+            "cacheVariables": {
+                "CMAKE_CXX_COMPILER": "g++"
+            }
+        },
+        {
+            "name": "clang-multi-config",
+            "displayName": "Clang Multi-config",
+            "description": "Target Unix-like OS with the clang compiler",
+            "inherits": "base-multi-config",
+            "cacheVariables": {
+                "CMAKE_CXX_COMPILER": "clang++"
+            }
+        }
+    ],
+    "buildPresets": [
+        {
+            "name": "msbuild-build-debug",
+            "configurePreset": "msbuild-multi-config",
+            "configuration": "Debug"
+        },
+        {
+            "name": "msbuild-build-release-dbg",
+            "configurePreset": "msbuild-multi-config",
+            "configuration": "RelWithDebInfo"
+        },
+        {
+            "name": "gcc-build-debug",
+            "configurePreset": "gcc-multi-config",
+            "configuration": "Debug"
+        },
+        {
+            "name": "gcc-build-release-dbg",
+            "configurePreset": "gcc-multi-config",
+            "configuration": "RelWithDebInfo"
+        },
+        {
+            "name": "clang-build-debug",
+            "configurePreset": "clang-multi-config",
+            "configuration": "Debug"
+        },
+        {
+            "name": "clang-build-release-dbg",
+            "configurePreset": "clang-multi-config",
+            "configuration": "RelWithDebInfo"
+        }
+    ]
+}

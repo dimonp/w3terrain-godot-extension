@@ -1,0 +1,338 @@
+[gd_scene format=3 uid="uid://b8ww2ikhg0dqs"]
+
+[ext_resource type="PackedScene" uid="uid://dfw3uhng1yff6" path="res://scene_ui_cell.tscn" id="1_psvbk"]
+[ext_resource type="Script" uid="uid://5b4p0xvske7f" path="res://camera.gd" id="2_vnbon"]
+[ext_resource type="W3eResource" uid="uid://bd8mviqbwek54" path="res://assets/imported/(4)Deadlock.w3e" id="3_7q4ca"]
+[ext_resource type="Texture2D" uid="uid://dur4qnv8xgdp7" path="res://assets/test/Ground/Ground1.png" id="4_w7jns"]
+[ext_resource type="Texture2D" uid="uid://b71jk1hmt24j6" path="res://assets/test/Ground/Ground0.png" id="5_2pu7o"]
+[ext_resource type="Texture2D" uid="uid://daeh76osj7req" path="res://assets/test/Cliff/Cliff0.png" id="9_w7jns"]
+[ext_resource type="ArrayMesh" uid="uid://egrw8u0c065a" path="res://assets/imported/Geosets/city_cliffs.obj" id="10_j5bx6"]
+[ext_resource type="ArrayMesh" uid="uid://1h17aqxktycc" path="res://assets/test/Geosets/ground_cliffs.obj" id="10_w7jns"]
+[ext_resource type="JSON" path="res://assets/test/Geosets/ground_keys.json" id="11_2pu7o"]
+[ext_resource type="JSON" path="res://assets/imported/Geosets/city_keys.json" id="11_dmtyk"]
+[ext_resource type="ArrayMesh" uid="uid://crqvx0t7qbtfx" path="res://assets/imported/Geosets/city_ramps.obj" id="12_e15gp"]
+[ext_resource type="ArrayMesh" uid="uid://dsmtl2qx67e7d" path="res://assets/test/Geosets/ground_ramps.obj" id="12_fe55i"]
+[ext_resource type="Texture2D" uid="uid://uks8qsay3qa5" path="res://assets/test/Cliff/Cliff1.png" id="13_2pu7o"]
+[ext_resource type="Shader" uid="uid://dapke3xfnlcxa" path="res://assets/shaders/water.gdshader" id="18_g0raq"]
+[ext_resource type="Texture2D" uid="uid://cgj68kqe14v38" path="res://assets/textures/water_foam.png" id="19_me0t4"]
+[ext_resource type="Shader" uid="uid://btgygwwtwjpcm" path="res://assets/shaders/terrain_ground.gdshader" id="20_eptg5"]
+[ext_resource type="Shader" uid="uid://bwccr61ip4qcc" path="res://assets/shaders/terrain_cliff.gdshader" id="21_e7r8p"]
+[ext_resource type="Script" uid="uid://di0g2wcmhv174" path="res://map_cell_selector.gd" id="22_2h4r2"]
+[ext_resource type="Shader" uid="uid://dsot73q548dj" path="res://assets/shaders/wireframe.gdshader" id="23_0vgac"]
+[ext_resource type="Script" uid="uid://ch0rfoo3ylumt" path="res://static_body_3d.gd" id="24_x3lqj"]
+[ext_resource type="Texture2D" uid="uid://dbx66sovxd1" path="res://icon.svg" id="25_qmegp"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_fnoqs"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_w0q0e"]
+sky_material = SubResource("ProceduralSkyMaterial_fnoqs")
+
+[sub_resource type="Environment" id="Environment_bnct2"]
+background_mode = 2
+sky = SubResource("Sky_w0q0e")
+ambient_light_color = Color(1, 1, 1, 1)
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="W3GeoResource" id="W3GeoResource_fnoqs"]
+geoset_config = ExtResource("11_dmtyk")
+texture = ExtResource("9_w7jns")
+cliff_geoset_mesh = ExtResource("10_j5bx6")
+ramp_geoset_mesh = ExtResource("12_e15gp")
+ground_id = 1
+
+[sub_resource type="W3GeoResource" id="W3GeoResource_v40a1"]
+geoset_config = ExtResource("11_2pu7o")
+texture = ExtResource("13_2pu7o")
+cliff_geoset_mesh = ExtResource("10_w7jns")
+ramp_geoset_mesh = ExtResource("12_fe55i")
+ground_id = 4
+
+[sub_resource type="Gradient" id="Gradient_chq4v"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_d7rpo"]
+frequency = 0.0245
+fractal_type = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_fnoqs"]
+width = 256
+height = 256
+noise = SubResource("FastNoiseLite_d7rpo")
+color_ramp = SubResource("Gradient_chq4v")
+seamless = true
+as_normal_map = true
+seamless_blend_skirt = 0.251
+
+[sub_resource type="Gradient" id="Gradient_w0q0e"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_bnct2"]
+fractal_type = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_6hu4v"]
+width = 256
+height = 256
+noise = SubResource("FastNoiseLite_bnct2")
+color_ramp = SubResource("Gradient_w0q0e")
+seamless = true
+as_normal_map = true
+seamless_blend_skirt = 0.295
+
+[sub_resource type="Gradient" id="Gradient_yx6fn"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0, 0.3046683, 0.6953317, 1)
+colors = PackedColorArray(0, 0, 0, 1, 0.28015244, 0.28015244, 0.28015244, 1, 0.7315517, 0.7315517, 0.7315517, 1, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_7a1fw"]
+noise_type = 0
+seed = 700
+frequency = 0.0194
+fractal_type = 2
+fractal_octaves = 1
+fractal_lacunarity = -2.6
+fractal_gain = 2.46
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_1spff"]
+width = 256
+height = 256
+noise = SubResource("FastNoiseLite_7a1fw")
+color_ramp = SubResource("Gradient_yx6fn")
+seamless = true
+normalize = false
+seamless_blend_skirt = 0.564
+
+[sub_resource type="Gradient" id="Gradient_016xl"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_y7pen"]
+noise_type = 0
+seed = -40
+frequency = 0.0228
+fractal_octaves = 10
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_epec2"]
+width = 256
+height = 256
+noise = SubResource("FastNoiseLite_y7pen")
+color_ramp = SubResource("Gradient_016xl")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1spff"]
+resource_local_to_scene = true
+render_priority = 1
+shader = ExtResource("18_g0raq")
+shader_parameter/wave_speed = 0.05
+shader_parameter/edge_fade_power = 2.0
+shader_parameter/transmittence = 0.04
+shader_parameter/h_dist_trans_weight = 3.0
+shader_parameter/transmit_color = Color(0.18039216, 0.21568628, 0.21960784, 1)
+shader_parameter/depth_fade_distance = 5.0
+shader_parameter/surface_albedo = Color(0.0627451, 0.3372549, 0.5686275, 1)
+shader_parameter/surface_bottom = Color(0.29411766, 0.42745098, 0.67058825, 0.6745098)
+shader_parameter/opacity = 0.4
+shader_parameter/opacity_floor = 0.5
+shader_parameter/opacity_ceiling = 0.8
+shader_parameter/pixelate = false
+shader_parameter/roughness = 0.4
+shader_parameter/height_scale = 1.0
+shader_parameter/amplitude1 = 2.0
+shader_parameter/amplitude2 = 0.5
+shader_parameter/vertex_noise_big = SubResource("NoiseTexture2D_1spff")
+shader_parameter/vertex_noise_big2 = SubResource("NoiseTexture2D_epec2")
+shader_parameter/v_noise_tile = 200
+shader_parameter/normal_noise = SubResource("NoiseTexture2D_fnoqs")
+shader_parameter/normal_noise2 = SubResource("NoiseTexture2D_6hu4v")
+shader_parameter/normal_noise_size = 51.2
+shader_parameter/normal_noise_speed = 0.05
+shader_parameter/v_normal_scale = 1.0
+shader_parameter/normal_map_w = 256
+shader_parameter/sky_color = Color(0.19607843, 0.5882353, 0.74509805, 1)
+shader_parameter/high_color = Color(0.031877957, 0.4517346, 0.64659643, 1)
+shader_parameter/low_color = Color(0.2224943, 0.5096545, 0.8677535, 1)
+shader_parameter/wave_color_range = 2.0
+shader_parameter/foamTexture = ExtResource("19_me0t4")
+shader_parameter/foamScale = 10.0
+shader_parameter/foamScrollSpeed = 0.20000000298024
+shader_parameter/foamEdgeBias = 1.0
+shader_parameter/foamFallOffDistance = 0.30000000447036
+shader_parameter/foamEdgeDistance = 0.2
+shader_parameter/shine_strength = 0.17
+shader_parameter/shine_shininess = 18.0
+shader_parameter/shadow = 0.2000000095
+shader_parameter/shadow_width = 0.18
+shader_parameter/shadow_color = Color(0.705, 0.705, 0.705, 0.705)
+shader_parameter/_specular_smoothness = 0.199
+shader_parameter/_specular_strength = 0.075
+shader_parameter/_glossiness = 0.067
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_fnoqs"]
+render_priority = 0
+shader = ExtResource("20_eptg5")
+shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/alpha_scissor_threshold = 0.50000002375
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_w0q0e"]
+render_priority = 0
+shader = ExtResource("21_e7r8p")
+shader_parameter/albedo = Color(1, 1, 1, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bnct2"]
+shading_mode = 0
+albedo_color = Color(1, 1, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bnct2"]
+render_priority = 0
+shader = ExtResource("23_0vgac")
+
+[sub_resource type="HeightMapShape3D" id="HeightMapShape3D_260s1"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_n51mc"]
+size = Vector3(100, 100, 100)
+
+[sub_resource type="Shader" id="Shader_chq4v"]
+code = "// NOTE: Shader automatically converted from Godot Engine 4.5.2.rc's StandardMaterial3D.
+
+shader_type spatial;
+render_mode blend_mix, depth_draw_always, cull_back, diffuse_burley, specular_schlick_ggx;
+
+uniform vec4 albedo : source_color;
+uniform sampler2D texture_albedo : source_color, filter_linear_mipmap, repeat_enable;
+uniform float alpha_scissor_threshold : hint_range(0.0, 1.0, 0.001);
+uniform ivec2 albedo_texture_size;
+uniform float point_size : hint_range(0.1, 128.0, 0.1);
+
+uniform float roughness : hint_range(0.0, 1.0);
+uniform sampler2D texture_metallic : hint_default_white, filter_linear_mipmap, repeat_enable;
+uniform vec4 metallic_texture_channel;
+uniform sampler2D texture_roughness : hint_roughness_r, filter_linear_mipmap, repeat_enable;
+
+uniform float specular : hint_range(0.0, 1.0, 0.01);
+uniform float metallic : hint_range(0.0, 1.0, 0.01);
+
+uniform vec3 uv1_scale;
+uniform vec3 uv1_offset;
+uniform vec3 uv2_scale;
+uniform vec3 uv2_offset;
+
+void vertex() {
+	UV = UV * uv1_scale.xy + uv1_offset.xy;
+}
+
+void fragment() {
+	vec2 base_uv = UV;
+
+	vec4 albedo_tex = texture(texture_albedo, base_uv);
+	ALBEDO = albedo.rgb * albedo_tex.rgb;
+
+	float metallic_tex = dot(texture(texture_metallic, base_uv), metallic_texture_channel);
+	METALLIC = metallic_tex * metallic;
+	SPECULAR = specular;
+
+	vec4 roughness_texture_channel = vec4(1.0, 0.0, 0.0, 0.0);
+	float roughness_tex = dot(texture(texture_roughness, base_uv), roughness_texture_channel);
+	ROUGHNESS = roughness_tex * roughness;
+	ALPHA *= albedo.a * albedo_tex.a;
+	ALPHA_SCISSOR_THRESHOLD = alpha_scissor_threshold;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_d7rpo"]
+render_priority = 0
+shader = SubResource("Shader_chq4v")
+shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/alpha_scissor_threshold = 0.50000002375
+shader_parameter/albedo_texture_size = Vector2i(256, 256)
+shader_parameter/point_size = 1.0
+shader_parameter/roughness = 1.0
+shader_parameter/metallic_texture_channel = Vector4(1, 0, 0, 0)
+shader_parameter/specular = 0.5
+shader_parameter/metallic = 0.0
+shader_parameter/uv1_scale = Vector3(1, 1, 1)
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
+shader_parameter/uv2_scale = Vector3(1, 1, 1)
+shader_parameter/uv2_offset = Vector3(0, 0, 0)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_fnoqs"]
+radius = 50.0
+height = 200.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d7rpo"]
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+albedo_texture = ExtResource("25_qmegp")
+
+[node name="Main" type="Node3D" unique_id=750667357]
+
+[node name="CellInfoUI" parent="." unique_id=84833305 instance=ExtResource("1_psvbk")]
+unique_name_in_owner = true
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=883196038]
+transform = Transform3D(0.73845536, -0.16427019, 0.653987, 0, 0.969872, 0.24361502, -0.6743024, -0.17989881, 0.71620715, 89.6339, 1302.8066, 98.16165)
+light_angular_distance = 30.0
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1603219920]
+environment = SubResource("Environment_bnct2")
+
+[node name="FreeLookCamera" type="Camera3D" parent="." unique_id=178638961]
+transform = Transform3D(0.97612214, -0.002640671, 0.21720634, 0.0027052572, 0.99999636, 5.8207484e-11, -0.21720555, 0.00058759894, 0.9761257, 1141.0597, 588.09247, -1764.7614)
+top_level = true
+keep_aspect = 0
+current = true
+fov = 55.0
+far = 5000.0
+script = ExtResource("2_vnbon")
+metadata/_custom_type_script = "uid://5b4p0xvske7f"
+
+[node name="Node3D" type="Node3D" parent="FreeLookCamera" unique_id=240286374]
+visible = false
+
+[node name="FreeLookCamera2" type="Camera3D" parent="." unique_id=2076083193]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5823.948, 1520.319, 8086.418)
+fov = 55.0
+script = ExtResource("2_vnbon")
+metadata/_custom_type_script = "uid://5b4p0xvske7f"
+
+[node name="W3MapNode" type="W3MapNode" parent="." unique_id=1528917546 node_paths=PackedStringArray("camera")]
+w3e_map = ExtResource("3_7q4ca")
+ground_textures = Array[Texture2D]([ExtResource("4_w7jns"), ExtResource("4_w7jns"), ExtResource("4_w7jns"), ExtResource("4_w7jns"), ExtResource("5_2pu7o"), ExtResource("5_2pu7o")])
+geo_resources = Array[W3GeoResource]([SubResource("W3GeoResource_fnoqs"), SubResource("W3GeoResource_v40a1")])
+camera = NodePath("../FreeLookCamera")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10240, 0, 10240)
+top_level = true
+visible = false
+
+[node name="W3SurfaceWater" type="W3SurfaceWater" parent="W3MapNode" unique_id=667545736 node_paths=PackedStringArray("map_node")]
+water_material = SubResource("ShaderMaterial_1spff")
+map_node = NodePath("..")
+
+[node name="W3SurfaceGround" type="W3SurfaceGround" parent="W3MapNode" unique_id=24243533 node_paths=PackedStringArray("map_node")]
+ground_material = SubResource("ShaderMaterial_fnoqs")
+geo_material = SubResource("ShaderMaterial_w0q0e")
+debug_material = SubResource("StandardMaterial3D_bnct2")
+render_normals = true
+map_node = NodePath("..")
+
+[node name="W3MapCellSelector" type="W3Surface" parent="W3MapNode" unique_id=1922867328 node_paths=PackedStringArray("map_node")]
+map_node = NodePath("..")
+script = ExtResource("22_2h4r2")
+shader_material = SubResource("ShaderMaterial_bnct2")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="W3MapNode" unique_id=938465191]
+transform = Transform3D(128, 0, 0, 0, 128, 0, 0, 0, 128, 8256, 0, -8256)
+script = ExtResource("24_x3lqj")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="W3MapNode/StaticBody3D" unique_id=710193185]
+shape = SubResource("HeightMapShape3D_260s1")
+debug_color = Color(0, 0.6, 0.7, 0.42)
+
+[node name="Test_MeshInstance3D_0" type="MeshInstance3D" parent="." unique_id=146938219]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1221.9264, -98.78076, -1926.3451)
+mesh = SubResource("BoxMesh_n51mc")
+skeleton = NodePath("../../..")
+surface_material_override/0 = SubResource("ShaderMaterial_d7rpo")
+
+[node name="Test_MeshInstance3D_1" type="MeshInstance3D" parent="." unique_id=274389898]
+transform = Transform3D(1, 0, 0, 0, 0.38268346, 0.92387956, 0, -0.92387956, 0.38268346, 975.7988, -96.208984, -2242.396)
+mesh = SubResource("CapsuleMesh_fnoqs")
+surface_material_override/0 = SubResource("StandardMaterial3D_d7rpo")
