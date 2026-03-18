@@ -2,6 +2,8 @@
 
 A high-performance GDExtension for Godot Engine that renders Warcraft III‑style terrain (`.w3e` files) in real‑time 3D. It provides a `W3MapNode` scene node that loads W3E terrain data, manages ground and cliff assets, and renders the landscape with dynamic section culling, LOD, and efficient memory caching.
 
+![Screenshot](screenshots/screenshot.jpg)
+
 ## Features
 
 - **W3E file support** – Load and edit standard Warcraft III terrain files (`.w3e`).
