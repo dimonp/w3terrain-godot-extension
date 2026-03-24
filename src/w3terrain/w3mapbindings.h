@@ -27,6 +27,7 @@ protected:
     godot::Variant get_cellpoint_type(const godot::Vector2i& coords) const;
     godot::Variant get_cellpoint_layer(const godot::Vector2i& coords) const;
     godot::Variant get_cellpoint_ground_height(const godot::Vector2i& coords) const;
+    godot::Variant get_cellpoint_water_height(const godot::Vector2i& coords) const;
     godot::Variant get_cellpoint_position(const godot::Vector2i& coords) const;
     godot::Variant get_cell_height(const godot::Vector2i& coords) const;
     godot::Variant get_height_at_point(const godot::Vector3& point) const;

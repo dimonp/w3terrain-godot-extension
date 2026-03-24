@@ -15,6 +15,7 @@ W3MapBindings::_bind_methods()
     godot::ClassDB::bind_method(godot::D_METHOD("get_cellpoint_type", "coord"), &W3MapBindings::get_cellpoint_type);
     godot::ClassDB::bind_method(godot::D_METHOD("get_cellpoint_layer", "coord"), &W3MapBindings::get_cellpoint_layer);
     godot::ClassDB::bind_method(godot::D_METHOD("get_cellpoint_ground_height", "coord"), &W3MapBindings::get_cellpoint_ground_height);
+    godot::ClassDB::bind_method(godot::D_METHOD("get_cellpoint_water_height", "coord"), &W3MapBindings::get_cellpoint_water_height);
     godot::ClassDB::bind_method(godot::D_METHOD("get_cellpoint_position", "coord"), &W3MapBindings::get_cellpoint_position);
     godot::ClassDB::bind_method(godot::D_METHOD("get_cell_height", "coord"), &W3MapBindings::get_cell_height);
     godot::ClassDB::bind_method(godot::D_METHOD("get_height_at_point", "point"), &W3MapBindings::get_height_at_point);
@@ -112,11 +113,9 @@ godot::Variant
 W3MapBindings::get_cellpoint_layer(const godot::Vector2i& coords) const
 {
     if (!w3e_map().is_valid()) {
-        w3_log_error("W3E map is not valid.");
         return godot::Variant::NIL;
     }
     if (!w3e_map()->is_valid_cellpoint(coords.x, coords.y)) {
-        w3_log_error("Cellpoint is not valid.");
         return godot::Variant::NIL;
     }
     return w3e_map()->get_cellpoint_layer(coords.x, coords.y);
@@ -126,14 +125,24 @@ godot::Variant
 W3MapBindings::get_cellpoint_ground_height(const godot::Vector2i& coords) const
 {
     if (!w3e_map().is_valid()) {
-        w3_log_error("W3E map is not valid.");
         return godot::Variant::NIL;
     }
     if (!w3e_map()->is_valid_cellpoint(coords.x, coords.y)) {
-        w3_log_error("Cellpoint is not valid.");
         return godot::Variant::NIL;
     }
     return w3e_map()->get_cellpoint_ground_height(coords.x, coords.y);
+}
+
+godot::Variant
+W3MapBindings::get_cellpoint_water_height(const godot::Vector2i& coords) const
+{
+    if (!w3e_map().is_valid()) {
+        return godot::Variant::NIL;
+    }
+    if (!w3e_map()->is_valid_cellpoint(coords.x, coords.y)) {
+        return godot::Variant::NIL;
+    }
+    return w3e_map()->get_cellpoint_water_height(coords.x, coords.y);
 }
 
 godot::Variant
@@ -188,9 +197,6 @@ W3MapBindings::pick_cell_by_ray(const godot::Vector3& ray_origin, const godot::V
 godot::Variant
 W3MapBindings::pick_cell_by_screen_position(const godot::Vector2i& screen_position) const
 {
-    if (!w3e_map().is_valid()) {
-        w3_log_error("W3E map is not valid.");
-    }
     const godot::Camera3D* p_camera = map_node_->get_camera();
     if (p_camera == nullptr) {
         return godot::Variant::NIL;
