@@ -1,4 +1,9 @@
 #include <godot_cpp/classes/engine.hpp>
+#ifdef EDITOR_SUPPORT_ENABLE
+#include <godot_cpp/classes/editor_interface.hpp>
+#include <godot_cpp/classes/sub_viewport.hpp>
+#endif
+
 #include "w3mapsectionmanager_impl.h"
 #include "w3mapcollector_impl.h"
 #include "w3mapnode.h"
@@ -9,7 +14,17 @@ void
 W3MapNode::collect_visible_sections()
 {
     static uint64_t last_farme_id = std::numeric_limits<uint64_t>::max();
+
+
     const godot::Camera3D* camera = get_camera();
+
+#ifdef EDITOR_SUPPORT_ENABLE
+    if (use_editor_camera_ && godot::Engine::get_singleton()->is_editor_hint()) {
+        godot::EditorInterface *editor_gui = godot::EditorInterface::get_singleton();
+        camera = editor_gui->get_editor_viewport_3d(0)->get_camera_3d();
+    }
+#endif
+
     if (camera == nullptr) {
         return;
     }
@@ -21,8 +36,8 @@ W3MapNode::collect_visible_sections()
     const uint64_t frame_id = godot::Engine::get_singleton()->get_process_frames();
     if (last_farme_id != frame_id) {
         collector_->collect_visible(
-            camera->get_camera_projection(), 
-            camera->get_global_transform(), 
+            camera->get_camera_projection(),
+            camera->get_global_transform(),
             get_global_transform());
 
         for(uint32_t section_id : collector_->get_visible_sections()) {

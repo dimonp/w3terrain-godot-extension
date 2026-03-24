@@ -1,7 +1,7 @@
 #ifndef _W3MAPBINDINGS_EDITOR__H
 #define _W3MAPBINDINGS_EDITOR__H
 
-#include <godot_cpp/classes/ref_counted.hpp>
+#include <godot_cpp/classes/object.hpp>
 
 namespace w3terr {
 

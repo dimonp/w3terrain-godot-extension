@@ -27,6 +27,7 @@ W3MapNode::_bind_methods()
             godot::PROPERTY_USAGE_INTERNAL),
         "", "get_map");
 
+#ifdef EDITOR_SUPPORT_ENABLE
     godot::ClassDB::bind_method(godot::D_METHOD("get_editor"), &W3MapNode::get_bindings_editor);
     ADD_PROPERTY(
         godot::PropertyInfo(godot::Variant::OBJECT, "editor",
@@ -34,6 +35,7 @@ W3MapNode::_bind_methods()
             "W3MapBindingsEditor",
             godot::PROPERTY_USAGE_INTERNAL),
         "", "get_editor");
+#endif
 
     godot::ClassDB::bind_method(godot::D_METHOD("get_w3e_map"), &W3MapNode::get_w3e_resource);
     godot::ClassDB::bind_method(godot::D_METHOD("set_w3e_map", "map"), &W3MapNode::set_w3e_resource);
@@ -61,6 +63,16 @@ W3MapNode::_bind_methods()
             godot::PROPERTY_HINT_ARRAY_TYPE,
             W3String::num(godot::Variant::OBJECT) + "/" + W3String::num(godot::PROPERTY_HINT_RESOURCE_TYPE) + ":W3GeoResource"),
         "set_geo_resources", "get_geo_resources");
+
+    ADD_GROUP("Camera", "camera_");
+#ifdef EDITOR_SUPPORT_ENABLE
+    godot::ClassDB::bind_method(godot::D_METHOD("is_editor_camera"), &W3MapNode::is_editor_camera);
+    godot::ClassDB::bind_method(godot::D_METHOD("use_editor_camera", "flag"), &W3MapNode::use_editor_camera);
+    ADD_PROPERTY(godot::PropertyInfo(godot::Variant::BOOL, "use_editor_camera",
+        godot::PROPERTY_HINT_NONE, "", godot::PROPERTY_USAGE_EDITOR),
+        "use_editor_camera", "is_editor_camera"
+    );
+#endif
 
     godot::ClassDB::bind_method(godot::D_METHOD("get_camera"), &W3MapNode::get_camera);
     godot::ClassDB::bind_method(godot::D_METHOD("set_camera", "p_camera"), &W3MapNode::set_camera);
@@ -144,9 +156,11 @@ W3MapNode::_enter_tree() {
         map_bindings_.reset(memnew(W3MapBindings(this)));
     }
 
+#ifdef EDITOR_SUPPORT_ENABLE
     if (!map_bindings_editor_) {
         map_bindings_editor_.reset(memnew(W3MapBindingsEditor(this)));
     }
+#endif
 
     const godot::Camera3D* p_camera = get_camera();
     if (p_camera != nullptr) {
@@ -175,11 +189,10 @@ W3MapNode::_exit_tree()
 
 void
 W3MapNode::_ready() {
-    auto* rs = godot::RenderingServer::get_singleton();
-
+    auto* rsrv = godot::RenderingServer::get_singleton();
     const auto callable_frame_post_draw = callable_mp(this, &W3MapNode::on_frame_rendered);
-    if (!rs->is_connected("frame_post_draw", callable_frame_post_draw)) {
-        rs->connect("frame_post_draw", callable_frame_post_draw);
+    if (!rsrv->is_connected("frame_post_draw", callable_frame_post_draw)) {
+        rsrv->connect("frame_post_draw", callable_frame_post_draw);
     }
 }
 
@@ -265,6 +278,20 @@ W3MapNode::set_geo_resources(const godot::TypedArray<W3GeoResource>& resources)
     prepare_geo_assets_rt();
     emit_signal(kSignalGeoAssetsChanged);
 }
+
+#ifdef EDITOR_SUPPORT_ENABLE
+bool
+W3MapNode::is_editor_camera() const
+{
+    return use_editor_camera_;
+}
+
+void
+W3MapNode::use_editor_camera(bool flag)
+{
+    use_editor_camera_ = flag;
+}
+#endif
 
 godot::Camera3D*
 W3MapNode::get_camera() const {

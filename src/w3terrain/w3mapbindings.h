@@ -1,9 +1,7 @@
 #ifndef _W3MAPBINDINGS__H
 #define _W3MAPBINDINGS__H
 
-#include <godot_cpp/classes/ref_counted.hpp>
-
-#include "w3math.h"
+#include <godot_cpp/classes/object.hpp>
 
 namespace w3terr {
 
@@ -33,7 +31,8 @@ protected:
     godot::Variant get_cell_height(const godot::Vector2i& coords) const;
     godot::Variant get_height_at_point(const godot::Vector3& point) const;
 
-    godot::Variant pick_cell_by_screen_position(const math::vector2& screen_position) const;
+    godot::Variant pick_cell_by_screen_position(const godot::Vector2i& screen_position) const;
+    godot::Variant pick_cell_by_ray(const godot::Vector3& ray_origin, const godot::Vector3& ray_direction) const;
 
 private:
     auto w3e_map() const;

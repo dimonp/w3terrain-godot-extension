@@ -23,8 +23,11 @@ set(CMAKE_VERBOSE_MAKEFILE ON CACHE BOOL "Enable verbose output" FORCE)
 
 option(gdextension_w3terrain_ENABLE_ASAN "Enable Address Sanitizer" OFF)
 option(gdextension_w3terrain_ENABLE_IPO "Enable IPO/LTO" ON)
-option(gdextension_w3terrain_DEBUG_COUNTERS_ENABLE "Performance monitor counters" ON)
 option(gdextension_w3terrain_ENABLE_AVX "Enable AVX instructions" ON)
+
+option(gdextension_w3terrain_EDITOR_SUPPORT_ENABLE "Enable Godot editor support" ON)
+option(gdextension_w3terrain_DEBUG_COUNTERS_ENABLE "Performance monitor counters" ON)
+
 
 # Now we can specify our own project which will inherit any global cmake properties or variables that have been defined.
 project(gdextension_w3terrain
@@ -102,9 +105,14 @@ get_target_property(GODOTCPP_PLATFORM godot::cpp GODOTCPP_PLATFORM)
 add_library(${LIBNAME} SHARED)
 
 target_compile_definitions(${LIBNAME} PRIVATE W3_PROJECT_BUILD_DLL)
+
 if(gdextension_w3terrain_DEBUG_COUNTERS_ENABLE)
     target_compile_definitions(${LIBNAME} PRIVATE W3MAP_STATS_ENABLE)
 endif()
+if(gdextension_w3terrain_EDITOR_SUPPORT_ENABLE)
+    target_compile_definitions(${LIBNAME} PRIVATE EDITOR_SUPPORT_ENABLE)
+endif()
+
 target_link_libraries(${LIBNAME} PRIVATE ${LIBNAME}_options)
 
 file(GLOB TILETERRAIN_SOURCE_FILES "src/w3terrain/*.cpp")

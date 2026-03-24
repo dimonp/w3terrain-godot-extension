@@ -19,6 +19,7 @@ W3MapBindings::_bind_methods()
     godot::ClassDB::bind_method(godot::D_METHOD("get_cell_height", "coord"), &W3MapBindings::get_cell_height);
     godot::ClassDB::bind_method(godot::D_METHOD("get_height_at_point", "point"), &W3MapBindings::get_height_at_point);
     godot::ClassDB::bind_method(godot::D_METHOD("pick_cell_by_screen_position", "screen_position"), &W3MapBindings::pick_cell_by_screen_position);
+    godot::ClassDB::bind_method(godot::D_METHOD("pick_cell_by_ray", "origin", "direction"), &W3MapBindings::pick_cell_by_ray);
 }
 
 inline
@@ -171,7 +172,21 @@ W3MapBindings::get_height_at_point(const godot::Vector3& point) const
 }
 
 godot::Variant
-W3MapBindings::pick_cell_by_screen_position(const math::vector2& screen_position) const
+W3MapBindings::pick_cell_by_ray(const godot::Vector3& ray_origin, const godot::Vector3& ray_direction) const
+{
+    godot::Transform3D node_transform = map_node_->get_global_transform();
+    math::line3 ray(node_transform.xform_inv(ray_origin), ray_direction);
+
+    math::vector3 ipoint;
+    std::optional<Coord2D> coords = map_node_->get_intersected_cell(ray, ipoint);
+    if (coords.has_value()) {
+        return godot::Vector2i { coords->x , coords->y };
+    }
+    return godot::Variant::NIL;
+}
+
+godot::Variant
+W3MapBindings::pick_cell_by_screen_position(const godot::Vector2i& screen_position) const
 {
     if (!w3e_map().is_valid()) {
         w3_log_error("W3E map is not valid.");
@@ -182,17 +197,9 @@ W3MapBindings::pick_cell_by_screen_position(const math::vector2& screen_position
     }
 
     math::vector3 ray_origin = p_camera->project_ray_origin(screen_position);
-    math::vector3 ray_direction= p_camera->project_ray_normal(screen_position) * 100000.0F;
+    math::vector3 ray_direction = p_camera->project_ray_normal(screen_position);
 
-    godot::Transform3D node_transform = map_node_->get_global_transform();
-    math::line3 ray(node_transform.xform_inv(ray_origin), ray_direction);
-
-    math::vector3 ipoint;
-    std::optional<Coord2D> coords = map_node_->get_intersected_cell(ray, ipoint);
-    if (coords.has_value()) {
-        return godot::Vector2i { coords->x , coords->y };
-    }
-    return godot::Variant::NIL;
+    return pick_cell_by_ray(ray_origin, ray_direction);
 }
 
 }  // namespace w3terr

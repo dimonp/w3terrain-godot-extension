@@ -10,7 +10,9 @@
 
 #include "w3defs.h"
 #include "w3mapbindings.h"
+#ifdef EDITOR_SUPPORT_ENABLE
 #include "w3mapbindingseditor.h"
+#endif
 #include "w3mapassets_impl.h"
 
 namespace w3terr {
@@ -41,13 +43,19 @@ public:
     godot::TypedArray<W3GeoResource> get_geo_resources() const;
     void set_geo_resources(const godot::TypedArray<W3GeoResource>& resources);
 
+#ifdef EDITOR_SUPPORT_ENABLE
+    bool is_editor_camera() const;
+    void use_editor_camera(bool flag);
+#endif
+
     godot::Camera3D* get_camera() const;
     void set_camera(godot::Camera3D* p_camera);
     bool is_camera_valid() const;
 
     W3MapBindings* get_bindings() const;
+#ifdef EDITOR_SUPPORT_ENABLE
     W3MapBindingsEditor* get_bindings_editor() const;
-
+#endif
     bool refresh_runtime();
 
     const W3MapAssets* get_assets() const;
@@ -74,7 +82,9 @@ protected:
     static void _bind_methods();
 
 private:
+#ifdef W3MAP_STATS_ENABLE
     static constexpr auto kStatCacheAllocationSizeId = "W3Terrain/cache_allocation_size";
+#endif
 
     bool load_map();
     void reset_runtime();
@@ -89,6 +99,7 @@ private:
     std::unique_ptr<W3MapBindings, GodotObjectDeleter<W3MapBindings>> map_bindings_;
     std::unique_ptr<W3MapBindingsEditor, GodotObjectDeleter<W3MapBindingsEditor>> map_bindings_editor_;
 
+    bool use_editor_camera_ = false;
     godot::ObjectID camera_id_;
 
 #ifdef W3MAP_STATS_ENABLE
