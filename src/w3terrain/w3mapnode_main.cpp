@@ -76,6 +76,7 @@ W3MapNode::W3MapNode()
     : informator_(new W3MapInformatorImpl(this))
 {}
 
+// Need it for PIMPL dependecies
 W3MapNode::~W3MapNode() = default;
 
 godot::AABB
@@ -172,7 +173,7 @@ W3MapNode::_exit_tree()
 #endif
 }
 
-void 
+void
 W3MapNode::_ready() {
     auto* rs = godot::RenderingServer::get_singleton();
 

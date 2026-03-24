@@ -44,8 +44,8 @@ W3MapCollectorImpl::build_quad_tree(const math::bbox3& root_bbox, uint8_t depth)
 
 void
 W3MapCollectorImpl::collect_visible(
-    const godot::Projection camera_projection,
-    const godot::Transform3D camera_transform,
+    const godot::Projection& camera_projection,
+    const godot::Transform3D& camera_transform,
     const godot::Transform3D& node_transform
 ) {
     static uint64_t last_farme_id = std::numeric_limits<uint64_t>::max();

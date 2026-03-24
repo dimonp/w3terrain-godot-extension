@@ -13,8 +13,8 @@ public:
     virtual void collect_intersected(const math::line3& line, W3Array<uint32_t>& sections) const = 0;
 
     virtual void collect_visible(
-        const godot::Projection camera_projection, 
-        const godot::Transform3D camera_transform, 
+        const godot::Projection& camera_projection,
+        const godot::Transform3D& camera_transform,
         const godot::Transform3D& node_transform) = 0;
     virtual const W3Array<uint32_t>& get_visible_sections() const = 0;
 };
