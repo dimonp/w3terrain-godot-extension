@@ -273,7 +273,7 @@ script = ExtResource("18_v1rnm")
 water_material = SubResource("ShaderMaterial_1spff")
 map_node = NodePath("..")
 
-[node name="W3SurfaceGround" type="W3SurfaceGround" parent="W3MapNode" unique_id=897660975 node_paths=PackedStringArray("map_node")]
+[node name="W3SurfaceTerrain" type="W3SurfaceTerrain" parent="W3MapNode" unique_id=897660975 node_paths=PackedStringArray("map_node")]
 ground_material = SubResource("ShaderMaterial_fnoqs")
 geo_material = SubResource("ShaderMaterial_w0q0e")
 debug_material = SubResource("StandardMaterial3D_bnct2")

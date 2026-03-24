@@ -46,7 +46,7 @@ private:
     W3Pair<VertexSpan, IndexSpan> precache_cells(uint32_t section_id) const;
     void render_cached_mesh(VertexSpan vertices, IndexSpan indices);
 
-    W3HashMap<uint32_t, bool> section_rendered_flags_;
+    W3Array<bool> section_rendered_flags_;
     W3Array<uint32_t> not_rendered_sections_;
 
     W3Ref<W3Marerial> water_material_asset_;

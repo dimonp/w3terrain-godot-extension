@@ -9,7 +9,7 @@
 #include "w3terrain/w3mapnode.h"
 #include "w3terrain/w3mapbindings.h"
 #include "w3terrain/w3mapbindingseditor.h"
-#include "w3terrain/w3surfaceground.h"
+#include "w3terrain/w3surfaceterrain.h"
 #include "w3terrain/w3surfacewater.h"
 
 namespace {
@@ -28,7 +28,7 @@ void initialize_gdextension_types(godot::ModuleInitializationLevel p_level)
 	GDREGISTER_CLASS(w3terr::W3MapNode);
 	GDREGISTER_CLASS(w3terr::W3GeoResource);
 	GDREGISTER_CLASS(w3terr::W3Surface)
-	GDREGISTER_CLASS(w3terr::W3SurfaceGround);
+	GDREGISTER_CLASS(w3terr::W3SurfaceTerrain);
 	GDREGISTER_CLASS(w3terr::W3SurfaceWater);
 	GDREGISTER_CLASS(w3terr::W3MapBindings);
 	GDREGISTER_CLASS(w3terr::W3MapBindingsEditor);

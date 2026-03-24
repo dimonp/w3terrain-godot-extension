@@ -260,7 +260,6 @@ metadata/_custom_type_script = "uid://5b4p0xvske7f"
 
 [node name="CameraDebug" type="Node3D" parent="FreeLookCamera" unique_id=1584251417]
 transform = Transform3D(1, 3.2014214e-10, 0, 8.731149e-11, 1, 0, 1.4901161e-08, 0, 1, 0, 0, 0)
-visible = false
 script = ExtResource("6_hehhk")
 
 [node name="W3MapNode" type="W3MapNode" parent="." unique_id=815498597 node_paths=PackedStringArray("camera")]
@@ -276,7 +275,7 @@ script = ExtResource("18_7ks05")
 water_material = SubResource("ShaderMaterial_1spff")
 map_node = NodePath("..")
 
-[node name="W3SurfaceGround" type="W3SurfaceGround" parent="W3MapNode" unique_id=776721820 node_paths=PackedStringArray("map_node")]
+[node name="W3SurfaceTerrain" type="W3SurfaceTerrain" parent="W3MapNode" unique_id=776721820 node_paths=PackedStringArray("map_node")]
 ground_material = SubResource("ShaderMaterial_fnoqs")
 geo_material = SubResource("ShaderMaterial_w0q0e")
 debug_material = SubResource("StandardMaterial3D_bnct2")

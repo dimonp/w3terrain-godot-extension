@@ -1,6 +1,6 @@
 find_package(GTest CONFIG REQUIRED)
 
-add_executable(w3terrain_test 
+add_executable(w3terrain_test
     main.cpp
     collector_test.cpp
     section_manager_test.cpp
@@ -23,7 +23,8 @@ if(WIN32)
     TARGET w3terrain_test
     POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:w3terrain_test> $<TARGET_FILE_DIR:w3terrain_test>
-    COMMAND_EXPAND_LISTS)
+    COMMAND_EXPAND_LISTS
+)
 endif()
 
 include(GoogleTest)

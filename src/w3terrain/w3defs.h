@@ -3,8 +3,6 @@
 
 #include <cassert>
 #include <cstdint>
-#include <vector>
-#include <unordered_map>
 
 #include <godot_cpp/variant/string.hpp>
 #include <godot_cpp/variant/typed_array.hpp>
@@ -12,6 +10,13 @@
 #include <godot_cpp/classes/mesh.hpp>
 #include <godot_cpp/classes/texture2d.hpp>
 #include <godot_cpp/classes/material.hpp>
+
+#if __has_include(<flat_map>)
+    #include <flat_map>
+    #define HAS_FLATMAP
+#else
+    #include <unordered_map>
+#endif
 
 namespace w3terr {
 
@@ -25,11 +30,17 @@ using W3Texture = godot::Texture2D;
 using W3Marerial = godot::Material;
 using W3Color = godot::Color;
 
+#ifdef HAS_FLATMAP
+    template <typename Key, typename Tp>
+    using W3FlatMap = std::flat_map<Key,Tp>;
+#else
+    template <typename Key, typename Tp>
+    using W3FlatMap = std::unordered_map<Key,Tp>;
+#endif
+
+
 template <typename T>
 using W3Ref = godot::Ref<T>;
-
-template <typename Key, typename Tp>
-using W3HashMap = std::unordered_map<Key,Tp>;
 
 template <typename T1, typename T2>
 using W3Pair = std::pair<T1, T2>;

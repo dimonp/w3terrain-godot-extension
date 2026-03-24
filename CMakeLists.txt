@@ -38,6 +38,9 @@ find_package(Python3 3.4 REQUIRED)
 find_program(GIT git REQUIRED)
 find_package(Microsoft.GSL CONFIG REQUIRED)
 
+include(ProjectOptions.cmake)
+gdextension_w3terrain_options()
+
 # Ensure godot-cpp submodule has been updated
 if(NOT EXISTS "${CMAKE_CURRENT_LIST_DIR}/godot-cpp/src")
     message(NOTICE "godot-cpp bindings source not found")
@@ -51,6 +54,7 @@ if(NOT EXISTS "${CMAKE_CURRENT_LIST_DIR}/godot-cpp/src")
 endif()
 set(GODOTCPP_TARGET "$<IF:$<CONFIG:Debug>,template_debug,template_release>")
 add_subdirectory(godot-cpp SYSTEM)
+target_link_libraries(godot-cpp PRIVATE ${LIBNAME}_options)
 
 # Add godot-cpp's module path and include the exported functions.
 # This is made available for documentation generation
@@ -94,9 +98,6 @@ add_subdirectory(quadtree SYSTEM)
 # The godot-cpp target has some of useful properties attached that can be retrieved like so.
 get_target_property(GODOTCPP_SUFFIX godot::cpp GODOTCPP_SUFFIX)
 get_target_property(GODOTCPP_PLATFORM godot::cpp GODOTCPP_PLATFORM)
-
-include(ProjectOptions.cmake)
-gdextension_w3terrain_options()
 
 add_library(${LIBNAME} SHARED)
 

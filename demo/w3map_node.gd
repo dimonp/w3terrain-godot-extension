@@ -38,8 +38,8 @@ func _on_w_3_map_cell_selector_selector_changed(coords: Vector2i) -> void:
 	if type is int:
 		cell_info_ui.cell_type = type
 
-	var ground_tileset = map.get_cellpoint_ground_tilset(cell_coords)
-	var geo_tileset = map.get_cellpoint_geo_tilset(cell_coords)
+	var ground_tileset = map.get_cellpoint_ground_tileset(cell_coords)
+	var geo_tileset = map.get_cellpoint_geo_tileset(cell_coords)
 	if ground_tileset is int and geo_tileset is int:
 		cell_info_ui.cell_tileset = Vector2i(ground_tileset, geo_tileset)
 

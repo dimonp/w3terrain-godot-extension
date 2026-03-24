@@ -10,8 +10,8 @@
 
 namespace w3terr {
 
-class W3SurfaceGround final: public W3Surface {
-    GDCLASS(W3SurfaceGround, W3Surface)
+class W3SurfaceTerrain final: public W3Surface {
+    GDCLASS(W3SurfaceTerrain, W3Surface)
 public:
     W3Ref<W3Marerial> get_ground_material() const;
     void set_ground_material(const W3Ref<W3Marerial>& material);
@@ -62,7 +62,6 @@ private:
 
     void render_geo_cells(uint32_t section_id, size_t tileset_id, bool render_as_normals);
     W3Pair<VertexSpan, IndexSpan> precache_geo_cells(uint32_t section_id, size_t tileset_id) const;
-    W3Pair<VertexSpan, IndexSpan> precache_geo_cells_fake(uint32_t section_id, size_t tileset_id) const;
 
 
     void render_cached_mesh(VertexSpan vertices, IndexSpan indices);
@@ -78,7 +77,7 @@ private:
     bool render_normals_ = false;
     W3Ref<W3Marerial> debug_material_;
 
-    W3HashMap<uint32_t, bool> section_rendered_flags_;
+    W3Array<bool> section_rendered_flags_;
     W3Array<uint32_t> not_rendered_sections_;
 
     W3Ref<godot::ShaderMaterial> ground_material_asset_;
@@ -105,7 +104,7 @@ private:
 
 inline
 godot::AABB
-W3SurfaceGround::_get_aabb() const
+W3SurfaceTerrain::_get_aabb() const
 {
     return mesh_->get_aabb();
 }

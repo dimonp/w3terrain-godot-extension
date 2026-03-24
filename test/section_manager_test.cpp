@@ -7,40 +7,38 @@
 #include "w3terrain/w3mapsectionmanager_impl.h"
 #include "mock_uitils.h"
 
-namespace w3terr {
+namespace {
 
-class MockRuntimeManager : public W3MapRuntimeManager {
+class MockRuntimeManager : public w3terr::W3MapRuntimeManager {
 public:
-    MOCK_METHOD(const CellPointRT&, get_cellpoint_rt, (const Coord2D&), (const, override));
-    MOCK_METHOD(float, get_cellpoint_layer_height, (const Coord2D&), (const, override));
-    MOCK_METHOD(float, get_cellpoint_ground_height, (const Coord2D&), (const, override));
-    MOCK_METHOD(math::vector3, get_cellpoint_position, (const Coord2D&), (const, override));
-    MOCK_METHOD(math::vector3, get_cellpoint_water_position, (const Coord2D&), (const, override));
-    MOCK_METHOD(math::bbox3, get_cell_bbox, (const Coord2D&), (const, override));
-    MOCK_METHOD(float, get_cell_ground_height, (const Coord2D&, float, float), (const, override));
-    MOCK_METHOD(bool, test_cell_intersection, (const Coord2D&, const math::line3&), (const, override));
-    MOCK_METHOD(std::optional<math::vector3>, get_cell_intersection_point, (const Coord2D&, const math::line3&), (const, override));
+    MOCK_METHOD(const CellPointRT&, get_cellpoint_rt, (const w3terr::Coord2D&), (const, override));
+    MOCK_METHOD(float, get_cellpoint_layer_height, (const w3terr::Coord2D&), (const, override));
+    MOCK_METHOD(float, get_cellpoint_ground_height, (const w3terr::Coord2D&), (const, override));
+    MOCK_METHOD(w3terr::math::vector3, get_cellpoint_position, (const w3terr::Coord2D&), (const, override));
+    MOCK_METHOD(w3terr::math::vector3, get_cellpoint_water_position, (const w3terr::Coord2D&), (const, override));
+    MOCK_METHOD(w3terr::math::bbox3, get_cell_bbox, (const w3terr::Coord2D&), (const, override));
+    MOCK_METHOD(float, get_cell_ground_height, (const w3terr::Coord2D&, float, float), (const, override));
+    MOCK_METHOD(bool, test_cell_intersection, (const w3terr::Coord2D&, const w3terr::math::line3&), (const, override));
+    MOCK_METHOD(std::optional<w3terr::math::vector3>, get_cell_intersection_point, (const w3terr::Coord2D&, const w3terr::math::line3&), (const, override));
 
     MOCK_METHOD(void, update_all_cells_rt, (), (override));
-    MOCK_METHOD(void, update_cell_rt, (const Coord2D&), (override));
-    MOCK_METHOD(void, update_area_rt, (const Coord2D&, int32_t), (override));
+    MOCK_METHOD(void, update_cell_rt, (const w3terr::Coord2D&), (override));
+    MOCK_METHOD(void, update_area_rt, (const w3terr::Coord2D&, int32_t), (override));
     MOCK_METHOD(bool, is_dirty, (), (const, override));
     MOCK_METHOD(void, set_dirty, (bool), (override));
 };
 
-class MockAssets : public W3MapAssets {
+class MockAssets : public w3terr::W3MapAssets {
 public:
-    MOCK_METHOD(W3e*, get_w3e, (), (const, override));
+    MOCK_METHOD(w3terr::W3e*, get_w3e, (), (const, override));
 };
-
-}  // namespace w3terr
 
 class SectionManagerTestFixture : public ::testing::Test {
 protected:
     w3terr::W3e w3e_5x5_;
     w3terr::W3e w3e_9x9_;
-    ::testing::NiceMock<w3terr::MockAssets> assets_;
-    w3terr::MockRuntimeManager runtime_manager_;
+    ::testing::NiceMock<MockAssets> assets_;
+    MockRuntimeManager runtime_manager_;
 
     void SetUp() override
     {
@@ -52,6 +50,9 @@ protected:
 
     void TearDown() override {}
 };
+
+}  // namespace
+
 
 TEST_F(SectionManagerTestFixture, InitializeWithValidParameters)
 {

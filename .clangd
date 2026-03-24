@@ -23,6 +23,17 @@ CompileFlags:
     - -Wno-unused-function
     - -Wno-unused-variable
 ---
+# Code-specific conditions.
+
+If:
+  PathMatch: .*\.cpp
+
+CompileFlags:
+  Remove:
+    - -fno-gnu-unique
+
+
+---
 # Suppress all third-party warnings.
 
 If:

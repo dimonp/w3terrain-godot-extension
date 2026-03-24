@@ -8,9 +8,11 @@
 #include "w3terrain/w3mapinformator_impl.h"
 #include "mock_uitils.h"
 
+namespace {
+
 class MockAssets : public w3terr::W3MapAssets {
 public:
-    MockAssets() 
+    MockAssets()
     {
         ground_assets_rt_.resize(2);
         geo_assets_rt_.resize(2);
@@ -38,6 +40,8 @@ protected:
 
     void TearDown() override {}
 };
+
+}  // namespace
 
 using W3CPInfo = w3terr::W3MapInformator::W3CPInfo;
 

@@ -1,7 +1,6 @@
 #ifndef _W3MAPASSETS__H
 #define _W3MAPASSETS__H
 
-
 #include <godot_cpp/classes/json.hpp>
 
 #include "w3defs.h"
@@ -21,9 +20,9 @@ public:
 
     struct GeoAsset {
         W3Ref<W3Mesh> cliff_geoset_mesh;
-        W3HashMap<uint32_t, uint32_t> geo_cliff_keys_map;
+        W3FlatMap<uint32_t, uint32_t> geo_cliff_keys_map;
         W3Ref<W3Mesh> ramp_geoset_mesh;
-        W3HashMap<uint32_t, uint32_t> geo_ramp_keys_map;
+        W3FlatMap<uint32_t, uint32_t> geo_ramp_keys_map;
         W3Ref<W3Texture> texture;
         uint32_t ground_tileset_id = 0;
     };

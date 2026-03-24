@@ -168,16 +168,15 @@ W3MapAssetsImpl::load_geo_config(size_t tileset_id, const W3Ref<godot::JSON>& co
     return true;
 }
 
+template<typename TMap>
 bool
-W3MapAssetsImpl::parse_geoset_resource(const godot::Dictionary& geoset, W3HashMap<uint32_t, uint32_t> &geo_keys_map)
+W3MapAssetsImpl::parse_geoset_resource(const godot::Dictionary& geoset, TMap &geo_keys_map)
 {
     size_t geoset_groups_count = static_cast<size_t>(geoset["count"]);
     if (geoset_groups_count == 0) {
         w3_log_error("XML geo config file error.");
         return false;
     }
-
-    geo_keys_map.reserve(geoset_groups_count);
 
     const godot::Variant gropups_data = geoset["groups"];
     if (gropups_data.get_type() != godot::Variant::DICTIONARY) {

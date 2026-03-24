@@ -10,8 +10,8 @@ W3MapBindings::_bind_methods()
     godot::ClassDB::bind_method(godot::D_METHOD("get_map_name"), &W3MapBindings::get_map_name);
     godot::ClassDB::bind_method(godot::D_METHOD("get_map_size"), &W3MapBindings::get_map_size);
     godot::ClassDB::bind_method(godot::D_METHOD("get_cell_bbox", "coord"), &W3MapBindings::get_cell_bbox);
-    godot::ClassDB::bind_method(godot::D_METHOD("get_cellpoint_ground_tilset", "coord"), &W3MapBindings::get_cellpoint_grond_tileset);
-    godot::ClassDB::bind_method(godot::D_METHOD("get_cellpoint_geo_tilset", "coord"), &W3MapBindings::get_cellpoint_geo_tileset);
+    godot::ClassDB::bind_method(godot::D_METHOD("get_cellpoint_ground_tileset", "coord"), &W3MapBindings::get_cellpoint_grond_tileset);
+    godot::ClassDB::bind_method(godot::D_METHOD("get_cellpoint_geo_tileset", "coord"), &W3MapBindings::get_cellpoint_geo_tileset);
     godot::ClassDB::bind_method(godot::D_METHOD("get_cellpoint_type", "coord"), &W3MapBindings::get_cellpoint_type);
     godot::ClassDB::bind_method(godot::D_METHOD("get_cellpoint_layer", "coord"), &W3MapBindings::get_cellpoint_layer);
     godot::ClassDB::bind_method(godot::D_METHOD("get_cellpoint_ground_height", "coord"), &W3MapBindings::get_cellpoint_ground_height);
@@ -71,7 +71,7 @@ W3MapBindings::get_cell_bbox(const godot::Vector2i& coords) const
     return get_runtime()->get_cell_bbox(static_cast<Coord2D>(coords));
 }
 
-godot::Variant 
+godot::Variant
 W3MapBindings::get_cellpoint_grond_tileset(const godot::Vector2i& coords) const
 {
     if (w3e_map().is_null()) {
@@ -83,7 +83,7 @@ W3MapBindings::get_cellpoint_grond_tileset(const godot::Vector2i& coords) const
     return w3e_map()->get_cellpoint(coords.x, coords.y).ground_tileset;
 }
 
-godot::Variant 
+godot::Variant
 W3MapBindings::get_cellpoint_geo_tileset(const godot::Vector2i& coords) const
 {
     if (w3e_map().is_null()) {

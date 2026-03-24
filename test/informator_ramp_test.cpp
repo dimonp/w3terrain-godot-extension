@@ -5,6 +5,8 @@
 #include "w3terrain/w3mapinformator_impl.h"
 #include "mock_uitils.h"
 
+namespace {
+
 class MockAssets : public w3terr::W3MapAssets {
 public:
     MockAssets() {
@@ -27,6 +29,8 @@ inline constexpr std::array<std::array<RC, 4>, 4> kRampCheckPattern = {{
     {RC::R, RC::MG, RC::MG, RC::MR},
     {RC::G, RC::G, RC::G, RC::G},
 }};
+
+}  // namespace
 
 using W3CPInfo = w3terr::W3MapInformator::W3CPInfo;
 

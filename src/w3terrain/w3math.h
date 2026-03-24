@@ -1,6 +1,7 @@
 #ifndef _W3MATH__H
 #define _W3MATH__H
 
+#include <array>
 #include <algorithm>
 #include <immintrin.h>
 
@@ -208,27 +209,27 @@ struct bbox3: public godot::AABB {
      * @brief Optimized clipstatus using 6 Frustum Planes.
      * @param planes Frustum planes in order NEAR, FAR, LEFT, RIGHT, TOP, BOTTOM
      */
-    ClipStatus clipstatus(const godot::Plane planes[6]) const {
+    ClipStatus clipstatus(const std::array<godot::Plane, 6>& planes) const {
         const vector3 min = this->get_min();
         const vector3 max = this->get_max();
 
 #if defined(__AVX__)
         // Prepare plane components in SoA (Structure of Arrays) format
         __m256 p_x = _mm256_setr_ps(
-            planes[0].normal.x, planes[1].normal.x, planes[2].normal.x, planes[3].normal.x, 
-            planes[4].normal.x, planes[5].normal.x, 0.0f, 0.0f
+            planes[0].normal.x, planes[1].normal.x, planes[2].normal.x, planes[3].normal.x,
+            planes[4].normal.x, planes[5].normal.x, 0.0F, 0.0F
         );
         __m256 p_y = _mm256_setr_ps(
-            planes[0].normal.y, planes[1].normal.y, planes[2].normal.y, planes[3].normal.y, 
-            planes[4].normal.y, planes[5].normal.y, 0.0f, 0.0f
+            planes[0].normal.y, planes[1].normal.y, planes[2].normal.y, planes[3].normal.y,
+            planes[4].normal.y, planes[5].normal.y, 0.0F, 0.0F
         );
         __m256 p_z = _mm256_setr_ps(
-            planes[0].normal.z, planes[1].normal.z, planes[2].normal.z, planes[3].normal.z, 
-            planes[4].normal.z, planes[5].normal.z, 0.0f, 0.0f
+            planes[0].normal.z, planes[1].normal.z, planes[2].normal.z, planes[3].normal.z,
+            planes[4].normal.z, planes[5].normal.z, 0.0F, 0.0F
         );
         __m256 p_w = _mm256_setr_ps(
-            planes[0].d, planes[1].d, planes[2].d, planes[3].d, 
-            planes[4].d, planes[5].d, 0.0f, 0.0f
+            planes[0].d, planes[1].d, planes[2].d, planes[3].d,
+            planes[4].d, planes[5].d, 0.0F, 0.0F
         );
 
         __m256 v_min_x = _mm256_set1_ps(min.x);
@@ -257,7 +258,7 @@ struct bbox3: public godot::AABB {
 
         // If N-vertex is in the positive half-space (>0), the entire AABB is outside
         int out_mask = _mm256_movemask_ps(_mm256_cmp_ps(dot_min, _mm256_setzero_ps(), _CMP_GT_OS));
-        if (out_mask & 0x3F) return Outside;
+        if (out_mask & 0x3F) { return Outside; }
 
         // Find the "Farthest" vertex (P-vertex, highest dot product)
         // If P-vertex is > 0 while N-vertex was <= 0, the AABB intersects the plane
@@ -279,7 +280,7 @@ struct bbox3: public godot::AABB {
 
         for (size_t i = 0; i < 6; ++i) {
             const auto& plane = planes[i];
-            
+
             // P-vertex: farthest point in the direction of the plane normal
             vector3 p_vertex(
                 (plane.normal.x > 0) ? max.x : min.x,
@@ -305,11 +306,11 @@ struct bbox3: public godot::AABB {
             // If the farthest point is also behind the plane, the AABB is Clipped
             if (dist_p > 0) {
                 is_clipped = true;
-            }        
+            }
         }
-        return is_clipped ? Clipped : Inside;    
+        return is_clipped ? Clipped : Inside;
 #endif
-    }    
+    }
 
     bool test_intersection(const line3& line) const
     {
@@ -326,9 +327,9 @@ inline
 uint32_t
 pack_vector3_to_32bit(const vector3& vector)
 {
-    const auto i_x = static_cast<uint32_t>(std::round((vector.x * 0.5F + 0.5F) * 1023.0F));
-    const auto i_y = static_cast<uint32_t>(std::round((vector.y * 0.5F + 0.5F) * 1023.0F));
-    const auto i_z = static_cast<uint32_t>(std::round((vector.z * 0.5F + 0.5F) * 4095.0F));
+    const auto i_x = static_cast<uint32_t>(std::round(((vector.x * 0.5F) + 0.5F) * 1023.0F));
+    const auto i_y = static_cast<uint32_t>(std::round(((vector.y * 0.5F) + 0.5F) * 1023.0F));
+    const auto i_z = static_cast<uint32_t>(std::round(((vector.z * 0.5F) + 0.5F) * 4095.0F));
 
     // Pack into a 32-bit unsigned integer using bit shifts
     // Format: [ ZZZZ ZZZZ ZZZZ YYYY YYYY YY XXXX XXXX XX ]
@@ -361,12 +362,12 @@ unpack_vector3_from_32bit(uint32_t packed_vector)
     // Pre-calculate (2.0f / max_int_val) to combine division and multiplication
     // X, Y max: 1023.0f | Z max: 4095.0f
     static const __m128 scale = _mm_setr_ps(
-        2.0f / 1023.0f, 
-        2.0f / 1023.0f, 
-        2.0f / 4095.0f, 
-        0.0f
+        2.0F / 1023.0F,
+        2.0F / 1023.0F,
+        2.0F / 4095.0F,
+        0.0F
     );
-    static const __m128 offset = _mm_set1_ps(1.0f);
+    static const __m128 offset = _mm_set1_ps(1.0F);
 
     // Perform math: (f * scale) - 1.0f
     f_components = _mm_mul_ps(f_components, scale);

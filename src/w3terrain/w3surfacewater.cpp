@@ -90,6 +90,9 @@ W3SurfaceWater::render(const W3Array<uint32_t>& collected_sections)
     std::ranges::copy_if (collected_sections,
         std::back_inserter(not_rendered_sections_),
         [&rendered_flags = section_rendered_flags_](uint32_t section_id) {
+            if (rendered_flags.size() <= section_id) {
+                rendered_flags.resize(static_cast<size_t>(section_id) + 1);
+            }
             return !rendered_flags[section_id];
         });
 
@@ -99,9 +102,9 @@ W3SurfaceWater::render(const W3Array<uint32_t>& collected_sections)
 
     begin_render();
     surface_tool_->set_material(water_material_asset_);
-    for(const auto section_ptr : not_rendered_sections_) {
-        section_rendered_flags_[section_ptr] = true;
-        render_cells(section_ptr);
+    for(const auto section_id : not_rendered_sections_) {
+        section_rendered_flags_[section_id] = true;
+        render_cells(section_id);
     }
     end_render();
 }

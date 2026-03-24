@@ -3,63 +3,63 @@
 
 #include "w3mapassets.h"
 #include "w3mapnode.h"
-#include "w3surfaceground.h"
+#include "w3surfaceterrain.h"
 
 namespace w3terr {
 
 W3Ref<W3Marerial>
-W3SurfaceGround::get_ground_material() const
+W3SurfaceTerrain::get_ground_material() const
 {
     return ground_material_asset_;
 }
 
 void
-W3SurfaceGround::set_ground_material(const W3Ref<W3Marerial>& material)
+W3SurfaceTerrain::set_ground_material(const W3Ref<W3Marerial>& material)
 {
     ground_material_asset_ = material;
     ground_assets_dirty_flag_ = true;
 }
 
 W3Ref<W3Marerial>
-W3SurfaceGround::get_geo_materials() const
+W3SurfaceTerrain::get_geo_materials() const
 {
     return geo_material_asset_;
 }
 
 void
-W3SurfaceGround::set_geo_materials(const W3Ref<W3Marerial>& material)
+W3SurfaceTerrain::set_geo_materials(const W3Ref<W3Marerial>& material)
 {
     geo_material_asset_ = material;
     geo_assets_dirty_flag_ = true;
 }
 
 bool
-W3SurfaceGround::get_render_normals() const
+W3SurfaceTerrain::get_render_normals() const
 {
     return render_normals_;
 }
 
 void
-W3SurfaceGround::set_render_normals(bool flag)
+W3SurfaceTerrain::set_render_normals(bool flag)
 {
     reset_rendered();
     render_normals_ = flag;
 }
 
 W3Ref<W3Marerial>
-W3SurfaceGround::get_debug_material() const
+W3SurfaceTerrain::get_debug_material() const
 {
     return debug_material_;
 }
 
 void
-W3SurfaceGround::set_debug_material(const W3Ref<W3Marerial>& material)
+W3SurfaceTerrain::set_debug_material(const W3Ref<W3Marerial>& material)
 {
     debug_material_ = material;
 }
 
 bool
-W3SurfaceGround::load_ground_materials()
+W3SurfaceTerrain::load_ground_materials()
 {
     ground_textures_array_.unref();
     if (ground_material_asset_.is_null()) {
@@ -83,7 +83,7 @@ W3SurfaceGround::load_ground_materials()
 }
 
 bool
-W3SurfaceGround::load_geo_materials()
+W3SurfaceTerrain::load_geo_materials()
 {
     geo_textures_array_.unref();
     if (geo_material_asset_.is_null()) {
@@ -107,14 +107,14 @@ W3SurfaceGround::load_geo_materials()
 }
 
 void
-W3SurfaceGround::on_ground_assets_changed()
+W3SurfaceTerrain::on_ground_assets_changed()
 {
     w3_log_debug("W3MapSurfaceGround::on_ground_assets_changed");
     ground_assets_dirty_flag_ = true;
 }
 
 void
-W3SurfaceGround::on_geo_assets_changed()
+W3SurfaceTerrain::on_geo_assets_changed()
 {
     w3_log_debug("W3MapSurfaceGround::on_geo_assets_changed");
     geo_assets_dirty_flag_ = true;

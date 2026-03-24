@@ -6,6 +6,8 @@
 #include "w3terrain/w3mapruntimemanager_impl.h"
 #include "mock_uitils.h"
 
+namespace {
+
 class MockInformator : public w3terr::W3MapInformator {
 public:
     MOCK_METHOD(w3terr::W3MapInformator::W3CPInfo, collect_cellpoint_info, (const w3terr::Coord2D&), (const, override));
@@ -56,6 +58,8 @@ protected:
 
     void TearDown() override {}
 };
+
+}  // namespace
 
 using W3CPInfo = w3terr::W3MapInformator::W3CPInfo;
 

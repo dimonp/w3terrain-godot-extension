@@ -58,7 +58,7 @@ W3MapCollectorImpl::collect_visible(
     const math::matrix44 vp_matrix = camera_projection * view_matrix;
     const math::matrix44 mvp_matrix = vp_matrix * node_transform;
 
-    const godot::Plane planes[] = {
+    const std::array<godot::Plane, 6> planes = {
         mvp_matrix.get_projection_plane(godot::Projection::PLANE_NEAR),
         mvp_matrix.get_projection_plane(godot::Projection::PLANE_FAR),
         mvp_matrix.get_projection_plane(godot::Projection::PLANE_LEFT),

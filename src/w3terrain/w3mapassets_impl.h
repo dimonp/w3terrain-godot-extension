@@ -51,7 +51,9 @@ protected:
     void prepare_geo_assets_rt();
 
     bool load_geo_config(size_t tileset_id, const W3Ref<godot::JSON>& config);
-    static bool parse_geoset_resource(const godot::Dictionary& geoset, W3HashMap<uint32_t, uint32_t> &geo_keys_map);
+
+    template<typename TMap>
+    static bool parse_geoset_resource(const godot::Dictionary& geoset, TMap &geo_keys_map);
 
     W3Ref<W3eResource> map_w3e_;
     godot::TypedArray<W3GeoResource> geo_assets_;

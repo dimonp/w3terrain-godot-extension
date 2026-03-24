@@ -270,7 +270,7 @@ TEST_F(CollectorTestFixture, CollectVisibleCameraOutside)
     godot::Transform3D camera_transform;
     camera_transform.origin = godot::Vector3(0.0F, 0.0F, 2000.0F); // far in +Z direction
     camera_transform.basis = godot::Basis::looking_at(
-        godot::Vector3(0.0F, 0.0F, 1.0F), 
+        godot::Vector3(0.0F, 0.0F, 1.0F),
         godot::Vector3(0.0F, 1.0F, 0.0F));
     // Narrow frustum (small field of view) to ensure no sections are visible
     godot::Projection camera_projection = godot::Projection::create_perspective(
@@ -292,7 +292,7 @@ TEST_F(CollectorTestFixture, CollectVisibleCameraLookingAtOneSection)
     godot::Transform3D camera_transform;
     camera_transform.origin = godot::Vector3(-256.0F, 0.0F, 256.0F); // inside section 1
     camera_transform.basis = godot::Basis::looking_at(
-        godot::Vector3(0.0F, 0.0F, -1.0F), 
+        godot::Vector3(0.0F, 0.0F, -1.0F),
         godot::Vector3(0.0F, 1.0F, 0.0F));
     godot::Projection camera_projection = godot::Projection::create_perspective(
         90.0F, 1.0F, 0.1F, 1000.0F);
@@ -314,7 +314,7 @@ TEST_F(CollectorTestFixture, CollectVisibleCameraLookingAtTwoSection)
     godot::Transform3D camera_transform;
     camera_transform.origin = godot::Vector3(0.0F, 0.0F, 1500.0F);
     camera_transform.basis = godot::Basis::looking_at(
-        godot::Vector3(0.0F, 0.0F, -1.0F), 
+        godot::Vector3(0.0F, 0.0F, -1.0F),
         godot::Vector3(0.0F, 1.0F, 0.0F));
     godot::Projection camera_projection = godot::Projection::create_perspective(
         90.0F, 1.0F, 0.1F, 1000.0F);
