@@ -2,15 +2,15 @@
 
 [ext_resource type="PackedScene" uid="uid://dfw3uhng1yff6" path="res://scene_ui_cell.tscn" id="1_psvbk"]
 [ext_resource type="Script" uid="uid://5b4p0xvske7f" path="res://camera.gd" id="2_vnbon"]
-[ext_resource type="W3eResource" uid="uid://bd8mviqbwek54" path="res://assets/imported/(4)Deadlock.w3e" id="3_7q4ca"]
+[ext_resource type="W3eResource" uid="uid://pwj8c7tsrahg" path="res://assets/test/Maps/(4)Deadlock.w3e" id="3_w7jns"]
 [ext_resource type="Texture2D" uid="uid://dur4qnv8xgdp7" path="res://assets/test/Ground/Ground1.png" id="4_w7jns"]
 [ext_resource type="Texture2D" uid="uid://b71jk1hmt24j6" path="res://assets/test/Ground/Ground0.png" id="5_2pu7o"]
+[ext_resource type="ArrayMesh" uid="uid://duus3haeuivrd" path="res://assets/test/Geosets/city_cliffs.obj" id="6_w7jns"]
+[ext_resource type="JSON" path="res://assets/test/Geosets/city_keys.json" id="7_2pu7o"]
+[ext_resource type="ArrayMesh" uid="uid://d04y68hgom6nw" path="res://assets/test/Geosets/city_ramps.obj" id="8_fe55i"]
 [ext_resource type="Texture2D" uid="uid://daeh76osj7req" path="res://assets/test/Cliff/Cliff0.png" id="9_w7jns"]
-[ext_resource type="ArrayMesh" uid="uid://egrw8u0c065a" path="res://assets/imported/Geosets/city_cliffs.obj" id="10_j5bx6"]
 [ext_resource type="ArrayMesh" uid="uid://1h17aqxktycc" path="res://assets/test/Geosets/ground_cliffs.obj" id="10_w7jns"]
 [ext_resource type="JSON" path="res://assets/test/Geosets/ground_keys.json" id="11_2pu7o"]
-[ext_resource type="JSON" path="res://assets/imported/Geosets/city_keys.json" id="11_dmtyk"]
-[ext_resource type="ArrayMesh" uid="uid://crqvx0t7qbtfx" path="res://assets/imported/Geosets/city_ramps.obj" id="12_e15gp"]
 [ext_resource type="ArrayMesh" uid="uid://dsmtl2qx67e7d" path="res://assets/test/Geosets/ground_ramps.obj" id="12_fe55i"]
 [ext_resource type="Texture2D" uid="uid://uks8qsay3qa5" path="res://assets/test/Cliff/Cliff1.png" id="13_2pu7o"]
 [ext_resource type="Shader" uid="uid://dapke3xfnlcxa" path="res://assets/shaders/water.gdshader" id="18_g0raq"]
@@ -37,10 +37,10 @@ tonemap_mode = 2
 glow_enabled = true
 
 [sub_resource type="W3GeoResource" id="W3GeoResource_fnoqs"]
-geoset_config = ExtResource("11_dmtyk")
+geoset_config = ExtResource("7_2pu7o")
 texture = ExtResource("9_w7jns")
-cliff_geoset_mesh = ExtResource("10_j5bx6")
-ramp_geoset_mesh = ExtResource("12_e15gp")
+cliff_geoset_mesh = ExtResource("6_w7jns")
+ramp_geoset_mesh = ExtResource("8_fe55i")
 ground_id = 1
 
 [sub_resource type="W3GeoResource" id="W3GeoResource_v40a1"]
@@ -294,7 +294,7 @@ script = ExtResource("2_vnbon")
 metadata/_custom_type_script = "uid://5b4p0xvske7f"
 
 [node name="W3MapNode" type="W3MapNode" parent="." unique_id=1528917546 node_paths=PackedStringArray("camera")]
-w3e_map = ExtResource("3_7q4ca")
+w3e_map = ExtResource("3_w7jns")
 ground_textures = Array[Texture2D]([ExtResource("4_w7jns"), ExtResource("4_w7jns"), ExtResource("4_w7jns"), ExtResource("4_w7jns"), ExtResource("5_2pu7o"), ExtResource("5_2pu7o")])
 geo_resources = Array[W3GeoResource]([SubResource("W3GeoResource_fnoqs"), SubResource("W3GeoResource_v40a1")])
 camera = NodePath("../FreeLookCamera")
@@ -324,7 +324,6 @@ script = ExtResource("24_x3lqj")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="W3MapNode/StaticBody3D" unique_id=710193185]
 shape = SubResource("HeightMapShape3D_260s1")
-debug_color = Color(0, 0.6, 0.7, 0.42)
 
 [node name="Test_MeshInstance3D_0" type="MeshInstance3D" parent="." unique_id=146938219]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1221.9264, -98.78076, -1926.3451)
