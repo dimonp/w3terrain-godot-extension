@@ -4,7 +4,8 @@
 [ext_resource type="Script" uid="uid://5b4p0xvske7f" path="res://camera.gd" id="2_vnbon"]
 [ext_resource type="W3eResource" uid="uid://pwj8c7tsrahg" path="res://assets/test/Maps/(4)Deadlock.w3e" id="3_w7jns"]
 [ext_resource type="Texture2D" uid="uid://dur4qnv8xgdp7" path="res://assets/test/Ground/Ground1.png" id="4_w7jns"]
-[ext_resource type="Texture2D" uid="uid://b71jk1hmt24j6" path="res://assets/test/Ground/Ground0.png" id="5_2pu7o"]
+[ext_resource type="Texture2D" uid="uid://c7umj4uiacdkl" path="res://assets/test/Ground/Ground0.png" id="5_2pu7o"]
+[ext_resource type="Texture2D" uid="uid://cxmv12pjaf6aa" path="res://assets/test/Ground/Ground2.png" id="6_2pu7o"]
 [ext_resource type="ArrayMesh" uid="uid://duus3haeuivrd" path="res://assets/test/Geosets/city_cliffs.obj" id="6_w7jns"]
 [ext_resource type="JSON" path="res://assets/test/Geosets/city_keys.json" id="7_2pu7o"]
 [ext_resource type="ArrayMesh" uid="uid://d04y68hgom6nw" path="res://assets/test/Geosets/city_ramps.obj" id="8_fe55i"]
@@ -295,7 +296,7 @@ metadata/_custom_type_script = "uid://5b4p0xvske7f"
 
 [node name="W3MapNode" type="W3MapNode" parent="." unique_id=1528917546 node_paths=PackedStringArray("camera")]
 w3e_map = ExtResource("3_w7jns")
-ground_textures = Array[Texture2D]([ExtResource("4_w7jns"), ExtResource("4_w7jns"), ExtResource("4_w7jns"), ExtResource("4_w7jns"), ExtResource("5_2pu7o"), ExtResource("5_2pu7o")])
+ground_textures = Array[Texture2D]([ExtResource("4_w7jns"), ExtResource("4_w7jns"), ExtResource("4_w7jns"), ExtResource("4_w7jns"), ExtResource("5_2pu7o"), ExtResource("6_2pu7o")])
 geo_resources = Array[W3GeoResource]([SubResource("W3GeoResource_fnoqs"), SubResource("W3GeoResource_v40a1")])
 camera = NodePath("../FreeLookCamera")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10240, 0, 10240)

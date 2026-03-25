@@ -78,7 +78,10 @@ W3MapBindingsEditor::increase_cellpoint_layer(const godot::Vector2i& coords) con
         return;
     }
 
-    w3e_map()->set_cellpoint_layer(coords.x, coords.y, base_layer + 1);
+    auto& cell_point = w3e_map()->get_cellpoint(coords.x, coords.y);
+    cell_point.height_layer = base_layer + 1;
+    cell_point.reset_flag(W3eCell::Flags::RAMP);
+
     // update section mesh
     map_node_->get_section_manager()->invalidate_sections_at_cellpoint(static_cast<Coord2D>(coords));
 }
@@ -98,7 +101,10 @@ W3MapBindingsEditor::decrease_cellpoint_layer(const godot::Vector2i& coords) con
         return;
     }
 
-    w3e_map()->set_cellpoint_layer(coords.x, coords.y, base_layer - 1);
+    auto& cell_point = w3e_map()->get_cellpoint(coords.x, coords.y);
+    cell_point.height_layer = base_layer - 1;
+    cell_point.reset_flag(W3eCell::Flags::RAMP);
+
     // update section mesh
     map_node_->get_section_manager()->invalidate_sections_at_cellpoint(static_cast<Coord2D>(coords));
 }
