@@ -1,10 +1,8 @@
 [gd_scene format=3 uid="uid://dw8t1of52hspa"]
 
 [ext_resource type="PackedScene" uid="uid://bkdf7cjgqflpn" path="res://scene_ui_map.tscn" id="1_urnxt"]
-[ext_resource type="PackedScene" uid="uid://dfw3uhng1yff6" path="res://scene_ui_cell.tscn" id="2_w0ngh"]
-[ext_resource type="PackedScene" uid="uid://ci65yo853w07a" path="res://scene_ui_edit.tscn" id="3_hmkg4"]
+[ext_resource type="W3eResource" uid="uid://fkieeaahxl43" path="res://assets/imported/legends.w3e" id="3_otsph"]
 [ext_resource type="Script" uid="uid://5b4p0xvske7f" path="res://camera.gd" id="4_b8x2j"]
-[ext_resource type="W3eResource" uid="uid://fkieeaahxl43" path="res://assets/imported/legends.w3e" id="6_kscw7"]
 [ext_resource type="Shader" uid="uid://btgygwwtwjpcm" path="res://assets/shaders/terrain_ground.gdshader" id="7_s6b7c"]
 [ext_resource type="Texture2D" uid="uid://32fmlm75jcof" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_Dirt.dds" id="8_urnxt"]
 [ext_resource type="Texture2D" uid="uid://80sys4bdqpx6" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_DirtRough.dds" id="9_w0ngh"]
@@ -276,30 +274,8 @@ anchor_right = 0.0
 anchor_bottom = 0.0
 grow_horizontal = 1
 grow_vertical = 1
-
-[node name="CellInfoUI" parent="." unique_id=2135721828 instance=ExtResource("2_w0ngh")]
-unique_name_in_owner = true
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_left = 1.0
-offset_top = 160.0
-offset_right = 1.0
-offset_bottom = 160.0
-grow_horizontal = 1
-grow_vertical = 1
-
-[node name="EditorInfoUI" parent="." unique_id=97424594 instance=ExtResource("3_hmkg4")]
-unique_name_in_owner = true
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_left = 1.0
-offset_top = 352.0
-offset_right = 1.0
-offset_bottom = 352.0
-grow_horizontal = 1
-grow_vertical = 1
+map_name = "legends.w3e"
+map_size = Vector2i(129, 129)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=988277321]
 transform = Transform3D(0.73845536, -0.16427019, 0.653987, 0, 0.969872, 0.24361502, -0.6743024, -0.17989881, 0.71620715, 89.6339, 1302.8066, 98.16165)
@@ -322,15 +298,8 @@ metadata/_custom_type_script = "uid://5b4p0xvske7f"
 
 [node name="Node3D" type="Node3D" parent="FreeLookCamera" unique_id=678218877]
 
-[node name="FreeLookCamera2" type="Camera3D" parent="." unique_id=864639064]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5823.948, 1520.319, 8086.418)
-visible = false
-fov = 55.0
-script = ExtResource("4_b8x2j")
-metadata/_custom_type_script = "uid://5b4p0xvske7f"
-
 [node name="W3MapNode" type="W3MapNode" parent="." unique_id=1219259070 node_paths=PackedStringArray("camera")]
-w3e_map = ExtResource("6_kscw7")
+w3e_map = ExtResource("3_otsph")
 ground_textures = Array[Texture2D]([ExtResource("8_urnxt"), ExtResource("9_w0ngh"), ExtResource("11_b8x2j"), ExtResource("10_hmkg4"), ExtResource("12_82gc0"), ExtResource("13_dv3vs")])
 geo_resources = Array[W3GeoResource]([SubResource("W3GeoResource_b8x2j"), SubResource("W3GeoResource_v40a1")])
 camera = NodePath("../FreeLookCamera")
@@ -361,7 +330,6 @@ script = ExtResource("28_pjguf")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="W3MapNode/StaticBody3D" unique_id=1628260596]
 visible = false
 shape = SubResource("HeightMapShape3D_260s1")
-debug_color = Color(0, 0.6, 0.7, 0.42)
 
 [node name="Test_MeshInstance3D_0" type="MeshInstance3D" parent="." unique_id=2094485054]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1125.7684, 178.32813, -1390.9862)
@@ -375,9 +343,5 @@ mesh = SubResource("CapsuleMesh_fnoqs")
 surface_material_override/0 = SubResource("StandardMaterial3D_d7rpo")
 
 [connection signal="button_pressed_create_map" from="MapInfoUI" to="W3MapNode" method="_on_map_info_ui_button_pressed_create_map"]
-[connection signal="height_decrease_button_pressed" from="EditorInfoUI" to="W3MapNode" method="_on_editor_info_ui_height_decrease_button_pressed"]
-[connection signal="height_increase_button_pressed" from="EditorInfoUI" to="W3MapNode" method="_on_editor_info_ui_height_increase_button_pressed"]
-[connection signal="layer_decrease_button_pressed" from="EditorInfoUI" to="W3MapNode" method="_on_editor_info_ui_layer_decrease_button_pressed"]
-[connection signal="layer_increase_button_pressed" from="EditorInfoUI" to="W3MapNode" method="_on_editor_info_ui_layer_increase_button_pressed"]
 [connection signal="map_initialized" from="W3MapNode" to="W3MapNode" method="_on_map_initialized"]
-[connection signal="selector_changed" from="W3MapNode/W3MapCellSelector" to="W3MapNode" method="_on_w_3_map_cell_selector_selector_changed"]
+[connection signal="selector_changed" from="W3MapNode" to="W3MapNode/W3MapCellSelector" method="_on_w3_map_node_selector_changed"]

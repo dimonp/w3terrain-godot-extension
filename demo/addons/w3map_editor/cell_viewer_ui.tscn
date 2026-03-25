@@ -1,0 +1,74 @@
+[gd_scene format=3 uid="uid://w4ns4sw5sy6x"]
+
+[ext_resource type="Script" uid="uid://t4jw3nwtskyw" path="res://addons/w3map_editor/cell_viewer_ui.gd" id="1_te5sx"]
+
+[node name="VBoxContainer" type="VBoxContainer" unique_id=1531573192]
+offset_left = 1.0
+offset_top = 3.0
+offset_right = 171.0
+offset_bottom = 273.0
+script = ExtResource("1_te5sx")
+
+[node name="GridContainerView" type="GridContainer" parent="." unique_id=2050180885]
+layout_mode = 2
+columns = 2
+
+[node name="CoordsLabel" type="Label" parent="GridContainerView" unique_id=787391319]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Coords"
+
+[node name="CoordsText" type="LineEdit" parent="GridContainerView" unique_id=355956835]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PositionLabel" type="Label" parent="GridContainerView" unique_id=1736479973]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Position"
+
+[node name="PositionText" type="LineEdit" parent="GridContainerView" unique_id=1560707536]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LayerLabel" type="Label" parent="GridContainerView" unique_id=1275884422]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Layer"
+
+[node name="LayerText" type="LineEdit" parent="GridContainerView" unique_id=495099284]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HeightLabel" type="Label" parent="GridContainerView" unique_id=1137927664]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Height"
+
+[node name="HeightText" type="LineEdit" parent="GridContainerView" unique_id=1958377269]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TilesetsLabel" type="Label" parent="GridContainerView" unique_id=1391936324]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Tilesets"
+
+[node name="TilesetsText" type="LineEdit" parent="GridContainerView" unique_id=2117653402]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="TypesLabel" type="Label" parent="GridContainerView" unique_id=1458425738]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Types"
+
+[node name="TypesText" type="LineEdit" parent="GridContainerView" unique_id=170152770]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3

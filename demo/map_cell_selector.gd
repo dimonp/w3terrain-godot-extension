@@ -1,25 +1,12 @@
 class_name W3MapCellSelector extends W3Surface
 
-signal selector_changed(coords: Vector2i)
-
 @export var shader_material: ShaderMaterial
-
-var _map
 
 func _ready():
 	var _shader_material = ShaderMaterial.new()
-	_map = map_node.map
-
-func _unhandled_input(event):
-	if event is InputEventMouseButton:
-		if event.button_index == MouseButton.MOUSE_BUTTON_LEFT and event.pressed:
-			var cell_coords = _map.pick_cell_by_screen_position(event.position)
-			if cell_coords is Vector2i:
-				selector_changed.emit(cell_coords)
-			
-				var aabb = _map.get_cell_bbox(cell_coords)
-				if aabb is AABB:
-					update_mesh(aabb);
+	
+func _on_w3_map_node_selector_changed(coords: Vector2i) -> void:
+	update_mesh(map_node.brush_bbox());
 
 func update_mesh(aabb: AABB):
 	_mesh.clear_surfaces()

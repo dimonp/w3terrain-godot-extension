@@ -1,0 +1,95 @@
+[gd_scene format=3 uid="uid://u7btll36lpnd"]
+
+[ext_resource type="Script" uid="uid://d1prje8iwjq4v" path="res://addons/w3map_editor/cell_editor_ui.gd" id="1_te5sx"]
+[ext_resource type="ButtonGroup" uid="uid://dy7i1juut4i5o" path="res://addons/w3map_editor/button_group_actions.tres" id="2_u23w3"]
+[ext_resource type="ButtonGroup" uid="uid://df5ijhntjejma" path="res://addons/w3map_editor/button_group_brush.tres" id="3_pcgd5"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_umld2"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_kysii"]
+
+[node name="VBoxContainer" type="VBoxContainer" unique_id=1531573192]
+offset_left = 1.0
+offset_top = 3.0
+offset_right = 171.0
+offset_bottom = 273.0
+script = ExtResource("1_te5sx")
+button_group_brush = ExtResource("3_pcgd5")
+button_group_actions = ExtResource("2_u23w3")
+
+[node name="GridContainerAction" type="GridContainer" parent="." unique_id=1708043553]
+layout_mode = 2
+columns = 2
+
+[node name="ButtonGroundU" type="Button" parent="GridContainerAction" unique_id=910487700]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/pressed = SubResource("StyleBoxFlat_umld2")
+toggle_mode = true
+button_group = ExtResource("2_u23w3")
+text = "Ground UP"
+metadata/action = 0
+
+[node name="ButtonGroundD" type="Button" parent="GridContainerAction" unique_id=854731868]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/pressed = SubResource("StyleBoxFlat_kysii")
+toggle_mode = true
+button_group = ExtResource("2_u23w3")
+text = "Ground DOWN
+"
+metadata/action = 1
+
+[node name="ButtonLayerU" type="Button" parent="GridContainerAction" unique_id=1513876804]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/pressed = SubResource("StyleBoxFlat_umld2")
+toggle_mode = true
+button_group = ExtResource("2_u23w3")
+text = "Layer UP"
+metadata/action = 2
+
+[node name="ButtonLayerD" type="Button" parent="GridContainerAction" unique_id=305035340]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/pressed = SubResource("StyleBoxFlat_kysii")
+toggle_mode = true
+button_group = ExtResource("2_u23w3")
+text = "Layer DOWN
+"
+metadata/action = 3
+
+[node name="HSeparator" type="HSeparator" parent="." unique_id=686849405]
+layout_mode = 2
+
+[node name="HBoxContainerBrush" type="HBoxContainer" parent="." unique_id=583442122]
+layout_mode = 2
+
+[node name="ButtonBrush1" type="Button" parent="HBoxContainerBrush" unique_id=1237978720]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/pressed = SubResource("StyleBoxFlat_umld2")
+toggle_mode = true
+button_group = ExtResource("3_pcgd5")
+text = "Brush 1x1"
+metadata/brush = 1
+
+[node name="ButtonBrush3" type="Button" parent="HBoxContainerBrush" unique_id=557324805]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/pressed = SubResource("StyleBoxFlat_kysii")
+toggle_mode = true
+button_group = ExtResource("3_pcgd5")
+text = "Brush 3x3
+"
+metadata/brush = 3
+
+[node name="ButtonBrush5" type="Button" parent="HBoxContainerBrush" unique_id=609761592]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/pressed = SubResource("StyleBoxFlat_kysii")
+toggle_mode = true
+button_group = ExtResource("3_pcgd5")
+text = "Brush 5x5
+"
+metadata/brush = 5
