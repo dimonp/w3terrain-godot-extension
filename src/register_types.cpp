@@ -5,6 +5,7 @@
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/core/defs.hpp>
 #include <godot_cpp/classes/resource_loader.hpp>
+#include <godot_cpp/classes/resource_saver.hpp>
 
 #include "w3terrain/w3mapnode.h"
 #include "w3terrain/w3mapbindings.h"
@@ -14,8 +15,10 @@
 
 namespace {
 
-// NOLINTNEXTLINE(cert-err58-cpp, readability-static-definition-in-anonymous-namespace, cppcoreguidelines-avoid-non-const-global-variables)
-static godot::Ref<w3terr::W3eResourceLoader> w3map_resource_loader;
+// NOLINTBEGIN(cppcoreguidelines-avoid-non-const-global-variables)
+godot::Ref<w3terr::W3eResourceLoader> w3map_resource_loader;
+godot::Ref<w3terr::W3eResourceSaver> w3map_resource_saver;
+// NOLINTEND(cppcoreguidelines-avoid-non-const-global-variables)
 
 void initialize_gdextension_types(godot::ModuleInitializationLevel p_level)
 {
@@ -25,6 +28,7 @@ void initialize_gdextension_types(godot::ModuleInitializationLevel p_level)
 
 	GDREGISTER_CLASS(w3terr::W3eResource);
 	GDREGISTER_CLASS(w3terr::W3eResourceLoader);
+	GDREGISTER_CLASS(w3terr::W3eResourceSaver);
 	GDREGISTER_CLASS(w3terr::W3MapNode);
 	GDREGISTER_CLASS(w3terr::W3GeoResource);
 	GDREGISTER_CLASS(w3terr::W3Surface)
@@ -35,6 +39,9 @@ void initialize_gdextension_types(godot::ModuleInitializationLevel p_level)
 
  	w3map_resource_loader.instantiate();
     godot::ResourceLoader::get_singleton()->add_resource_format_loader(w3map_resource_loader);
+
+	w3map_resource_saver.instantiate();
+	godot::ResourceSaver::get_singleton()->add_resource_format_saver(w3map_resource_saver);
 }
 
 void uninitialize_gdextension_types(godot::ModuleInitializationLevel p_level)
@@ -46,6 +53,9 @@ void uninitialize_gdextension_types(godot::ModuleInitializationLevel p_level)
 	// Unregister the loader when the module unloads (important for editor plugins)
 	godot::ResourceLoader::get_singleton()->remove_resource_format_loader(w3map_resource_loader);
 	w3map_resource_loader.unref();
+
+	godot::ResourceSaver::get_singleton()->remove_resource_format_saver(w3map_resource_saver);
+	w3map_resource_saver.unref();
 }
 
 extern "C"

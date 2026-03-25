@@ -24,6 +24,7 @@ Checks: "*,\
   -cppcoreguidelines-non-private-member-variables-in-classes, \
   -bugprone-easily-swappable-parameters, \
   -bugprone-argument-comment, \
+  -readability-use-anyofallof, \
   -readability-magic-numbers"
 WarningsAsErrors: ''
 CheckOptions:

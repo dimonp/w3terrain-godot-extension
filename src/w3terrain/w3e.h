@@ -93,6 +93,10 @@ struct W3eCell {
 
 class W3_API W3e {
 public:
+    static constexpr int kW3eVersion = 11;
+    static constexpr char const* kW3eMagik = "W3E!";
+
+
     const W3eCell& get_cellpoint(int32_t coord_2d_x, int32_t coord_2d_y) const;
     W3eCell& get_cellpoint(int32_t coord_2d_x, int32_t coord_2d_y);
 
