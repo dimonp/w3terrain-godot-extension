@@ -89,9 +89,9 @@ struct W3eCell {
         return this->flags |= flag;
     }
 
-    uint8_t reset_flag(Flags flag)
+    uint8_t clear_flag(Flags flag)
     {
-        return this->flags &= ~flag;
+        return this->flags &= static_cast<uint8_t>(~flag);
     }
 };
 #pragma pack()

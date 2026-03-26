@@ -12,6 +12,12 @@ W3MapBindingsEditor::_bind_methods()
     godot::ClassDB::bind_method(godot::D_METHOD("increase_cellpoint_layer", "coord"), &W3MapBindingsEditor::increase_cellpoint_layer);
     godot::ClassDB::bind_method(godot::D_METHOD("decrease_cellpoint_layer", "coord"), &W3MapBindingsEditor::decrease_cellpoint_layer);
     godot::ClassDB::bind_method(godot::D_METHOD("set_cellpoint_ground_height", "coord", "height"), &W3MapBindingsEditor::set_cellpoint_ground_height);
+    godot::ClassDB::bind_method(godot::D_METHOD("set_cellpoint_water_height", "coord", "height"), &W3MapBindingsEditor::set_cellpoint_water_height);
+    godot::ClassDB::bind_method(godot::D_METHOD("set_cellpoint_ground_tileset", "coord", "tileset", "variation"), &W3MapBindingsEditor::set_cellpoint_ground_tileset);
+    godot::ClassDB::bind_method(godot::D_METHOD("set_cellpoint_geo_tileset", "coord", "tileset"), &W3MapBindingsEditor::set_cellpoint_geo_tileset);
+    godot::ClassDB::bind_method(godot::D_METHOD("set_cellpoint_geo_variation", "coord", "variation"), &W3MapBindingsEditor::set_cellpoint_geo_variation);
+    godot::ClassDB::bind_method(godot::D_METHOD("set_cellpoint_water", "coord", "flag"), &W3MapBindingsEditor::set_cellpoint_water);
+    godot::ClassDB::bind_method(godot::D_METHOD("set_cellpoint_ramp", "coord", "flag"), &W3MapBindingsEditor::set_cellpoint_ramp);
 }
 
 inline
@@ -80,7 +86,8 @@ W3MapBindingsEditor::increase_cellpoint_layer(const godot::Vector2i& coords) con
 
     auto& cell_point = w3e_map()->get_cellpoint(coords.x, coords.y);
     cell_point.height_layer = base_layer + 1;
-    cell_point.reset_flag(W3eCell::Flags::RAMP);
+    cell_point.clear_flag(W3eCell::Flags::RAMP);
+    cell_point.clear_flag(W3eCell::Flags::WATER);
 
     // update section mesh
     map_node_->get_section_manager()->invalidate_sections_at_cellpoint(static_cast<Coord2D>(coords));
@@ -103,7 +110,8 @@ W3MapBindingsEditor::decrease_cellpoint_layer(const godot::Vector2i& coords) con
 
     auto& cell_point = w3e_map()->get_cellpoint(coords.x, coords.y);
     cell_point.height_layer = base_layer - 1;
-    cell_point.reset_flag(W3eCell::Flags::RAMP);
+    cell_point.clear_flag(W3eCell::Flags::RAMP);
+    cell_point.clear_flag(W3eCell::Flags::WATER);
 
     // update section mesh
     map_node_->get_section_manager()->invalidate_sections_at_cellpoint(static_cast<Coord2D>(coords));
@@ -123,5 +131,115 @@ W3MapBindingsEditor::set_cellpoint_ground_height(const godot::Vector2i& coords, 
     // update section mesh
     map_node_->get_section_manager()->invalidate_sections_at_cellpoint(static_cast<Coord2D>(coords));
 }
+
+void
+W3MapBindingsEditor::set_cellpoint_water_height(const godot::Vector2i& coords, float height) const
+{
+    if (!w3e_map().is_valid()) {
+        return;
+    }
+    if (!w3e_map()->is_valid_cellpoint(coords.x, coords.y)) {
+        return;
+    }
+
+    w3e_map()->set_cellpoint_water_height(coords.x, coords.y, height);
+    // update section mesh
+    map_node_->get_section_manager()->invalidate_sections_at_cellpoint(static_cast<Coord2D>(coords));
+}
+
+void
+W3MapBindingsEditor::set_cellpoint_ground_tileset(const godot::Vector2i& coords, uint8_t tileset, uint8_t variation) const
+{
+    if (!w3e_map().is_valid()) {
+        return;
+    }
+    if (!w3e_map()->is_valid_cellpoint(coords.x, coords.y)) {
+        return;
+    }
+
+    auto& cell = w3e_map()->get_cellpoint(coords.x, coords.y);
+    cell.ground_tileset = tileset;
+    cell.ground_variation = variation;
+
+    // update section mesh
+    map_node_->get_section_manager()->invalidate_sections_at_cellpoint(static_cast<Coord2D>(coords));
+}
+
+void
+W3MapBindingsEditor::set_cellpoint_geo_tileset(const godot::Vector2i& coords, uint8_t tileset) const
+{
+    if (!w3e_map().is_valid()) {
+        return;
+    }
+    if (!w3e_map()->is_valid_cellpoint(coords.x, coords.y)) {
+        return;
+    }
+
+    auto& cell = w3e_map()->get_cellpoint(coords.x, coords.y);
+    cell.geo_tileset = tileset;
+
+    // update section mesh
+    map_node_->get_section_manager()->invalidate_sections_at_cellpoint(static_cast<Coord2D>(coords));
+}
+
+void
+W3MapBindingsEditor::set_cellpoint_geo_variation(const godot::Vector2i& coords, uint8_t variation) const
+{
+    if (!w3e_map().is_valid()) {
+        return;
+    }
+    if (!w3e_map()->is_valid_cellpoint(coords.x, coords.y)) {
+        return;
+    }
+
+    auto& cell = w3e_map()->get_cellpoint(coords.x, coords.y);
+    cell.geo_variation = variation;
+
+    // update section mesh
+    map_node_->get_section_manager()->invalidate_sections_at_cellpoint(static_cast<Coord2D>(coords));
+}
+
+void
+W3MapBindingsEditor::set_cellpoint_water(const godot::Vector2i& coords, bool flag) const
+{
+    if (!w3e_map().is_valid()) {
+        return;
+    }
+    if (!w3e_map()->is_valid_cellpoint(coords.x, coords.y)) {
+        return;
+    }
+
+    auto& cell = w3e_map()->get_cellpoint(coords.x, coords.y);
+    if (flag) {
+        cell.set_flag(W3eCell::Flags::WATER);
+    } else {
+        cell.clear_flag(W3eCell::Flags::WATER);
+    }
+
+    // update section mesh
+    map_node_->get_section_manager()->invalidate_sections_at_cellpoint(static_cast<Coord2D>(coords));
+}
+
+void
+W3MapBindingsEditor::set_cellpoint_ramp(const godot::Vector2i& coords, bool flag) const
+{
+    if (!w3e_map().is_valid()) {
+        return;
+    }
+    if (!w3e_map()->is_valid_cellpoint(coords.x, coords.y)) {
+        return;
+    }
+
+    auto& cell = w3e_map()->get_cellpoint(coords.x, coords.y);
+    if (flag) {
+        cell.set_flag(W3eCell::Flags::RAMP);
+    } else {
+        cell.clear_flag(W3eCell::Flags::RAMP);
+    }
+
+    // update section mesh
+    map_node_->get_section_manager()->invalidate_sections_at_cellpoint(static_cast<Coord2D>(coords));
+}
+
 
 }  // namespace w3terr

@@ -23,6 +23,13 @@ protected:
     void increase_cellpoint_layer(const godot::Vector2i& coords) const;
     void decrease_cellpoint_layer(const godot::Vector2i& coords) const;
     void set_cellpoint_ground_height(const godot::Vector2i& coords, float height) const;
+    void set_cellpoint_water_height(const godot::Vector2i& coords, float height) const;
+    void set_cellpoint_ground_tileset(const godot::Vector2i& coords, uint8_t tileset, uint8_t variation = 0) const;
+    void set_cellpoint_geo_tileset(const godot::Vector2i& coords, uint8_t tileset) const;
+    void set_cellpoint_geo_variation(const godot::Vector2i& coords, uint8_t variation) const;
+    void set_cellpoint_water(const godot::Vector2i& coords, bool flag) const;
+    void set_cellpoint_ramp(const godot::Vector2i& coords, bool flag) const;
+
 private:
     auto w3e_map() const;
 
