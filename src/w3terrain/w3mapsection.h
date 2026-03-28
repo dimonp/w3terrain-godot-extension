@@ -18,7 +18,10 @@ public:
     static constexpr int32_t kNumberOfCells = kCellsDimension * kCellsDimension;
 
     explicit W3MapSection(const W3MapRuntimeManager* map_runtime): runtime_manager_(map_runtime) {}
-    void initialize(size_t ground_tilesets_size, size_t geo_tilesets_size, const Coord2D& origin_2d, const math::bbox3& bbox);
+    void initialize(
+        size_t ground_tilesets_size,
+        size_t geo_tilesets_size,
+        const Coord2D& origin_2d);
 
     struct CachedMesh {
         CachedMesh() noexcept;
@@ -88,7 +91,6 @@ public:
     const CachedMesh& get_cached_waters_mesh() const;
 
     const Coord2D& get_origin_2d() const;
-    const math::bbox3& get_bbox() const;
 
     uint32_t map_ground_tileset_to_layer(size_t tileset_id) const;
     Coord2D calc_cell_coord_from_idx(size_t cell_idx) const;
@@ -110,19 +112,10 @@ private:
     CachedMesh water_mesh_;
 
     W3Array<uint32_t> ground_tileset_to_layer_map_;
-
-    math::bbox3 bbox_;
     bool dirty_ = true;
 
     const W3MapRuntimeManager* runtime_manager_;
 };
-
-inline
-const math::bbox3&
-W3MapSection::get_bbox() const
-{
-    return bbox_;
-}
 
 inline
 const Coord2D&

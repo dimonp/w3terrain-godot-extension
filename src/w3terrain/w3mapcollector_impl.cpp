@@ -1,7 +1,6 @@
 #include <quadtree/quadtree.h>
 #include <quadtree/quadtree_collector.h>
 
-#include "w3mapsection.h"
 #include "w3mapsectionmanager.h"
 #include "w3mapcollector_impl.h"
 
@@ -23,8 +22,7 @@ W3MapCollectorImpl::build_quad_tree(const math::bbox3& root_bbox, uint8_t depth)
     quadtree_.initialize(root_bbox, depth);
     // loop all sections
     for(auto section_id : *sections_) {
-        const auto& section = sections_->get_section_by_id(section_id);
-        const auto& bbox = section.get_bbox();
+        const auto& bbox = sections_->calc_section_bbox(section_id);
         auto *const tree_node = quadtree_.find_containment_node(bbox);
         if (tree_node == nullptr) {
             w3_log_error("Section %d does not fit quadtree.", section_id);

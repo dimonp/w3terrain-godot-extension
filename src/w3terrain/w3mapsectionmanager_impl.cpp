@@ -35,6 +35,18 @@ W3MapSectionManagerImpl::get_section_id_from_coord(int32_t section_2d_x, int32_t
     return (section_2d_y * sections_2d_x_size_) + section_2d_x + 1;
 }
 
+math::bbox3
+W3MapSectionManagerImpl::calc_section_bbox(SectionId section_id) const
+{
+    const auto* map_w3e = assets_->get_w3e();
+    const Coord2D origin = calc_section_origin(section_id);
+    return map_w3e->calc_cellpoints_bbox(
+        origin.x,
+        origin.y,
+        W3MapSection::kCellsDimension
+    );
+}
+
 void
 W3MapSectionManagerImpl::update_all_sections()
 {
@@ -57,8 +69,7 @@ W3MapSectionManagerImpl::update_all_sections()
         section.initialize(
             map_w3e->get_ground_tilesets_count(),
             map_w3e->get_geo_tilesets_count(),
-            origin,
-            section_bbox);
+            origin);
     }
 }
 

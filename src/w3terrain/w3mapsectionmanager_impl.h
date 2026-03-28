@@ -22,6 +22,7 @@ public:
     const W3MapSection& get_section_by_id(SectionId section_id) const override;
     W3MapSection& get_section_by_id(SectionId section_id) override;
     bool is_valid_section_id(SectionId section_id) const override;
+    math::bbox3 calc_section_bbox(SectionId section_id) const override;
 
     void update_all_sections() override;
     void set_dirty_all() override;

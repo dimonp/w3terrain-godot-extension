@@ -69,26 +69,22 @@ auto create_section_array4()
     auto section00 = w3terr::W3MapSection(nullptr);
     section00.initialize(
         2, 1,
-        { 0, 0 },
-        bbox3 { {-512.0F, 0.0F, 0.0F}, {0.0F, 32.0F, 512.0F} });
+        { 0, 0 });
 
     auto section01 = w3terr::W3MapSection(nullptr);
     section01.initialize(
         2, 1,
-        { 4, 0 },
-        bbox3 { {-512.0F, -32.0F, -512.0F}, {0.0F, 0.0F, 0.0F} });
+        { 4, 0 });
 
     auto section10 = w3terr::W3MapSection(nullptr);
     section10.initialize(
         2, 1,
-        { 0, 4 },
-        bbox3 { {0.0F, -32.0F, 0.0F}, {512.0F, 32.0F, 512.0F} });
+        { 0, 4 });
 
     auto section11 = w3terr::W3MapSection(nullptr);
     section11.initialize(
         2, 1,
-        { 4, 4 },
-        bbox3 { {0.0F, 0.0F, -512.0F}, {512.0F, 0.0F, 0.0F} });
+        { 4, 4 });
 
     return std::vector<w3terr::W3MapSection> { section00, section01, section10, section11 };
 }

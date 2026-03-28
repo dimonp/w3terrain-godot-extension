@@ -50,14 +50,12 @@ void
 W3MapSection::initialize(
     size_t ground_tilesets_size,
     size_t geo_tilesets_size,
-    const Coord2D& origin_2d,
-    const math::bbox3& bbox)
-{
+    const Coord2D& origin_2d
+) {
     ground_tileset_to_layer_map_.assign(ground_tilesets_size, {});
     ground_cached_meshes_.assign(ground_tilesets_size, {});
     geo_cached_meshes_.assign(geo_tilesets_size, {});
     origin_2d_ = origin_2d;
-    bbox_ = bbox;
 }
 
 void

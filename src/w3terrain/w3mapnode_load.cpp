@@ -64,7 +64,7 @@ W3MapNode::load_map()
     math::bbox3 root_bbox;
     root_bbox.begin_extend();
     for(const auto section_id : *sections_manager_) {
-        const auto section_bbox = sections_manager_->get_section_by_id(section_id).get_bbox();
+        const auto section_bbox = sections_manager_->calc_section_bbox(section_id);
         root_bbox.extend(section_bbox);
     }
 

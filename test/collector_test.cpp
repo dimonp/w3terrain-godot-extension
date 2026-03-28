@@ -6,23 +6,23 @@
 #include "w3terrain/w3math.h"
 #include "mock_uitils.h"
 
-namespace w3terr {
+namespace {
 
-class MockSectionManager : public W3MapSectionManager {
-public:
+class MockSectionManager : public w3terr::W3MapSectionManager {
+  public:
+
     MOCK_METHOD(SectionIdIterator, begin, (), (const, override));
     MOCK_METHOD(SectionIdIterator, end, (), (const, override));
 
-    MOCK_METHOD(const W3MapSection&, get_section_by_id, (SectionId), (const, override));
-    MOCK_METHOD(W3MapSection&, get_section_by_id, (SectionId), (override));
+    MOCK_METHOD(const w3terr::W3MapSection&, get_section_by_id, (SectionId), (const, override));
+    MOCK_METHOD(w3terr::W3MapSection&, get_section_by_id, (SectionId), (override));
     MOCK_METHOD(bool, is_valid_section_id, (SectionId), (const, override));
+    MOCK_METHOD(w3terr::math::bbox3, calc_section_bbox, (SectionId), (const, override));
 
     MOCK_METHOD(void, update_all_sections, (), (override));
     MOCK_METHOD(void, set_dirty_all, (), (override));
-    MOCK_METHOD(void, invalidate_sections_at_cellpoint, (const Coord2D&), (override));
+    MOCK_METHOD(void, invalidate_sections_at_cellpoint, (const w3terr::Coord2D&), (override));
 };
-
-}  // namespace w3terr
 
 class CollectorTestFixture : public ::testing::Test {
 protected:
@@ -37,7 +37,7 @@ protected:
         { 512.0F, 128.0F, 512.0F }};
 
     std::vector<w3terr::W3MapSection> sections_array_;
-    w3terr::MockSectionManager section_manager_;
+    MockSectionManager section_manager_;
 
     void SetUp() override
     {
@@ -56,10 +56,27 @@ protected:
             .WillByDefault(::testing::ReturnRef(sections_array_[2]));
         ON_CALL(::testing::Const(section_manager_), get_section_by_id(4))
             .WillByDefault(::testing::ReturnRef(sections_array_[3]));
+
+        ON_CALL(::testing::Const(section_manager_), calc_section_bbox(1))
+            .WillByDefault(::testing::Return(
+                w3terr::math::bbox3 { {-512.0F, 0.0F, 0.0F}, {0.0F, 32.0F, 512.0F} }));
+        ON_CALL(::testing::Const(section_manager_), calc_section_bbox(2))
+            .WillByDefault(::testing::Return(
+                w3terr::math::bbox3 { {-512.0F, -32.0F, -512.0F}, {0.0F, 0.0F, 0.0F} }));
+        ON_CALL(::testing::Const(section_manager_), calc_section_bbox(3))
+            .WillByDefault(::testing::Return(
+                w3terr::math::bbox3 { {0.0F, -32.0F, 0.0F}, {512.0F, 32.0F, 512.0F} }));
+        ON_CALL(::testing::Const(section_manager_), calc_section_bbox(4))
+            .WillByDefault(::testing::Return(
+                w3terr::math::bbox3 { {0.0F, 0.0F, -512.0F}, {512.0F, 0.0F, 0.0F} }));
+
     }
 
     void TearDown() override {}
 };
+
+}  // namespace
+
 
 TEST_F(CollectorTestFixture, InitializeWithValidParameters)
 {
@@ -140,7 +157,7 @@ TEST_F(CollectorTestFixture, LineMissesAll)
 
 TEST_F(CollectorTestFixture, InitiallyEmpty)
 {
-    w3terr::MockSectionManager empty_section_manager;
+    MockSectionManager empty_section_manager;
 
     // No sections, so quadtree will have zero nodes
     EXPECT_CALL(empty_section_manager, begin())
@@ -161,7 +178,7 @@ TEST_F(CollectorTestFixture, InitiallyEmpty)
 
 TEST_F(CollectorTestFixture, TwoSections)
 {
-    w3terr::MockSectionManager two_section_manager;
+    MockSectionManager two_section_manager;
 
     ON_CALL(two_section_manager, begin())
         .WillByDefault(::testing::Return(w3terr::W3MapSectionManager::SectionIdIterator(1)));
@@ -172,6 +189,14 @@ TEST_F(CollectorTestFixture, TwoSections)
         .WillByDefault(::testing::ReturnRef(sections_array_[0]));
     ON_CALL(::testing::Const(two_section_manager), get_section_by_id(2))
         .WillByDefault(::testing::ReturnRef(sections_array_[1]));
+
+    ON_CALL(::testing::Const(two_section_manager), calc_section_bbox(1))
+        .WillByDefault(::testing::Return(
+            w3terr::math::bbox3 { {-512.0F, 0.0F, 0.0F}, {0.0F, 32.0F, 512.0F} }));
+    ON_CALL(::testing::Const(two_section_manager), calc_section_bbox(2))
+        .WillByDefault(::testing::Return(
+            w3terr::math::bbox3 { {-512.0F, -32.0F, -512.0F}, {0.0F, 0.0F, 0.0F} }));
+
 
     w3terr::W3MapCollectorImpl sut(
         &two_section_manager,
@@ -208,7 +233,7 @@ TEST_F(CollectorTestFixture, CollectIntersectedLineInsideSection)
 
 TEST_F(CollectorTestFixture, CollectIntersectedEmptyQuadTree)
 {
-    w3terr::MockSectionManager empty_section_manager;
+    MockSectionManager empty_section_manager;
     EXPECT_CALL(empty_section_manager, begin())
         .WillOnce(::testing::Return(w3terr::W3MapSectionManager::SectionIdIterator(1)));
     EXPECT_CALL(empty_section_manager, end())
@@ -245,7 +270,7 @@ TEST_F(CollectorTestFixture, CollectVisibleTwoSection)
 
 TEST_F(CollectorTestFixture, CollectVisibleEmptyQuadTree)
 {
-    w3terr::MockSectionManager empty_section_manager;
+    MockSectionManager empty_section_manager;
     EXPECT_CALL(empty_section_manager, begin())
         .WillOnce(::testing::Return(w3terr::W3MapSectionManager::SectionIdIterator(1)));
     EXPECT_CALL(empty_section_manager, end())
