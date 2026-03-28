@@ -41,8 +41,7 @@ W3MapNode::collect_visible_sections()
             get_global_transform());
 
         for(uint32_t section_id : collector_->get_visible_sections()) {
-            W3MapSection& section = get_section_manager()->get_section_by_id(section_id);
-            section.refresh();
+            get_section_manager()->refresh_section(section_id);
         }
         last_farme_id = frame_id;
     }
@@ -63,8 +62,7 @@ W3MapNode::get_intersected_cell(const math::line3& line, math::vector3& ipoint) 
     }
 
     for(uint32_t section_id : intersected_sections) {
-        const W3MapSection& section = sections_manager_->get_section_by_id(section_id);
-        const std::optional<Coord2D> coords = section.find_intersected_cell(line,  ipoint);
+        const std::optional<Coord2D> coords = sections_manager_->find_intersected_cell(section_id, line,  ipoint);
         if (coords.has_value()) {
             return coords;
         }

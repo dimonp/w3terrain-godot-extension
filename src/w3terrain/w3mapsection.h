@@ -1,12 +1,10 @@
 #ifndef _W3MAPSECTION__H
 #define _W3MAPSECTION__H
 
-#include <optional>
 #include <bitset>
 #include <span>
 
 #include "w3defs.h"
-#include "w3math.h"
 
 namespace w3terr {
 
@@ -18,10 +16,7 @@ public:
     static constexpr int32_t kNumberOfCells = kCellsDimension * kCellsDimension;
 
     explicit W3MapSection(const W3MapRuntimeManager* map_runtime): runtime_manager_(map_runtime) {}
-    void initialize(
-        size_t ground_tilesets_size,
-        size_t geo_tilesets_size,
-        const Coord2D& origin_2d);
+    void initialize(size_t ground_tilesets_size, size_t geo_tilesets_size);
 
     struct CachedMesh {
         CachedMesh() noexcept;
@@ -77,8 +72,6 @@ public:
         friend class W3MapSection;
     };
 
-    bool refresh();
-
     uint32_t get_ground_vertices_count(size_t tileset_id) const;
     uint32_t get_geo_vertices_count(size_t tileset_id) const;
     uint32_t get_water_vertices_count() const;
@@ -90,22 +83,19 @@ public:
     const CachedMesh& get_cached_geo_mesh(size_t tileset_id) const;
     const CachedMesh& get_cached_waters_mesh() const;
 
-    const Coord2D& get_origin_2d() const;
-
     uint32_t map_ground_tileset_to_layer(size_t tileset_id) const;
-    Coord2D calc_cell_coord_from_idx(size_t cell_idx) const;
 
-    std::optional<Coord2D> find_intersected_cell(const math::line3 &line, math::vector3& ipoint) const;
-
-    void update_all_cells();
-    void free_cached_data();
-    void update_cell(size_t cell_idx);
+    void update_all_cells(const Coord2D& section_origin);
+    bool refresh(const Coord2D& section_origin);
 
     void set_dirty(bool flag = true);
     bool is_dirty() const;
 
+    static Coord2D calc_cell_coord_from_idx(const Coord2D& section_origin, size_t cell_idx);
+
 private:
-    Coord2D origin_2d_ = { 0, 0 };
+    void free_cached_data();
+    void update_cell(const Coord2D& cell_coords, size_t cell_idx);
 
     W3Array<CachedMesh> ground_cached_meshes_;
     W3Array<CachedMesh> geo_cached_meshes_;
@@ -116,23 +106,6 @@ private:
 
     const W3MapRuntimeManager* runtime_manager_;
 };
-
-inline
-const Coord2D&
-W3MapSection::get_origin_2d() const
-{
-    return origin_2d_;
-}
-
-inline
-Coord2D
-W3MapSection::calc_cell_coord_from_idx(size_t cell_idx) const
-{
-    return {
-        get_origin_2d().x + static_cast<int32_t>(cell_idx % kCellsDimension),
-        get_origin_2d().y + static_cast<int32_t>(cell_idx / kCellsDimension)
-    };
-}
 
 inline
 uint32_t
@@ -211,6 +184,16 @@ bool
 W3MapSection::is_dirty() const
 {
     return dirty_;
+}
+
+inline
+Coord2D
+W3MapSection::calc_cell_coord_from_idx(const Coord2D& section_origin, size_t cell_idx)
+{
+    return {
+        section_origin.x + static_cast<int32_t>(cell_idx % W3MapSection::kCellsDimension),
+        section_origin.y + static_cast<int32_t>(cell_idx / W3MapSection::kCellsDimension)
+    };
 }
 
 }  // namespace w3terr

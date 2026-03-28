@@ -49,13 +49,11 @@ W3MapSection::CachedMesh::alloc_cached_buffer(const size_t alloc_size) const
 void
 W3MapSection::initialize(
     size_t ground_tilesets_size,
-    size_t geo_tilesets_size,
-    const Coord2D& origin_2d
+    size_t geo_tilesets_size
 ) {
     ground_tileset_to_layer_map_.assign(ground_tilesets_size, {});
     ground_cached_meshes_.assign(ground_tilesets_size, {});
     geo_cached_meshes_.assign(geo_tilesets_size, {});
-    origin_2d_ = origin_2d;
 }
 
 void
@@ -93,10 +91,9 @@ W3MapSection::free_cached_data()
 }
 
 void
-W3MapSection::update_cell(const size_t cell_idx)
+W3MapSection::update_cell(const Coord2D& cell_coords, const size_t cell_idx)
 {
-    const Coord2D cell_coord = calc_cell_coord_from_idx(cell_idx);
-    const W3MapRuntimeManagerImpl::CellPointRT& cell_rt = runtime_manager_->get_cellpoint_rt(cell_coord);
+    const W3MapRuntimeManagerImpl::CellPointRT& cell_rt = runtime_manager_->get_cellpoint_rt(cell_coords);
 
     // mark cell as unusable for all geoset ground meshes
     for(size_t tileset_id = 0; tileset_id < get_ground_tilesets_size(); ++tileset_id) {
@@ -156,40 +153,24 @@ W3MapSection::update_cell(const size_t cell_idx)
 }
 
 void
-W3MapSection::update_all_cells()
+W3MapSection::update_all_cells(const Coord2D& section_origin)
 {
     std::ranges::fill(ground_tileset_to_layer_map_, 0);
     std::ranges::fill(ground_cached_meshes_, W3MapSection::CachedMesh {});
     std::ranges::fill(geo_cached_meshes_, W3MapSection::CachedMesh {});
     water_mesh_ = W3MapSection::CachedMesh {};
     for(uint32_t cell_idx = 0; cell_idx < kNumberOfCells; ++cell_idx) {
-        update_cell(cell_idx);
+        const auto cell_coords = calc_cell_coord_from_idx(section_origin, cell_idx);
+        update_cell(cell_coords, cell_idx);
     }
-}
-
-std::optional<Coord2D>
-W3MapSection::find_intersected_cell(const math::line3 &line, math::vector3& ipoint) const
-{
-    for(uint32_t cell_idx = 0; cell_idx < kNumberOfCells; ++cell_idx) {
-        const Coord2D cell_coord = calc_cell_coord_from_idx(cell_idx);
-
-        auto point_opt = runtime_manager_->get_cell_intersection_point(
-            cell_coord, line);
-
-        if (point_opt.has_value()) {
-            ipoint = point_opt.value();
-            return std::make_optional<Coord2D>(cell_coord.x, cell_coord.y);
-        }
-    }
-    return std::nullopt;
 }
 
 bool
-W3MapSection::refresh()
+W3MapSection::refresh(const Coord2D& section_origin)
 {
     if (is_dirty()) {
         free_cached_data();
-        update_all_cells();
+        update_all_cells(section_origin);
         set_dirty(false);
         return true;
     }

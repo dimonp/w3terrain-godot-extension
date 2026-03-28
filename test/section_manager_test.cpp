@@ -67,7 +67,6 @@ TEST_F(SectionManagerTestFixture, InitializeWithValidParameters)
     EXPECT_FALSE(sut.is_valid_section_id(10));
 
     const auto& section = sut.get_section_by_id(1);
-    EXPECT_EQ(section.get_origin_2d() , w3terr::Coord2D(0, 0));
     EXPECT_EQ(section.get_geo_tilesets_size(), 2);
     EXPECT_EQ(section.get_ground_tilesets_size(), 2);
 }
@@ -105,15 +104,6 @@ TEST_F(SectionManagerTestFixture, MultipleSectionsIteration)
     // 9x9 map with section dimension 4 => 2x2 sections
     EXPECT_EQ(sut.begin(), w3terr::W3MapSectionManager::SectionIdIterator(1));
     EXPECT_EQ(sut.end(), w3terr::W3MapSectionManager::SectionIdIterator(5)); // 4 sections
-
-    // Check each section's origin
-    const std::vector<w3terr::Coord2D> expected_origins = {
-        {0, 0}, {4, 0}, {0, 4}, {4, 4}
-    };
-    for (size_t i = 0; i < expected_origins.size(); ++i) {
-        const auto& section = sut.get_section_by_id(static_cast<uint32_t>(i + 1));
-        EXPECT_EQ(section.get_origin_2d(), expected_origins[i]);
-    }
 }
 
 TEST_F(SectionManagerTestFixture, UpdateAllSectionsReinitializesSections)

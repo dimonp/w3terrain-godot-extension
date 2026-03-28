@@ -67,24 +67,16 @@ inline
 auto create_section_array4()
 {
     auto section00 = w3terr::W3MapSection(nullptr);
-    section00.initialize(
-        2, 1,
-        { 0, 0 });
+    section00.initialize(2, 1);
 
     auto section01 = w3terr::W3MapSection(nullptr);
-    section01.initialize(
-        2, 1,
-        { 4, 0 });
+    section01.initialize(2, 1);
 
     auto section10 = w3terr::W3MapSection(nullptr);
-    section10.initialize(
-        2, 1,
-        { 0, 4 });
+    section10.initialize(2, 1);
 
     auto section11 = w3terr::W3MapSection(nullptr);
-    section11.initialize(
-        2, 1,
-        { 4, 4 });
+    section11.initialize(2, 1);
 
     return std::vector<w3terr::W3MapSection> { section00, section01, section10, section11 };
 }

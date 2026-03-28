@@ -29,7 +29,7 @@ W3MapSectionManagerImpl::~W3MapSectionManagerImpl() noexcept
 
 inline
 W3MapSectionManagerImpl::SectionId
-W3MapSectionManagerImpl::get_section_id_from_coord(int32_t section_2d_x, int32_t section_2d_y) const
+W3MapSectionManagerImpl::calc_section_id_from_coord(int32_t section_2d_x, int32_t section_2d_y) const
 {
     w3_assert(is_valid_section_coord(section_2d_x, section_2d_y));
     return (section_2d_y * sections_2d_x_size_) + section_2d_x + 1;
@@ -47,6 +47,31 @@ W3MapSectionManagerImpl::calc_section_bbox(SectionId section_id) const
     );
 }
 
+std::optional<Coord2D>
+W3MapSectionManagerImpl::find_intersected_cell(SectionId section_id, const math::line3 &line, math::vector3& ipoint) const
+{
+    for(uint32_t cell_idx = 0; cell_idx < W3MapSection::kNumberOfCells; ++cell_idx) {
+        const Coord2D origing = calc_section_origin(section_id);
+        const Coord2D cell_coord = W3MapSection::calc_cell_coord_from_idx(origing, cell_idx);
+
+        auto point_opt = runtime_->get_cell_intersection_point(
+            cell_coord, line);
+
+        if (point_opt.has_value()) {
+            ipoint = point_opt.value();
+            return std::make_optional<Coord2D>(cell_coord.x, cell_coord.y);
+        }
+    }
+    return std::nullopt;
+}
+
+void
+W3MapSectionManagerImpl::refresh_section(SectionId section_id)
+{
+    Coord2D origin = calc_section_origin(section_id);
+    get_section_by_id(section_id).refresh(origin);
+}
+
 void
 W3MapSectionManagerImpl::update_all_sections()
 {
@@ -59,17 +84,10 @@ W3MapSectionManagerImpl::update_all_sections()
 
     // loop and initialize all sections
     for(const auto section_id : *this) {
-        const Coord2D origin = calc_section_origin(section_id);
-        const math::bbox3 section_bbox = map_w3e->calc_cellpoints_bbox(
-            origin.x,
-            origin.y,
-            W3MapSection::kCellsDimension);
-
         W3MapSection& section = get_section_by_id(section_id);
         section.initialize(
             map_w3e->get_ground_tilesets_count(),
-            map_w3e->get_geo_tilesets_count(),
-            origin);
+            map_w3e->get_geo_tilesets_count());
     }
 }
 
@@ -105,7 +123,7 @@ W3MapSectionManagerImpl::invalidate_sections_at_cellpoint(const Coord2D& coords)
             if (!is_valid_section_coord(idx_2d_y, idx_2d_x)) {
                 continue;
             }
-            SectionId section_id = get_section_id_from_coord(idx_2d_x, idx_2d_y);
+            SectionId section_id = calc_section_id_from_coord(idx_2d_x, idx_2d_y);
             get_section_by_id(section_id).set_dirty();
         }
     }

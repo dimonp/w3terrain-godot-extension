@@ -18,10 +18,6 @@ class MockSectionManager : public w3terr::W3MapSectionManager {
     MOCK_METHOD(w3terr::W3MapSection&, get_section_by_id, (SectionId), (override));
     MOCK_METHOD(bool, is_valid_section_id, (SectionId), (const, override));
     MOCK_METHOD(w3terr::math::bbox3, calc_section_bbox, (SectionId), (const, override));
-
-    MOCK_METHOD(void, update_all_sections, (), (override));
-    MOCK_METHOD(void, set_dirty_all, (), (override));
-    MOCK_METHOD(void, invalidate_sections_at_cellpoint, (const w3terr::Coord2D&), (override));
 };
 
 class CollectorTestFixture : public ::testing::Test {

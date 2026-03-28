@@ -24,9 +24,13 @@ public:
     bool is_valid_section_id(SectionId section_id) const override;
     math::bbox3 calc_section_bbox(SectionId section_id) const override;
 
-    void update_all_sections() override;
-    void set_dirty_all() override;
-    void invalidate_sections_at_cellpoint(const Coord2D& coords) override;
+    std::optional<Coord2D> find_intersected_cell(SectionId section_id, const math::line3 &line, math::vector3& ipoint) const;
+    Coord2D calc_section_origin(SectionId section_id) const;
+
+    void invalidate_sections_at_cellpoint(const Coord2D& coords);
+    void refresh_section(SectionId section_id);
+    void update_all_sections();
+    void set_dirty_all();
 
     static uint64_t get_cache_allocation_size();
 
@@ -36,8 +40,7 @@ private:
 
     static size_t id_to_idx(uint32_t section_id);
 
-    Coord2D calc_section_origin(SectionId section_id) const;
-    SectionId get_section_id_from_coord(int32_t section_2d_x, int32_t section_2d_y) const;
+    SectionId calc_section_id_from_coord(int32_t section_2d_x, int32_t section_2d_y) const;
     bool is_valid_section_coord(int32_t section_2d_x, int32_t section_2d_y) const;
 
     W3Array<W3MapSection> sections_array_;

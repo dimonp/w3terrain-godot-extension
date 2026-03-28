@@ -159,7 +159,8 @@ W3SurfaceWater::precache_cells(const uint32_t section_id) const
             continue;
         }
 
-        const Coord2D cell_coord = section.calc_cell_coord_from_idx(cell_idx);
+        const auto section_origin = section_manager->calc_section_origin(section_id);
+        const auto cell_coord = W3MapSection::calc_cell_coord_from_idx(section_origin, cell_idx);
 
         const math::vector3 base_water_pos = runtime_manager->get_cellpoint_water_position(cell_coord);
         const float water_height = base_water_pos.y;
