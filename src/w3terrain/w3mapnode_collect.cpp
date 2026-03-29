@@ -1,3 +1,5 @@
+#include "w3mapnode.h"
+
 #include <godot_cpp/classes/engine.hpp>
 #ifdef EDITOR_SUPPORT_ENABLE
 #include <godot_cpp/classes/editor_interface.hpp>
@@ -6,7 +8,6 @@
 
 #include "w3mapsectionmanager_impl.h"
 #include "w3mapcollector_impl.h"
-#include "w3mapnode.h"
 
 namespace w3terr {
 

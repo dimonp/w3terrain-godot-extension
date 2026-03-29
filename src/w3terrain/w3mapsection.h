@@ -5,6 +5,7 @@
 #include <span>
 
 #include "w3defs.h"
+#include "w3map.h"
 
 namespace w3terr {
 
@@ -12,8 +13,7 @@ class W3MapRuntimeManager;
 
 class W3_API W3MapSection {
 public:
-    static constexpr int32_t kCellsDimension = 4;
-    static constexpr int32_t kNumberOfCells = kCellsDimension * kCellsDimension;
+    static constexpr int32_t kNumberOfCells = kSectionDimension * kSectionDimension;
 
     explicit W3MapSection(const W3MapRuntimeManager* map_runtime): runtime_manager_(map_runtime) {}
     void initialize(size_t ground_tilesets_size, size_t geo_tilesets_size);
@@ -191,8 +191,8 @@ Coord2D
 W3MapSection::calc_cell_coord_from_idx(const Coord2D& section_origin, size_t cell_idx)
 {
     return {
-        section_origin.x + static_cast<int32_t>(cell_idx % W3MapSection::kCellsDimension),
-        section_origin.y + static_cast<int32_t>(cell_idx / W3MapSection::kCellsDimension)
+        section_origin.x + static_cast<int32_t>(cell_idx % kSectionDimension),
+        section_origin.y + static_cast<int32_t>(cell_idx / kSectionDimension)
     };
 }
 

@@ -38,7 +38,7 @@ private:
     int32_t sections_2d_x_size_ = 0;
     int32_t sections_2d_y_size_ = 0;
 
-    static size_t id_to_idx(uint32_t section_id);
+    static size_t map_section_id_to_idx(uint32_t section_id);
 
     SectionId calc_section_id_from_coord(int32_t section_2d_x, int32_t section_2d_y) const;
     bool is_valid_section_coord(int32_t section_2d_x, int32_t section_2d_y) const;
@@ -65,7 +65,7 @@ W3MapSectionManagerImpl::end() const
 
 inline
 size_t
-W3MapSectionManagerImpl::id_to_idx(uint32_t section_id)
+W3MapSectionManagerImpl::map_section_id_to_idx(uint32_t section_id)
 {
     return static_cast<size_t>(section_id - 1);
 }
@@ -83,7 +83,7 @@ const W3MapSection&
 W3MapSectionManagerImpl::get_section_by_id(uint32_t section_id) const
 {
     w3_assert(section_id > 0 && section_id <= sections_array_.size());
-    return sections_array_[id_to_idx(section_id)];
+    return sections_array_[map_section_id_to_idx(section_id)];
 }
 
 inline
@@ -91,7 +91,7 @@ W3MapSection&
 W3MapSectionManagerImpl::get_section_by_id(SectionId section_id)
 {
     w3_assert(is_valid_section_id(section_id));
-    return sections_array_[id_to_idx(section_id)];
+    return sections_array_[map_section_id_to_idx(section_id)];
 }
 
 inline

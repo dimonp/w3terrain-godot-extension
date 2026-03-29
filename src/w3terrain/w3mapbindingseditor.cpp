@@ -1,7 +1,8 @@
+#include "w3mapbindingseditor.h"
+
 #include "w3defs.h"
 #include "w3mapnode.h"
 #include "w3mapsectionmanager_impl.h"
-#include "w3mapbindingseditor.h"
 
 namespace w3terr {
 

@@ -1,5 +1,6 @@
-#include "w3mapassets.h"
 #include "w3mapinformator_impl.h"
+
+#include "w3mapassets.h"
 
 namespace w3terr {
 

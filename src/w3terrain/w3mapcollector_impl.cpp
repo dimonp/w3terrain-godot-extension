@@ -1,8 +1,9 @@
+#include "w3mapcollector_impl.h"
+
 #include <quadtree/quadtree.h>
 #include <quadtree/quadtree_collector.h>
 
 #include "w3mapsectionmanager.h"
-#include "w3mapcollector_impl.h"
 
 namespace w3terr {
 

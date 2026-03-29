@@ -1,7 +1,8 @@
+#include "w3mapsection.h"
+
 #include <algorithm>
 #include <lru_memory_manager/lrumemorymanager.h>
 
-#include "w3mapsection.h"
 #include "w3mapruntimemanager.h"
 
 namespace w3terr {
@@ -30,7 +31,6 @@ W3MapSection::CachedMesh::get_cache_handle() const
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
     return std::launder(reinterpret_cast<LRUHandle*>(storage_.data()));
 }
-
 
 const void*
 W3MapSection::CachedMesh::get_cached_buffer() const

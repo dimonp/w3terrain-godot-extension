@@ -1,8 +1,9 @@
+#include "w3mapruntimemanager_impl.h"
+
 #include <array>
 #include "w3math.h"
 #include "w3mapassets.h"
 #include "w3mapinformator_impl.h"
-#include "w3mapruntimemanager_impl.h"
 
 namespace w3terr {
 
@@ -71,18 +72,26 @@ W3MapRuntimeManagerImpl::w3e_map() const
 }
 
 inline
+size_t
+W3MapRuntimeManagerImpl::map_cell_coords_to_idx(const Coord2D& coords) const
+{
+    const auto map_size_x =  w3e_map()->get_map_2d_size_x();
+    return static_cast<size_t>(coords.y * map_size_x) + coords.x;
+}
+
+inline
 W3MapRuntimeManager::CellPointRT&
 W3MapRuntimeManagerImpl::get_cellpoint_rt(const Coord2D& coords)
 {
-    const auto map_size_x =  w3e_map()->get_map_2d_size_x();
-    return cellpoints_rt_[static_cast<size_t>(coords.y * map_size_x) + coords.x];
+    const auto cell_idx = map_cell_coords_to_idx(coords);
+    return cellpoints_rt_[cell_idx];
 }
 
 const W3MapRuntimeManager::CellPointRT&
 W3MapRuntimeManagerImpl::get_cellpoint_rt(const Coord2D& coords) const
 {
-    const auto map_size_x =  w3e_map()->get_map_2d_size_x();
-    return cellpoints_rt_[static_cast<size_t>(coords.y * map_size_x) + coords.x];
+    const auto cell_idx = map_cell_coords_to_idx(coords);
+    return cellpoints_rt_[cell_idx];
 }
 
 float

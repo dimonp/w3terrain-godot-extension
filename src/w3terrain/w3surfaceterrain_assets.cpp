@@ -1,9 +1,10 @@
+#include "w3surfaceterrain.h"
+
 #include <godot_cpp/classes/standard_material3d.hpp>
 #include <godot_cpp/classes/shader_material.hpp>
 
 #include "w3mapassets.h"
 #include "w3mapnode.h"
-#include "w3surfaceterrain.h"
 
 namespace w3terr {
 

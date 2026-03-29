@@ -1,8 +1,9 @@
+#include "w3mapnode.h"
+
 #include "w3mapinformator_impl.h" // IWYU pragma: keep
 #include "w3mapruntimemanager_impl.h"
 #include "w3mapcollector_impl.h"
 #include "w3mapsectionmanager_impl.h"
-#include "w3mapnode.h"
 
 namespace w3terr {
 
@@ -40,12 +41,12 @@ W3MapNode::load_map()
     const int32_t map_2d_size_x = get_w3e()->get_map_2d_size_x();
     const int32_t map_2d_size_y = get_w3e()->get_map_2d_size_y();
 
-    if ((map_2d_size_x - 1) % W3MapSection::kCellsDimension != 0) {
+    if ((map_2d_size_x - 1) % kSectionDimension != 0) {
         w3_log_error("Map size must be divided by section size.");
         return false;
     }
 
-    if ((map_2d_size_y - 1) % W3MapSection::kCellsDimension != 0) {
+    if ((map_2d_size_y - 1) % kSectionDimension != 0) {
         w3_log_error("Map size must be divided by section size.");
         return false;
     }

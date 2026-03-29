@@ -1,7 +1,8 @@
+#include "w3mapinformator_impl.h"
+
 #include <ranges>
 
 #include "w3mapassets.h"
-#include "w3mapinformator_impl.h"
 
 namespace w3terr {
 

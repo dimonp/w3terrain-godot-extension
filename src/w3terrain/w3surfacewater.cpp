@@ -1,3 +1,5 @@
+#include "w3surfacewater.h"
+
 #include <godot_cpp/classes/performance.hpp>
 
 #include "w3mapruntimemanager_impl.h"
@@ -5,7 +7,6 @@
 #include "w3mapsectionmanager_impl.h"
 #include "w3mapsection.h"
 #include "w3mapnode.h"
-#include "w3surfacewater.h"
 
 namespace w3terr {
 

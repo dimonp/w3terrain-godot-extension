@@ -48,6 +48,8 @@ private:
     void update_runtime_cliff(const auto& cell_info, CellPointRT& cell_rt) const;
     void update_runtime_ramp(const auto& cell_info, CellPointRT& cell_rt) const;
 
+    size_t map_cell_coords_to_idx(const Coord2D& coords) const;
+
     W3Array<CellPointRT> cellpoints_rt_;
 
     gsl::not_null<const W3MapAssets*> map_asset_;

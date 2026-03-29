@@ -1,6 +1,7 @@
+#include "w3mapbindings.h"
+
 #include "w3mapnode.h"
 #include "w3mapruntimemanager_impl.h"
-#include "w3mapbindings.h"
 
 namespace w3terr {
 

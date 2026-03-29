@@ -1,8 +1,9 @@
-#ifndef _W3MAP__H
-#define _W3MAP__H
+#ifndef _W3E__H
+#define _W3E__H
 
 #include "w3defs.h"
 #include "w3math.h"
+#include "w3map.h"
 
 namespace w3terr {
 
@@ -10,19 +11,6 @@ inline constexpr uint8_t kW3MapMapBaseHeightLayer   = 2;
 inline constexpr int32_t kW3MapMapBaseHeight        = 0x2000;
 inline constexpr int32_t kW3MapMapMaxHeight         = 0x4000;
 inline constexpr uint8_t kW3MapMapMaxGroundLayers   = 4;
-
-inline constexpr float kW3MapTile2DSize             = 128.0F;
-inline constexpr float kW3MapTile2DHalfSize         = kW3MapTile2DSize / 2.0F;
-inline constexpr float kW3MapTile2DInvSize          = 1.0F / kW3MapTile2DSize;
-inline constexpr float kGroundTextureTileSize       = 64.0F;
-
-inline float get_3d_coord_from_2d_x(int32_t idx) {
-    return static_cast<float>(idx) * kW3MapTile2DSize;
-}
-
-inline float get_3d_coord_from_2d_z(int32_t idx) {
-    return -static_cast<float>(idx) * kW3MapTile2DSize;
-}
 
 #pragma pack(1)
 struct W3eCell {
@@ -303,5 +291,5 @@ W3e::set_cellpoint_water_height(int32_t coord_2d_x, int32_t coord_2d_y, float he
 
 }  // namespace w3terr
 
-#endif  /// _W3MAP__H
+#endif  /// _W3E__H
 
