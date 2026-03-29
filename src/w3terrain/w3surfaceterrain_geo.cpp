@@ -105,8 +105,8 @@ W3SurfaceTerrain::precache_geo_cells(uint32_t section_id, size_t tileset_id) con
 
         const W3MapRuntimeManager::CellPointRT& cell_rt00 = runtime_manager->get_cellpoint_rt(cell_coord);
         const W3MapRuntimeManager::CellPointRT& cell_rt10 = runtime_manager->get_cellpoint_rt({cell_coord.x + 1, cell_coord.y});
-        const W3MapRuntimeManager::CellPointRT& cell_rt11 = runtime_manager->get_cellpoint_rt({cell_coord.x + 1, cell_coord.y + 1});
         const W3MapRuntimeManager::CellPointRT& cell_rt01 = runtime_manager->get_cellpoint_rt({cell_coord.x,     cell_coord.y + 1});
+        const W3MapRuntimeManager::CellPointRT& cell_rt11 = runtime_manager->get_cellpoint_rt({cell_coord.x + 1, cell_coord.y + 1});
 
         const W3Mesh *gro_mesh_ptr = nullptr;
         if (cell_rt00.check_flag(W3MapRuntimeManagerImpl::CellPointRT::GEO_CLIFF)) {

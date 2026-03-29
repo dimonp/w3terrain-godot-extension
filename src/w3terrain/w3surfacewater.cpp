@@ -177,25 +177,25 @@ W3SurfaceWater::precache_cells(const uint32_t section_id) const
         vertices[dest_vertex_idx].pos.y = water_height;
         ++dest_vertex_idx;
 
-        // vertex 11
-        cellpoint_position = runtime_manager->get_cellpoint_position({ cell_coord.x + 1, cell_coord.y + 1 });
-        vertices[dest_vertex_idx].pos = cellpoint_position;
-        vertices[dest_vertex_idx].pos.y = water_height;
-        ++dest_vertex_idx;
-
         // vertex 01
         cellpoint_position = runtime_manager->get_cellpoint_position({ cell_coord.x, cell_coord.y + 1 });
         vertices[dest_vertex_idx].pos = cellpoint_position;
         vertices[dest_vertex_idx].pos.y = water_height;
         ++dest_vertex_idx;
 
+        // vertex 11
+        cellpoint_position = runtime_manager->get_cellpoint_position({ cell_coord.x + 1, cell_coord.y + 1 });
+        vertices[dest_vertex_idx].pos = cellpoint_position;
+        vertices[dest_vertex_idx].pos.y = water_height;
+        ++dest_vertex_idx;
+
         // cell indices counterclockwise
         indices[dest_index_idx++] = dest_vertex_idx - 4; // 0
-        indices[dest_index_idx++] = dest_vertex_idx - 2; // 2
+        indices[dest_index_idx++] = dest_vertex_idx - 1; // 3
         indices[dest_index_idx++] = dest_vertex_idx - 3; // 1
         indices[dest_index_idx++] = dest_vertex_idx - 4; // 0
-        indices[dest_index_idx++] = dest_vertex_idx - 1; // 3
         indices[dest_index_idx++] = dest_vertex_idx - 2; // 2
+        indices[dest_index_idx++] = dest_vertex_idx - 1; // 3
 
 #ifdef W3MAP_STATS_ENABLE
         stat_water_tiles_precached_++;

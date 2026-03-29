@@ -1,6 +1,7 @@
 #include "w3mapruntimemanager_impl.h"
 
 #include <array>
+#include <cstddef>
 #include "w3math.h"
 #include "w3mapassets.h"
 #include "w3mapinformator_impl.h"
@@ -75,8 +76,31 @@ inline
 size_t
 W3MapRuntimeManagerImpl::map_cell_coords_to_idx(const Coord2D& coords) const
 {
-    const auto map_size_x =  w3e_map()->get_map_2d_size_x();
-    return static_cast<size_t>(coords.y * map_size_x) + coords.x;
+    // Iterate cellpoints in cache-friendly order
+    // cells:    0123456..n      0123456..n     0123456..n
+    // row 0: .. section 00 .... section 01 ... section 02 ...
+    // row 1: .. section 10 .... section 11 ... section 12 ...
+    // row 2: .. section 20 .... section 21 ... section 22 ...
+    // row 3: .. section 30 .... section 31 ... section 32 ...
+
+    const size_t num_sections_x = w3e_map()->get_map_2d_size_x() / kSectionDimension;
+    const int sec_x = coords.x / kSectionDimension;
+    const int sec_y = coords.y / kSectionDimension;
+    const int loc_x = coords.x % kSectionDimension;
+    const int loc_y = coords.y % kSectionDimension;
+
+    const size_t full_row_size = (static_cast<size_t>(num_sections_x * kSectionDimension) + 1) * kSectionDimension;
+    // Global offset to the start of the current horizontal band of sections
+    const size_t global_offset = sec_y * full_row_size;
+
+    // Offset to a specific section within a row
+    const size_t sec_in_row_offset = sec_x * static_cast<size_t>(kSectionDimension * kSectionDimension);
+
+    // Local offset within a section
+    const int current_sec_w = (sec_x < num_sections_x) ? kSectionDimension : 1;
+    const size_t local_offset = static_cast<size_t>(loc_y * current_sec_w) + loc_x;
+
+    return global_offset + sec_in_row_offset + local_offset;
 }
 
 inline
@@ -353,7 +377,9 @@ W3MapRuntimeManagerImpl::update_all_cells_rt()
 {
     const auto map_size_x = w3e_map()->get_map_2d_size_x();
     const auto map_size_y = w3e_map()->get_map_2d_size_y();
-    const size_t runtime_array_size = static_cast<size_t>(map_size_x) * map_size_y;
+    const size_t runtime_array_size = static_cast<size_t>(
+        map_size_x + kSectionDimension - 1) * (map_size_y + kSectionDimension - 1 // + 1 padding cells
+    );
     cellpoints_rt_.resize(runtime_array_size);
 
     for(int32_t idx_2d_y = 0; idx_2d_y < map_size_y; ++idx_2d_y) {
