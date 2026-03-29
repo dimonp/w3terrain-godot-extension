@@ -21,7 +21,7 @@ W3MapSection::CachedMesh::~CachedMesh() noexcept
 {
     // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
     LRUHandle* cache_mem_handle = reinterpret_cast<LRUHandle*>(storage_.data());
-    cache_mem_handle->~LRUHandle();
+    get_lrumm_instance()->free(cache_mem_handle);
 }
 
 auto*
