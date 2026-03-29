@@ -26,15 +26,15 @@ public:
     math::bbox3 get_cell_bbox(const Coord2D& coords) const override;
     float get_cell_ground_height(const Coord2D& coords, float t_lerp, float s_lerp) const override;
 
-    bool test_cell_intersection(const Coord2D& coords, const math::line3& line) const override;
-    std::optional<math::vector3> get_cell_intersection_point(const Coord2D& coords, const math::line3& line) const override;
-
     void update_all_cells_rt() override;
     void update_cell_rt(const Coord2D& coords) override;
     void update_area_rt(const Coord2D& coords, int32_t area_margin) override;
 
     bool is_dirty() const override;
     void set_dirty(bool flag) override;
+
+    bool test_cell_intersection(const Coord2D& coords, const math::line3& line) const override;
+    std::optional<math::vector3> get_cell_intersection_point(const Coord2D& coords, const math::line3& line) const override;
 
 private:
     const auto* w3e_map() const;

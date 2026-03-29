@@ -80,15 +80,15 @@ public:
     virtual math::bbox3 get_cell_bbox(const Coord2D& coords) const = 0;
     virtual float get_cell_ground_height(const Coord2D& coords, float t_lerp, float s_lerp) const = 0;
 
-    virtual bool test_cell_intersection(const Coord2D& coords, const math::line3& line) const = 0;
-    virtual std::optional<math::vector3> get_cell_intersection_point(const Coord2D& coords, const math::line3& line) const = 0;
-
     virtual void update_all_cells_rt() = 0;
     virtual void update_cell_rt(const Coord2D& coords) = 0;
     virtual void update_area_rt(const Coord2D& coords, int32_t area_margin) = 0;
 
     virtual bool is_dirty() const = 0;
     virtual void set_dirty(bool flag) = 0;
+
+    virtual bool test_cell_intersection(const Coord2D& coords, const math::line3& line) const = 0;
+    virtual std::optional<math::vector3> get_cell_intersection_point(const Coord2D& coords, const math::line3& line) const = 0;
 };
 
 }  // namespace w3terr

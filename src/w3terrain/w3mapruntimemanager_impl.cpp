@@ -118,18 +118,18 @@ uint32_t
 W3MapRuntimeManagerImpl::get_cliff_geoset_id_for_geokey(const size_t geo_tileset_id, const uint32_t geo_key) const
 {
     const uint32_t geo_variation = geo_key >> 8U;
-	const auto& keys_map = map_asset_->geo_asset_rt(geo_tileset_id).geo_cliff_keys_map;
+    const auto& keys_map = map_asset_->geo_asset_rt(geo_tileset_id).geo_cliff_keys_map;
 
     // find geoset id
     uint32_t geo_variation_mask = 7;
     size_t max_iter = 32;
     while(--max_iter != 0U) {
-		const uint32_t geo_key_tmp = (geo_key & 0xffU) | ((geo_variation & geo_variation_mask) << 8U);
+        const uint32_t geo_key_tmp = (geo_key & 0xffU) | ((geo_variation & geo_variation_mask) << 8U);
 
         const auto itr = keys_map.find(geo_key_tmp);
-		if (itr != keys_map.end()) {
-			return itr->second;
-		}
+        if (itr != keys_map.end()) {
+            return itr->second;
+        }
         geo_variation_mask >>= 1U;
     }
 
