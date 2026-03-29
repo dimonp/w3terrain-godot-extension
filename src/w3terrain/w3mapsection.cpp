@@ -2,7 +2,7 @@
 #include <lru_memory_manager/lrumemorymanager.h>
 
 #include "w3mapsection.h"
-#include "w3mapruntimemanager_impl.h"
+#include "w3mapruntimemanager.h"
 
 namespace w3terr {
 
@@ -93,7 +93,7 @@ W3MapSection::free_cached_data()
 void
 W3MapSection::update_cell(const Coord2D& cell_coords, const size_t cell_idx)
 {
-    const W3MapRuntimeManagerImpl::CellPointRT& cell_rt = runtime_manager_->get_cellpoint_rt(cell_coords);
+    const W3MapRuntimeManager::CellPointRT& cell_rt = runtime_manager_->get_cellpoint_rt(cell_coords);
 
     // mark cell as unusable for all geoset ground meshes
     for(size_t tileset_id = 0; tileset_id < get_ground_tilesets_size(); ++tileset_id) {
@@ -107,11 +107,11 @@ W3MapSection::update_cell(const Coord2D& cell_coords, const size_t cell_idx)
         cached_mesh.usage_flags_.set(cell_idx, false);
     }
 
-    if (cell_rt.check_flag(W3MapRuntimeManagerImpl::CellPointRT::GROUND)) {  // ground cellpoint
-        for(size_t layer_idx = 0; layer_idx < W3MapRuntimeManagerImpl::CellPointRT::kMaxGroundLayers; ++layer_idx) {
+    if (cell_rt.check_flag(W3MapRuntimeManager::CellPointRT::GROUND)) {  // ground cellpoint
+        for(size_t layer_idx = 0; layer_idx < W3MapRuntimeManager::CellPointRT::kMaxGroundLayers; ++layer_idx) {
 
             size_t tileset_id = cell_rt.get_ground_tileset_id(layer_idx);
-            if (tileset_id == W3MapRuntimeManagerImpl::CellPointRT::kEmptyTilesetId) {
+            if (tileset_id == W3MapRuntimeManager::CellPointRT::kEmptyTilesetId) {
                 continue;
             }
 
@@ -124,7 +124,7 @@ W3MapSection::update_cell(const Coord2D& cell_coords, const size_t cell_idx)
             ground_mesh.vertices_count_ += 4;
             ground_mesh.indices_count_ += 6;
         }
-    } else if (cell_rt.check_flag(W3MapRuntimeManagerImpl::CellPointRT::GEO_CLIFF)) { // geo cellpoint (cliffs)
+    } else if (cell_rt.check_flag(W3MapRuntimeManager::CellPointRT::GEO_CLIFF)) { // geo cellpoint (cliffs)
         const size_t tileset_id = cell_rt.tileset_id;
         W3MapSection::CachedMesh &cliff_mesh = geo_cached_meshes_[tileset_id];
         cliff_mesh.usage_flags_ |= (1U << cell_idx);
@@ -132,7 +132,7 @@ W3MapSection::update_cell(const Coord2D& cell_coords, const size_t cell_idx)
         // update precached mesh
         cliff_mesh.vertices_count_ += cell_rt.vertices_count;
         cliff_mesh.indices_count_ += cell_rt.indices_count;
-    } else if (cell_rt.check_flag(W3MapRuntimeManagerImpl::CellPointRT::GEO_RAMP)) { // geo cellpoint (ramps)
+    } else if (cell_rt.check_flag(W3MapRuntimeManager::CellPointRT::GEO_RAMP)) { // geo cellpoint (ramps)
         const size_t tileset_id = cell_rt.tileset_id;
         W3MapSection::CachedMesh &ramp_mesh = geo_cached_meshes_[tileset_id];
         ramp_mesh.usage_flags_.set(cell_idx, true);
@@ -143,7 +143,7 @@ W3MapSection::update_cell(const Coord2D& cell_coords, const size_t cell_idx)
     }
 
     // update water info
-    if (cell_rt.check_flag(W3MapRuntimeManagerImpl::CellPointRT::WATER)) {
+    if (cell_rt.check_flag(W3MapRuntimeManager::CellPointRT::WATER)) {
         water_mesh_.usage_flags_.set(cell_idx, true);
 
         // update precached mesh

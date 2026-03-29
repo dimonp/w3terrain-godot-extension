@@ -71,14 +71,14 @@ W3MapRuntimeManagerImpl::w3e_map() const
 }
 
 inline
-W3MapRuntimeManagerImpl::CellPointRT&
+W3MapRuntimeManager::CellPointRT&
 W3MapRuntimeManagerImpl::get_cellpoint_rt(const Coord2D& coords)
 {
     const auto map_size_x =  w3e_map()->get_map_2d_size_x();
     return cellpoints_rt_[static_cast<size_t>(coords.y * map_size_x) + coords.x];
 }
 
-const W3MapRuntimeManagerImpl::CellPointRT&
+const W3MapRuntimeManager::CellPointRT&
 W3MapRuntimeManagerImpl::get_cellpoint_rt(const Coord2D& coords) const
 {
     const auto map_size_x =  w3e_map()->get_map_2d_size_x();
@@ -101,7 +101,7 @@ math::vector3
 W3MapRuntimeManagerImpl::get_cellpoint_position(const Coord2D& coords) const
 {
     math::vector3 pos = w3e_map()->get_cellpoint_position(coords.x, coords.y);
-    const W3MapRuntimeManagerImpl::CellPointRT& cell_rt = get_cellpoint_rt(coords);
+    const CellPointRT& cell_rt = get_cellpoint_rt(coords);
     if (cell_rt.check_flag(CellPointRT::Flags::RAMP_MIDDLE)) {
         pos.y += kW3MapTile2DHalfSize;
     }

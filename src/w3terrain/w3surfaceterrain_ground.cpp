@@ -104,10 +104,10 @@ W3SurfaceTerrain::precache_ground_cells(uint32_t section_id, size_t tileset_id) 
         const auto section_origin = section_manager->calc_section_origin(section_id);
         const auto cell_coord = W3MapSection::calc_cell_coord_from_idx(section_origin, cell_idx);
 
-        const W3MapRuntimeManagerImpl::CellPointRT& cell_rt00 = runtime_manager->get_cellpoint_rt(cell_coord);
-        const W3MapRuntimeManagerImpl::CellPointRT& cell_rt10 = runtime_manager->get_cellpoint_rt({ cell_coord.x + 1, cell_coord.y });
-        const W3MapRuntimeManagerImpl::CellPointRT& cell_rt11 = runtime_manager->get_cellpoint_rt({ cell_coord.x + 1, cell_coord.y + 1 });
-        const W3MapRuntimeManagerImpl::CellPointRT& cell_rt01 = runtime_manager->get_cellpoint_rt({ cell_coord.x,     cell_coord.y + 1 });
+        const W3MapRuntimeManager::CellPointRT& cell_rt00 = runtime_manager->get_cellpoint_rt(cell_coord);
+        const W3MapRuntimeManager::CellPointRT& cell_rt10 = runtime_manager->get_cellpoint_rt({ cell_coord.x + 1, cell_coord.y });
+        const W3MapRuntimeManager::CellPointRT& cell_rt11 = runtime_manager->get_cellpoint_rt({ cell_coord.x + 1, cell_coord.y + 1 });
+        const W3MapRuntimeManager::CellPointRT& cell_rt01 = runtime_manager->get_cellpoint_rt({ cell_coord.x,     cell_coord.y + 1 });
 
         // calc cell uv
         const auto [tile_idx_u, tile_idx_v] = cell_rt00.get_ground_tile_uv_indices(layer);

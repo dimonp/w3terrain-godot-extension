@@ -115,7 +115,7 @@ TEST_F(SectionManagerTestFixture, UpdateAllSectionsReinitializesSections)
 
     // Switch to a larger map
     ON_CALL(assets_, get_w3e()).WillByDefault(testing::Return(&w3e_9x9_));
-    sut.update_all_sections();
+    sut.initialize_all_sections();
 
     // Now should have 4 sections
     EXPECT_EQ(sut.begin(), w3terr::W3MapSectionManager::SectionIdIterator(1));

@@ -19,7 +19,7 @@ W3MapSectionManagerImpl::W3MapSectionManagerImpl(
     W3MapRuntimeManager* runtime
 ) : runtime_(runtime) , assets_(assets)
 {
-    update_all_sections();
+    initialize_all_sections();
 }
 
 W3MapSectionManagerImpl::~W3MapSectionManagerImpl() noexcept
@@ -73,7 +73,7 @@ W3MapSectionManagerImpl::refresh_section(SectionId section_id)
 }
 
 void
-W3MapSectionManagerImpl::update_all_sections()
+W3MapSectionManagerImpl::initialize_all_sections()
 {
     const auto* map_w3e = assets_->get_w3e();
     sections_2d_x_size_ = map_w3e->get_map_2d_size_x() / W3MapSection::kCellsDimension;

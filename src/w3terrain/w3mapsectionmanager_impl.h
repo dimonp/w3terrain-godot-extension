@@ -27,9 +27,9 @@ public:
     std::optional<Coord2D> find_intersected_cell(SectionId section_id, const math::line3 &line, math::vector3& ipoint) const;
     Coord2D calc_section_origin(SectionId section_id) const;
 
+    void initialize_all_sections();
     void invalidate_sections_at_cellpoint(const Coord2D& coords);
     void refresh_section(SectionId section_id);
-    void update_all_sections();
     void set_dirty_all();
 
     static uint64_t get_cache_allocation_size();
