@@ -13,6 +13,8 @@ func _init():
 	ui_instance.get_node("GridContainerAction/ButtonGroundD").pressed.connect(_on_button_pressed_ground_down)
 	ui_instance.get_node("GridContainerAction/ButtonLayerU").pressed.connect(_on_button_pressed_layer_up)
 	ui_instance.get_node("GridContainerAction/ButtonLayerD").pressed.connect(_on_button_pressed_layer_down)
+	ui_instance.get_node("GridContainerAction/ButtonRampA").pressed.connect(_on_button_pressed_ramp_add)
+	ui_instance.get_node("GridContainerAction/ButtonRampD").pressed.connect(_on_button_pressed_ramp_del)
 	ui_instance.get_node("HBoxContainerBrush/ButtonBrush1").toggled.connect(_on_button_toggled_ground_brush1)
 	ui_instance.get_node("HBoxContainerBrush/ButtonBrush3").toggled.connect(_on_button_toggled_ground_brush3)
 	ui_instance.get_node("HBoxContainerBrush/ButtonBrush5").toggled.connect(_on_button_toggled_ground_brush5)
@@ -28,6 +30,12 @@ func _on_button_pressed_layer_up():
 
 func _on_button_pressed_layer_down():
 	get_edited_object().brush_action = W3MapNodeEditor.BrushAction.LAYER_DOWN
+
+func _on_button_pressed_ramp_add():
+	get_edited_object().brush_action = W3MapNodeEditor.BrushAction.RAMP_ADD
+
+func _on_button_pressed_ramp_del():
+	get_edited_object().brush_action = W3MapNodeEditor.BrushAction.RAMP_DEL
 
 func _on_button_unpressed_action():
 	get_edited_object().brush_size = 0

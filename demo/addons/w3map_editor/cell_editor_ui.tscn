@@ -59,6 +59,25 @@ text = "Layer DOWN
 "
 metadata/action = 3
 
+[node name="ButtonRampA" type="Button" parent="GridContainerAction" unique_id=1604042354]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/pressed = SubResource("StyleBoxFlat_umld2")
+toggle_mode = true
+button_group = ExtResource("2_u23w3")
+text = "Ramp ADD"
+metadata/action = 4
+
+[node name="ButtonRampD" type="Button" parent="GridContainerAction" unique_id=315005582]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/pressed = SubResource("StyleBoxFlat_kysii")
+toggle_mode = true
+button_group = ExtResource("2_u23w3")
+text = "Ramp DEL
+"
+metadata/action = 5
+
 [node name="HSeparator" type="HSeparator" parent="." unique_id=686849405]
 layout_mode = 2
 

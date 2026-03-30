@@ -19,7 +19,6 @@ protected:
 
     void create_map(const godot::Vector2i& size) const;
 
-    bool check_cellpoint_layer(const godot::Vector2i& coords, uint8_t base_layer) const;
     void increase_cellpoint_layer(const godot::Vector2i& coords) const;
     void decrease_cellpoint_layer(const godot::Vector2i& coords) const;
     void set_cellpoint_ground_height(const godot::Vector2i& coords, float height) const;
@@ -32,6 +31,8 @@ protected:
 
 private:
     auto w3e_map() const;
+
+    bool check_cellpoint_layer(const godot::Vector2i& coords, uint8_t base_layer) const;
 
     W3MapNode* map_node_ = nullptr;
 };

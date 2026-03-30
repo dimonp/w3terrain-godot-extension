@@ -35,7 +35,7 @@ func _forward_3d_gui_input(viewport_camera: Camera3D, event: InputEvent) -> int:
 			return EditorPlugin.AFTER_GUI_INPUT_STOP
 			
 	if event is InputEventKey:
-		if event.keycode == KEY_SPACE:
+		if event.keycode == KEY_SPACE or event.keycode == KEY_ENTER:
 			if event.pressed:
 				edited_object.do_action()
 				return EditorPlugin.AFTER_GUI_INPUT_STOP

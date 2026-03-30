@@ -6,6 +6,8 @@ enum BrushAction {
 	GROUND_DOWN,
 	LAYER_UP, 
 	LAYER_DOWN,
+	RAMP_ADD, 
+	RAMP_DEL,
 }
 
 var cell_viewer: Dictionary = {
@@ -100,6 +102,10 @@ func do_action():
 			change_layer(selected_coords, 1)
 		BrushAction.LAYER_DOWN:
 			change_layer(selected_coords, -1)
+		BrushAction.RAMP_ADD:
+			change_ramp(selected_coords, true)
+		BrushAction.RAMP_DEL:
+			change_ramp(selected_coords, false)
 
 func change_height(coords: Vector2i, base_diff: float):
 	for y in range(brush_size):
@@ -117,7 +123,6 @@ func change_height(coords: Vector2i, base_diff: float):
 			var cell_height = map.get_cellpoint_ground_height(curr_coords)
 			if cell_height is float:
 				var new_height = cell_height + base_diff / div
-				print("coord: %s, cell_height: %f, div: %f  new_height: %f" % [curr_coords, cell_height, div, new_height])
 				editor.set_cellpoint_ground_height(curr_coords, new_height)
 
 func change_layer(coords: Vector2i, diff: int):
@@ -132,3 +137,13 @@ func change_layer(coords: Vector2i, diff: int):
 				editor.increase_cellpoint_layer(curr_coords)
 			else:
 				editor.decrease_cellpoint_layer(curr_coords)
+
+func change_ramp(coords: Vector2i, flag: bool):
+	for y in range(brush_size):
+		for x in range(brush_size):
+			var curr_coords = Vector2i(
+				coords.x + x - brush_size / 2, 
+				coords.y + y - brush_size / 2,
+			)
+			print("coord: %s" % [curr_coords])
+			editor.set_cellpoint_ramp(curr_coords, flag)
