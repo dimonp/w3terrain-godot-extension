@@ -1,7 +1,5 @@
 #include "w3mapinformator_impl.h"
 
-#include <ranges>
-
 #include "w3mapassets.h"
 
 namespace w3terr {
@@ -92,7 +90,9 @@ W3MapInformatorImpl::collect_cellpoint_ground_info(const Coord2D& coords, W3CPIn
         return false;
     }
 
-    for (auto [layer_idx, layer] : std::views::enumerate(info.ground_layers)) {
+    for (size_t layer_idx = 0; layer_idx < info.ground_layers.size(); ++layer_idx) {
+        // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-constant-array-index)
+        auto& layer = info.ground_layers[layer_idx];
         layer = {
             .mask = calc_ground_layer_tilesets_mask(info.key, layer_idx),
             .tileset_id = extract_ground_tileset_id(info.key, layer_idx)

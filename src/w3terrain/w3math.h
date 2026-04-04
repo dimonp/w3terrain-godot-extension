@@ -3,7 +3,10 @@
 
 #include <array>
 #include <algorithm>
-#include <immintrin.h>
+
+#if defined(__i386__) || defined(__x86_64__)
+    #include <immintrin.h>
+#endif
 
 #include <godot_cpp/variant/aabb.hpp>
 #include <godot_cpp/variant/vector2.hpp>
@@ -278,9 +281,7 @@ struct bbox3: public godot::AABB {
 #else
         bool is_clipped = false;
 
-        for (size_t i = 0; i < 6; ++i) {
-            const auto& plane = planes[i];
-
+        for (const auto& plane: planes) {
             // P-vertex: farthest point in the direction of the plane normal
             vector3 p_vertex(
                 (plane.normal.x > 0) ? max.x : min.x,

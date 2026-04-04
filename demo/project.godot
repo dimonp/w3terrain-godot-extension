@@ -14,10 +14,10 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 
 [application]
 
-config/name="Warcraft 3 terrain demo"
+config/name="Warcraft3 terrain demo"
 run/main_scene="uid://dw8t1of52hspa"
 config/features=PackedStringArray("4.6", "Forward Plus")
-config/icon="res://icon.svg"
+config/icon="uid://do3p32mkuifrc"
 
 [display]
 
@@ -27,8 +27,13 @@ window/stretch/mode="canvas_items"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/debug_menu/plugin.cfg", "res://addons/w3map_editor/plugin.cfg")
+enabled=PackedStringArray("res://addons/w3map_editor/plugin.cfg")
+
+[input_devices]
+
+pointing/emulate_touch_from_mouse=true
 
 [rendering]
 
+textures/vram_compression/import_etc2_astc=true
 anti_aliasing/quality/screen_space_aa=1

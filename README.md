@@ -51,7 +51,7 @@ A high-performance GDExtension for Godot Engine that renders Warcraft III‑styl
 This project does not contain the original textures and resources from Warcraft 3.
 Test resource stubs are used to run scene_demo_test.tscn, but if you want to see the map in its original form
 with the original resources, you must first import them from the original game's mpq archive.
-To get the archive with resources, install the Warcraft 3 (TFT,RoC) (for example, from https://archive.org/details/Warcraft3DemoCD) and use https://github.com/dimonp/assets_mpq_importer tools to extract the resources.  
+To get the archive with resources, install the Warcraft 3 (TFT,RoC) (for example, from <https://archive.org/details/Warcraft3DemoCD>) and use <https://github.com/dimonp/assets_mpq_importer> tools to extract the resources.
 Copy the extracted resources to the `demo/assets/imported` directory:
 ```
 .
@@ -81,7 +81,7 @@ Copy the extracted resources to the `demo/assets/imported` directory:
 └── legends.w3e
 ```
 
-Water shader taken from https://godotshaders.com/shader/foam-edge-water-shader/
+Water shader taken from <https://godotshaders.com/shader/foam-edge-water-shader>
 
 ## Requirements
 
@@ -127,9 +127,9 @@ The compiled library (`libgdextension_w3terrain.so` on Linux, `.dll` on Windows,
 
 ### 4. Run the demo
 
-In the project folder execute:  
-Windows: `\path\to\godot\binary\godot.windows.template_release.x86_64.exe --path demo`  
-Linux: `/path/to/godot/binary/godot.linuxbsd.template_release.x86_64 --path ./demo`  
+In the project folder execute:
+Windows: `\path\to\godot\binary\godot.windows.template_release.x86_64.exe --path demo`
+Linux: `/path/to/godot/binary/godot.linuxbsd.template_release.x86_64 --path ./demo`
 
 For the editor, you must first compile the debug version (see Building step 3)
 Open the `demo/` folder in Godot Editor and run `scene_demo_test.tscn`.

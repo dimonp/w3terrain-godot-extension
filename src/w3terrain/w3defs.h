@@ -3,6 +3,7 @@
 
 #include <cassert>
 #include <cstdint>
+#include <vector>
 
 #include <godot_cpp/variant/string.hpp>
 #include <godot_cpp/variant/typed_array.hpp>
