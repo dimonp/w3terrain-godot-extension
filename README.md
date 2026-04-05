@@ -11,13 +11,13 @@ A high-performance GDExtension for Godot Engine that renders Warcraft III‑styl
 - **Asset management** – Assign ground textures (tilesets) and cliff/ramp meshes (geo assets) via Godot’s resource system.
 - **Runtime editing** – Modify height, layer, water, and tile properties through a dedicated `W3MapBindingsEditor` resource.
 - **Memory‑aware caching** – Integrates an LRU cache for section meshes and textures; old sections
--  are automatically evicted when memory limits are reached.
+- are automatically evicted when memory limits are reached.
 - **Performance monitoring** – Built‑in counters for cache allocation, visible sections, and draw calls (enabled with `W3MAP_STATS_ENABLE`).
 - **Full Godot integration** – Exposes all functionality as GDExtension classes, usable from GDScript, C#, or the editor.
 
 ## Project Structure
 
-```
+```text
 .
 ├── src/w3terrain/          # Core C++ extension code
 │   ├── w3mapnode.h/cpp     # Main Godot node (W3MapNode)
@@ -53,7 +53,8 @@ Test resource stubs are used to run scene_demo_test.tscn, but if you want to see
 with the original resources, you must first import them from the original game's mpq archive.
 To get the archive with resources, install the Warcraft 3 (TFT,RoC) (for example, from <https://archive.org/details/Warcraft3DemoCD>) and use <https://github.com/dimonp/assets_mpq_importer> tools to extract the resources.
 Copy the extracted resources to the `demo/assets/imported` directory:
-```
+
+```text
 .
 ├── demo/assets/imported
 │   ├── Geosets
@@ -118,7 +119,9 @@ cmake .. -DCMAKE_TOOLCHAIN_FILE=/path/to/vcpkg/scripts/buildsystems/vcpkg.cmake
 ```bash
 cmake --build . --config Release
 ```
+
 or
+
 ```bash
 cmake --build . --config Debug
 ```
@@ -212,8 +215,5 @@ See [LICENSE.txt](LICENSE.txt) for full text.
 ## Support
 
 [GitHub repository](https://github.com/dimonp/w3terrain_gdextension/issues).
-
-
----
 
 *Happy mapping!*
