@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://cgdmqnmjqc686" path="res://debug_camera.gd" id="5_hrm1c"]
 [ext_resource type="W3eResource" uid="uid://fkieeaahxl43" path="res://assets/imported/legends.w3e" id="6_rbnhm"]
 [ext_resource type="Texture2D" uid="uid://dur4qnv8xgdp7" path="res://assets/test/Ground/Ground1.png" id="8_hrm1c"]
-[ext_resource type="Texture2D" uid="uid://b71jk1hmt24j6" path="res://assets/test/Ground/Ground0.png" id="9_7wi8k"]
+[ext_resource type="Texture2D" uid="uid://c7umj4uiacdkl" path="res://assets/test/Ground/Ground0.png" id="9_7wi8k"]
 [ext_resource type="ArrayMesh" uid="uid://duus3haeuivrd" path="res://assets/test/Geosets/city_cliffs.obj" id="14_rbnhm"]
 [ext_resource type="JSON" path="res://assets/test/Geosets/city_keys.json" id="15_rbnhm"]
 [ext_resource type="ArrayMesh" uid="uid://d04y68hgom6nw" path="res://assets/test/Geosets/city_ramps.obj" id="16_y01pv"]
@@ -23,7 +23,6 @@
 [ext_resource type="Script" uid="uid://di0g2wcmhv174" path="res://map_cell_selector.gd" id="22_qfmwi"]
 [ext_resource type="Shader" uid="uid://dsot73q548dj" path="res://assets/shaders/wireframe.gdshader" id="23_i4jk5"]
 [ext_resource type="Script" uid="uid://ch0rfoo3ylumt" path="res://static_body_3d.gd" id="24_laj5i"]
-[ext_resource type="Texture2D" uid="uid://dbx66sovxd1" path="res://icon.svg" id="25_1b0xf"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hrm1c"]
 shading_mode = 0
@@ -189,7 +188,7 @@ albedo_color = Color(1, 1, 0, 1)
 render_priority = 0
 shader = ExtResource("23_i4jk5")
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ryve1"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fqub1"]
 shading_mode = 0
 vertex_color_use_as_albedo = true
 
@@ -269,7 +268,6 @@ height = 200.0
 transparency = 2
 alpha_scissor_threshold = 0.5
 alpha_antialiasing_mode = 0
-albedo_texture = ExtResource("25_1b0xf")
 
 [node name="Main" type="Node3D" unique_id=370783374]
 
@@ -350,7 +348,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 500, 0)
 script = ExtResource("24_laj5i")
 
 [node name="DebugAxis3D2" type="MeshInstance3D" parent="W3MapNode/StaticBody3D" unique_id=1321353043]
-material_override = SubResource("StandardMaterial3D_ryve1")
+material_override = SubResource("StandardMaterial3D_fqub1")
 ignore_occlusion_culling = true
 skeleton = NodePath("../../../FreeLookCamera")
 script = ExtResource("18_hrm1c")

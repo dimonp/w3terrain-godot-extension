@@ -1,31 +1,31 @@
 [gd_scene format=3 uid="uid://dw8t1of52hspa"]
 
 [ext_resource type="PackedScene" uid="uid://bkdf7cjgqflpn" path="res://scene_ui_map.tscn" id="1_urnxt"]
-[ext_resource type="W3eResource" uid="uid://fkieeaahxl43" path="res://assets/imported/legends.w3e" id="3_otsph"]
+[ext_resource type="W3eResource" uid="uid://fkieeaahxl43" path="res://assets/imported/legends.w3e" id="3_vv7lr"]
 [ext_resource type="Script" uid="uid://5b4p0xvske7f" path="res://camera.gd" id="4_b8x2j"]
 [ext_resource type="Shader" uid="uid://btgygwwtwjpcm" path="res://assets/shaders/terrain_ground.gdshader" id="7_s6b7c"]
-[ext_resource type="Texture2D" uid="uid://32fmlm75jcof" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_Dirt.dds" id="8_urnxt"]
-[ext_resource type="Texture2D" uid="uid://80sys4bdqpx6" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_DirtRough.dds" id="9_w0ngh"]
-[ext_resource type="Texture2D" uid="uid://bmniey06x0r2r" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_Rock.dds" id="10_hmkg4"]
-[ext_resource type="Texture2D" uid="uid://bkq5lovaprn8q" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_DirtGrass.dds" id="11_b8x2j"]
-[ext_resource type="Texture2D" uid="uid://bkjtp8v8klen4" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_Grass.dds" id="12_82gc0"]
-[ext_resource type="ArrayMesh" uid="uid://egrw8u0c065a" path="res://assets/imported/Geosets/city_cliffs.obj" id="12_io65a"]
-[ext_resource type="Texture2D" uid="uid://b5axx0p3j1gmm" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_GrassDark.dds" id="13_dv3vs"]
+[ext_resource type="Texture2D" uid="uid://jp8nkky8lxef" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_Dirt.dds" id="8_urnxt"]
+[ext_resource type="Texture2D" uid="uid://crox3ixedij0o" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_DirtRough.dds" id="9_w0ngh"]
+[ext_resource type="Texture2D" uid="uid://bgdeliviyoxpc" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_Rock.dds" id="10_hmkg4"]
+[ext_resource type="Texture2D" uid="uid://kqa1131h2uc3" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_DirtGrass.dds" id="11_b8x2j"]
+[ext_resource type="Texture2D" uid="uid://cb4rm4f1ik4s0" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_Grass.dds" id="12_82gc0"]
+[ext_resource type="ArrayMesh" uid="uid://dk2t4bdns5f2f" path="res://assets/imported/Geosets/city_cliffs.obj" id="12_io65a"]
+[ext_resource type="Texture2D" uid="uid://ur1ggqtmlcml" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_GrassDark.dds" id="13_dv3vs"]
 [ext_resource type="JSON" path="res://assets/imported/Geosets/city_keys.json" id="13_urnxt"]
-[ext_resource type="ArrayMesh" uid="uid://q68eu8u65jxg" path="res://assets/imported/Geosets/ground_cliffs.obj" id="13_ww0kn"]
+[ext_resource type="ArrayMesh" uid="uid://ddpo8en18s2tx" path="res://assets/imported/Geosets/ground_cliffs.obj" id="13_ww0kn"]
 [ext_resource type="JSON" path="res://assets/imported/Geosets/ground_keys.json" id="14_io65a"]
 [ext_resource type="Shader" uid="uid://bwccr61ip4qcc" path="res://assets/shaders/terrain_cliff.gdshader" id="14_vn2gu"]
-[ext_resource type="ArrayMesh" uid="uid://crqvx0t7qbtfx" path="res://assets/imported/Geosets/city_ramps.obj" id="14_w0ngh"]
-[ext_resource type="Texture2D" uid="uid://dyokdo0o4ynim" path="res://assets/imported/ReplaceableTextures/Cliff/Cliff0.dds" id="15_hmkg4"]
-[ext_resource type="ArrayMesh" uid="uid://di0b8tut6qup0" path="res://assets/imported/Geosets/ground_ramps.obj" id="15_urnxt"]
-[ext_resource type="Texture2D" uid="uid://vpmjcvosojf2" path="res://assets/imported/ReplaceableTextures/Cliff/Cliff1.dds" id="16_vv7lr"]
+[ext_resource type="ArrayMesh" uid="uid://c0p3i101uywly" path="res://assets/imported/Geosets/city_ramps.obj" id="14_w0ngh"]
+[ext_resource type="ArrayMesh" uid="uid://d3wc5586kb13g" path="res://assets/imported/Geosets/ground_ramps.obj" id="15_urnxt"]
+[ext_resource type="Texture2D" uid="uid://4h7jch54vvai" path="res://assets/imported/ReplaceableTextures/Cliff/Cliff0.dds" id="16_vv7lr"]
+[ext_resource type="Texture2D" uid="uid://clek2bqbss2gv" path="res://assets/imported/ReplaceableTextures/Cliff/Cliff1.dds" id="17_otsph"]
 [ext_resource type="Shader" uid="uid://dapke3xfnlcxa" path="res://assets/shaders/water.gdshader" id="23_qe25m"]
 [ext_resource type="Texture2D" uid="uid://cgj68kqe14v38" path="res://assets/textures/water_foam.png" id="24_b6pdu"]
 [ext_resource type="Script" uid="uid://clefr3i4v05fs" path="res://w3map_node.gd" id="25_s2tdf"]
 [ext_resource type="Script" uid="uid://di0g2wcmhv174" path="res://map_cell_selector.gd" id="26_3m3ah"]
+[ext_resource type="Texture2D" uid="uid://ck4jeri3rja1b" path="res://godot.png" id="26_otsph"]
 [ext_resource type="Shader" uid="uid://dsot73q548dj" path="res://assets/shaders/wireframe.gdshader" id="27_k5r1i"]
 [ext_resource type="Script" uid="uid://ch0rfoo3ylumt" path="res://static_body_3d.gd" id="28_pjguf"]
-[ext_resource type="Texture2D" uid="uid://dbx66sovxd1" path="res://icon.svg" id="29_c8yr1"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_fnoqs"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -43,13 +43,13 @@ glow_enabled = true
 
 [sub_resource type="W3GeoResource" id="W3GeoResource_b8x2j"]
 geoset_config = ExtResource("13_urnxt")
-texture = ExtResource("15_hmkg4")
+texture = ExtResource("16_vv7lr")
 cliff_geoset_mesh = ExtResource("12_io65a")
 ramp_geoset_mesh = ExtResource("14_w0ngh")
 
 [sub_resource type="W3GeoResource" id="W3GeoResource_v40a1"]
 geoset_config = ExtResource("14_io65a")
-texture = ExtResource("16_vv7lr")
+texture = ExtResource("17_otsph")
 cliff_geoset_mesh = ExtResource("13_ww0kn")
 ramp_geoset_mesh = ExtResource("15_urnxt")
 ground_id = 4
@@ -243,6 +243,7 @@ void fragment() {
 render_priority = 0
 shader = SubResource("Shader_chq4v")
 shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/texture_albedo = ExtResource("26_otsph")
 shader_parameter/alpha_scissor_threshold = 0.50000002375
 shader_parameter/albedo_texture_size = Vector2i(256, 256)
 shader_parameter/point_size = 1.0
@@ -263,7 +264,7 @@ height = 200.0
 transparency = 2
 alpha_scissor_threshold = 0.5
 alpha_antialiasing_mode = 0
-albedo_texture = ExtResource("29_c8yr1")
+albedo_texture = ExtResource("26_otsph")
 
 [node name="Main" type="Node3D" unique_id=1944748486]
 
@@ -286,7 +287,7 @@ shadow_enabled = true
 environment = SubResource("Environment_bnct2")
 
 [node name="FreeLookCamera" type="Camera3D" parent="." unique_id=1738304446]
-transform = Transform3D(0.97612196, -0.0026406704, 0.21720628, 0.0027052567, 0.9999961, 0, -0.21720551, 0.0005875988, 0.9761254, 1222.7849, 1378.228, 633.17365)
+transform = Transform3D(0.6626731, -0.148699, 0.7339979, -0.051370766, 0.968756, 0.24263708, -0.7471447, -0.19849508, 0.6343298, 1222.7849, 1344.78, 633.17365)
 top_level = true
 visible = false
 keep_aspect = 0
@@ -299,7 +300,7 @@ metadata/_custom_type_script = "uid://5b4p0xvske7f"
 [node name="Node3D" type="Node3D" parent="FreeLookCamera" unique_id=678218877]
 
 [node name="W3MapNode" type="W3MapNode" parent="." unique_id=1219259070 node_paths=PackedStringArray("camera")]
-w3e_map = ExtResource("3_otsph")
+w3e_map = ExtResource("3_vv7lr")
 ground_textures = Array[Texture2D]([ExtResource("8_urnxt"), ExtResource("9_w0ngh"), ExtResource("11_b8x2j"), ExtResource("10_hmkg4"), ExtResource("12_82gc0"), ExtResource("13_dv3vs")])
 geo_resources = Array[W3GeoResource]([SubResource("W3GeoResource_b8x2j"), SubResource("W3GeoResource_v40a1")])
 camera = NodePath("../FreeLookCamera")

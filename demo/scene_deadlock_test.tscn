@@ -21,7 +21,6 @@
 [ext_resource type="Script" uid="uid://di0g2wcmhv174" path="res://map_cell_selector.gd" id="22_2h4r2"]
 [ext_resource type="Shader" uid="uid://dsot73q548dj" path="res://assets/shaders/wireframe.gdshader" id="23_0vgac"]
 [ext_resource type="Script" uid="uid://ch0rfoo3ylumt" path="res://static_body_3d.gd" id="24_x3lqj"]
-[ext_resource type="Texture2D" uid="uid://dbx66sovxd1" path="res://icon.svg" id="25_qmegp"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_fnoqs"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -260,7 +259,6 @@ height = 200.0
 transparency = 2
 alpha_scissor_threshold = 0.5
 alpha_antialiasing_mode = 0
-albedo_texture = ExtResource("25_qmegp")
 
 [node name="Main" type="Node3D" unique_id=750667357]
 

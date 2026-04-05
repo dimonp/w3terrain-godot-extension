@@ -4,27 +4,27 @@
 [ext_resource type="Script" uid="uid://5b4p0xvske7f" path="res://camera.gd" id="2_0m8ng"]
 [ext_resource type="W3eResource" uid="uid://bd8mviqbwek54" path="res://assets/imported/(4)Deadlock.w3e" id="4_tl6ok"]
 [ext_resource type="Shader" uid="uid://btgygwwtwjpcm" path="res://assets/shaders/terrain_ground.gdshader" id="5_on6u8"]
-[ext_resource type="Texture2D" uid="uid://32fmlm75jcof" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_Dirt.dds" id="6_fnmf5"]
-[ext_resource type="Texture2D" uid="uid://80sys4bdqpx6" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_DirtRough.dds" id="7_j2ifq"]
-[ext_resource type="Texture2D" uid="uid://bmniey06x0r2r" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_Rock.dds" id="8_5x0cd"]
-[ext_resource type="Texture2D" uid="uid://bkq5lovaprn8q" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_DirtGrass.dds" id="9_eqejc"]
-[ext_resource type="Texture2D" uid="uid://bkjtp8v8klen4" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_Grass.dds" id="10_tl6ok"]
-[ext_resource type="Texture2D" uid="uid://b5axx0p3j1gmm" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_GrassDark.dds" id="11_0m8ng"]
+[ext_resource type="Texture2D" uid="uid://jp8nkky8lxef" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_Dirt.dds" id="6_fnmf5"]
+[ext_resource type="Texture2D" uid="uid://crox3ixedij0o" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_DirtRough.dds" id="7_j2ifq"]
+[ext_resource type="Texture2D" uid="uid://bgdeliviyoxpc" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_Rock.dds" id="8_5x0cd"]
+[ext_resource type="Texture2D" uid="uid://kqa1131h2uc3" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_DirtGrass.dds" id="9_eqejc"]
+[ext_resource type="Texture2D" uid="uid://cb4rm4f1ik4s0" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_Grass.dds" id="10_tl6ok"]
+[ext_resource type="Texture2D" uid="uid://ur1ggqtmlcml" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_GrassDark.dds" id="11_0m8ng"]
 [ext_resource type="Shader" uid="uid://bwccr61ip4qcc" path="res://assets/shaders/terrain_cliff.gdshader" id="12_u3b0v"]
-[ext_resource type="ArrayMesh" uid="uid://egrw8u0c065a" path="res://assets/imported/Geosets/city_cliffs.obj" id="13_b8hja"]
+[ext_resource type="ArrayMesh" uid="uid://dk2t4bdns5f2f" path="res://assets/imported/Geosets/city_cliffs.obj" id="13_b8hja"]
 [ext_resource type="JSON" path="res://assets/imported/Geosets/city_keys.json" id="14_ysolg"]
-[ext_resource type="ArrayMesh" uid="uid://crqvx0t7qbtfx" path="res://assets/imported/Geosets/city_ramps.obj" id="15_fhv34"]
-[ext_resource type="Texture2D" uid="uid://dyokdo0o4ynim" path="res://assets/imported/ReplaceableTextures/Cliff/Cliff0.dds" id="16_v064l"]
+[ext_resource type="ArrayMesh" uid="uid://c0p3i101uywly" path="res://assets/imported/Geosets/city_ramps.obj" id="15_fhv34"]
+[ext_resource type="Texture2D" uid="uid://4h7jch54vvai" path="res://assets/imported/ReplaceableTextures/Cliff/Cliff0.dds" id="16_v064l"]
 [ext_resource type="JSON" path="res://assets/imported/Geosets/ground_keys.json" id="17_j2ifq"]
-[ext_resource type="ArrayMesh" uid="uid://q68eu8u65jxg" path="res://assets/imported/Geosets/ground_cliffs.obj" id="17_tl6ok"]
-[ext_resource type="ArrayMesh" uid="uid://di0b8tut6qup0" path="res://assets/imported/Geosets/ground_ramps.obj" id="19_0m8ng"]
-[ext_resource type="Texture2D" uid="uid://vpmjcvosojf2" path="res://assets/imported/ReplaceableTextures/Cliff/Cliff1.dds" id="20_k2sr4"]
+[ext_resource type="ArrayMesh" uid="uid://ddpo8en18s2tx" path="res://assets/imported/Geosets/ground_cliffs.obj" id="17_tl6ok"]
+[ext_resource type="ArrayMesh" uid="uid://d3wc5586kb13g" path="res://assets/imported/Geosets/ground_ramps.obj" id="19_0m8ng"]
+[ext_resource type="Texture2D" uid="uid://clek2bqbss2gv" path="res://assets/imported/ReplaceableTextures/Cliff/Cliff1.dds" id="20_k2sr4"]
 [ext_resource type="Shader" uid="uid://dapke3xfnlcxa" path="res://assets/shaders/water.gdshader" id="21_jfoyk"]
 [ext_resource type="Texture2D" uid="uid://cgj68kqe14v38" path="res://assets/textures/water_foam.png" id="22_mshri"]
 [ext_resource type="Script" uid="uid://di0g2wcmhv174" path="res://map_cell_selector.gd" id="23_cude8"]
 [ext_resource type="Shader" uid="uid://dsot73q548dj" path="res://assets/shaders/wireframe.gdshader" id="24_wm84l"]
 [ext_resource type="Script" uid="uid://ch0rfoo3ylumt" path="res://static_body_3d.gd" id="25_ee8o1"]
-[ext_resource type="Texture2D" uid="uid://dbx66sovxd1" path="res://icon.svg" id="26_jr23v"]
+[ext_resource type="Texture2D" uid="uid://ck4jeri3rja1b" path="res://godot.png" id="25_eqejc"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_fnoqs"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -243,6 +243,7 @@ void fragment() {
 render_priority = 0
 shader = SubResource("Shader_chq4v")
 shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/texture_albedo = ExtResource("25_eqejc")
 shader_parameter/alpha_scissor_threshold = 0.50000002375
 shader_parameter/albedo_texture_size = Vector2i(256, 256)
 shader_parameter/point_size = 1.0
@@ -263,7 +264,7 @@ height = 200.0
 transparency = 2
 alpha_scissor_threshold = 0.5
 alpha_antialiasing_mode = 0
-albedo_texture = ExtResource("26_jr23v")
+albedo_texture = ExtResource("25_eqejc")
 
 [node name="Main" type="Node3D" unique_id=750667357]
 
@@ -328,7 +329,6 @@ script = ExtResource("25_ee8o1")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="W3MapNode/StaticBody3D" unique_id=710193185]
 shape = SubResource("HeightMapShape3D_260s1")
-debug_color = Color(0, 0.6, 0.7, 0.42)
 
 [node name="Test_MeshInstance3D_0" type="MeshInstance3D" parent="." unique_id=146938219]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1221.9264, -98.78076, -1926.3451)

@@ -44,14 +44,18 @@ func _input(event):
 
 	if event is InputEventScreenDrag:
 		_touches[event.index] = event.position
-		
+
 		# CASE 1: Single finger - Rotation (Look around)
 		if _touches.size() == 1:
 			_handle_rotation(event.relative)
-			
+
 		# CASE 2: Two fingers - Movement (Translate)
 		elif _touches.size() == 2:
 			_handle_movement(event.relative)
+
+	# Receives mouse motion
+	if event is InputEventMouseMotion:
+		_mouse_position = event.relative
 
 	# Receives mouse button input
 	if event is InputEventMouseButton:
@@ -137,10 +141,10 @@ func _update_mouselook():
 
 func _handle_rotation(relative: Vector2) -> void:
 	var rotation_amount = relative * sensitivity * _rotation_speed
-	
+
 	# Horizontal (Y-axis)
 	rotate_y(deg_to_rad(-rotation_amount.x))
-	
+
 	# Vertical (X-axis) with clamp
 	var new_pitch = rotation.x - deg_to_rad(rotation_amount.y)
 	rotation.x = clamp(new_pitch, deg_to_rad(-89), deg_to_rad(89))
@@ -151,13 +155,13 @@ func _handle_movement(relative: Vector2) -> void:
 	var dir = Vector3()
 	var forward = -global_transform.basis.z
 	var right = global_transform.basis.x
-	
+
 	# Project forward vector onto horizontal plane to keep movement level
 	forward.y = 0
 	forward = forward.normalized()
-	
+
 	dir += right * -relative.x
 	dir += forward * -relative.y
-	
+
 	# Apply movement scaled by speed and sensitivity
 	global_translate(dir * _move_speed * sensitivity)
