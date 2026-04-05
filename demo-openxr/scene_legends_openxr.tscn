@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://rapmb8xqpsuy" path="res://scene_init.gd" id="1_brotl"]
 [ext_resource type="Script" uid="uid://blih02h5n21kk" path="res://xr_origin_3d.gd" id="3_bmwcd"]
+[ext_resource type="PackedScene" uid="uid://cqhw276realc" path="res://addons/godot-xr-tools/functions/function_pointer.tscn" id="3_e04m2"]
 [ext_resource type="W3eResource" uid="uid://fkieeaahxl43" path="res://assets/imported/legends.w3e" id="3_ghtj3"]
 [ext_resource type="Texture2D" uid="uid://jp8nkky8lxef" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_Dirt.dds" id="4_cf4c8"]
 [ext_resource type="Texture2D" uid="uid://crox3ixedij0o" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_DirtRough.dds" id="5_bmwcd"]
@@ -23,7 +24,9 @@
 [ext_resource type="Shader" uid="uid://btgygwwtwjpcm" path="res://assets/shaders/terrain_ground.gdshader" id="21_lejlq"]
 [ext_resource type="Shader" uid="uid://bwccr61ip4qcc" path="res://assets/shaders/terrain_cliff.gdshader" id="22_asf28"]
 [ext_resource type="Texture2D" uid="uid://7uuvuy20ksiu" path="res://godot.png" id="24_f3ufx"]
+[ext_resource type="Script" uid="uid://ldsx265u01ib" path="res://map_cell_selector.gd" id="25_ghtj3"]
 [ext_resource type="Script" uid="uid://ch0rfoo3ylumt" path="res://static_body_3d.gd" id="25_lf842"]
+[ext_resource type="Shader" uid="uid://dsot73q548dj" path="res://assets/shaders/wireframe.gdshader" id="26_cf4c8"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_fnoqs"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -44,6 +47,9 @@ size = Vector3(0.05, 0.05, 0.05)
 
 [sub_resource type="BoxMesh" id="BoxMesh_ghtj3"]
 size = Vector3(0.05, 0.05, 0.05)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_e04m2"]
+albedo_color = Color(1, 0, 0, 1)
 
 [sub_resource type="W3GeoResource" id="W3GeoResource_b8x2j"]
 geoset_config = ExtResource("11_mkyah")
@@ -187,6 +193,10 @@ shader_parameter/albedo = Color(1, 1, 1, 1)
 shading_mode = 0
 albedo_color = Color(1, 1, 0, 1)
 
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_bmwcd"]
+render_priority = 0
+shader = ExtResource("26_cf4c8")
+
 [sub_resource type="HeightMapShape3D" id="HeightMapShape3D_260s1"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_n51mc"]
@@ -301,11 +311,16 @@ pose = &"aim"
 [node name="MeshInstance3D" type="MeshInstance3D" parent="XROrigin3D/XRController3D_Right" unique_id=1136464362]
 mesh = SubResource("BoxMesh_ghtj3")
 
+[node name="FunctionPointer" parent="XROrigin3D/XRController3D_Right" unique_id=496956032 instance=ExtResource("3_e04m2")]
+distance = 2000.0
+laser_material = SubResource("StandardMaterial3D_e04m2")
+
 [node name="W3MapNode" type="W3MapNode" parent="." unique_id=1219259070 node_paths=PackedStringArray("camera")]
 w3e_map = ExtResource("3_ghtj3")
 ground_textures = Array[Texture2D]([ExtResource("4_cf4c8"), ExtResource("5_bmwcd"), ExtResource("6_l15ur"), ExtResource("7_d07wy"), ExtResource("8_h7man"), ExtResource("9_fma41")])
 geo_resources = Array[W3GeoResource]([SubResource("W3GeoResource_b8x2j"), SubResource("W3GeoResource_v40a1")])
 camera = NodePath("../XROrigin3D/XRCamera3D")
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7936, 0, 8448)
 top_level = true
 script = ExtResource("18_stc3e")
@@ -322,6 +337,8 @@ map_node = NodePath("..")
 
 [node name="W3MapCellSelector" type="W3Surface" parent="W3MapNode" unique_id=491563736 node_paths=PackedStringArray("map_node")]
 map_node = NodePath("..")
+script = ExtResource("25_ghtj3")
+shader_material = SubResource("ShaderMaterial_bmwcd")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="W3MapNode" unique_id=2001769822]
 transform = Transform3D(128, 0, 0, 0, 128, 0, 0, 0, 128, 8256, 0, -8256)
@@ -343,4 +360,6 @@ transform = Transform3D(1, 0, 0, 0, 0.38268346, 0.92387956, 0, -0.92387956, 0.38
 mesh = SubResource("CapsuleMesh_fnoqs")
 surface_material_override/0 = SubResource("StandardMaterial3D_d7rpo")
 
+[connection signal="button_pressed" from="XROrigin3D/XRController3D_Right" to="XROrigin3D/XRController3D_Right" method="_on_button_pressed"]
 [connection signal="map_initialized" from="W3MapNode" to="W3MapNode" method="_on_map_initialized"]
+[connection signal="selector_changed" from="W3MapNode" to="W3MapNode/W3MapCellSelector" method="_on_w3_map_node_selector_changed"]
