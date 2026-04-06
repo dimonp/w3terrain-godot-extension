@@ -6,7 +6,7 @@ func _ready():
 	var _shader_material = ShaderMaterial.new()
 
 func _on_w3_map_node_selector_changed(coords: Vector2i) -> void:
-	update_mesh(map_node.cell_bbox(coords));
+	update_mesh(map_node.selected_cell_bbox());
 
 func update_mesh(aabb: AABB):
 	_mesh.clear_surfaces()

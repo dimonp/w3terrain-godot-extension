@@ -1,0 +1,71 @@
+[gd_scene format=3 uid="uid://5jmidalsi5p7"]
+
+[node name="PanelContainerCellInfo" type="PanelContainer" unique_id=1330942989]
+anchors_preset = -1
+anchor_right = 0.86800003
+anchor_bottom = 0.67200005
+offset_right = -0.5600586
+offset_bottom = 0.2399292
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1232174243]
+layout_mode = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 10
+theme_override_constants/margin_bottom = 10
+
+[node name="GridContainer" type="GridContainer" parent="MarginContainer" unique_id=1140632581]
+layout_mode = 2
+columns = 2
+
+[node name="LabelCoords" type="Label" parent="MarginContainer/GridContainer" unique_id=1769273389]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Coords"
+
+[node name="LabelCoordsValue" type="Label" parent="MarginContainer/GridContainer" unique_id=963955403]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "128 x 128"
+
+[node name="LabelPos" type="Label" parent="MarginContainer/GridContainer" unique_id=1316724405]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Position"
+
+[node name="LabelPosValue" type="Label" parent="MarginContainer/GridContainer" unique_id=1901326511]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "128 x 128"
+
+[node name="LabelLayer" type="Label" parent="MarginContainer/GridContainer" unique_id=1936410055]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Layer"
+
+[node name="LabelLayerValue" type="Label" parent="MarginContainer/GridContainer" unique_id=1873658720]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "128 x 128"
+
+[node name="LabelType" type="Label" parent="MarginContainer/GridContainer" unique_id=507611024]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Type"
+
+[node name="LabelTypeValue" type="Label" parent="MarginContainer/GridContainer" unique_id=717208003]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "128 x 128"
+
+[node name="LabelTileset" type="Label" parent="MarginContainer/GridContainer" unique_id=673333959]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Tilesets"
+
+[node name="LabelTilesetValue" type="Label" parent="MarginContainer/GridContainer" unique_id=1335972855]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "128 x 128"

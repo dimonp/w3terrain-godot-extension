@@ -1,6 +1,7 @@
 extends XROrigin3D
 
-@export var speed: float = 128.0
+@export var speed: float = 256.0
+@export var rotation_speed: float = 1.0
 
 @onready var camera := $XRCamera3D
 @onready var left_controller := $XRController3D_Left
@@ -16,15 +17,20 @@ func _physics_process(delta: float):
 	if can_trigger and trigger_val > 0.5:
 		can_trigger = false
 		_update_selector()
+
 	elif trigger_val == 0:
 		can_trigger = true
 
 	var input = left_controller.get_vector2(&"move")
 	if input.length() > 0.1:
-		var direction = (camera.global_transform.basis.z * -input.y + 
-				camera.global_transform.basis.x * input.x)
-		global_position += direction * speed * delta
+		rotate_y(-input.x * rotation_speed * delta)
 
+		var forward = camera.global_transform.basis.z
+		forward = forward.normalized()
+
+		var direction = forward * -input.y
+		global_position += direction * speed * delta
+		
 func _update_selector():
 	var ray_origin = pointer.global_position
 	var ray_direction = -pointer.global_transform.basis.z.normalized()
