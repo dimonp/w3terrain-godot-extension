@@ -8,6 +8,10 @@
 #include "w3mapcollector_impl.h"
 #include "w3mapsectionmanager_impl.h"
 #include "w3mapbindings.h"
+#ifdef EDITOR_SUPPORT_ENABLE
+#include "w3mapbindingseditor.h"
+#endif
+
 
 namespace w3terr {
 

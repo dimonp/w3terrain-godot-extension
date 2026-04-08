@@ -6,13 +6,8 @@
 
 #include <godot_cpp/classes/camera3d.hpp>
 #include <godot_cpp/classes/visual_instance3d.hpp>
-#include <godot_cpp/classes/json.hpp>
 
 #include "w3defs.h"
-#include "w3mapbindings.h"
-#ifdef EDITOR_SUPPORT_ENABLE
-#include "w3mapbindingseditor.h"
-#endif
 #include "w3mapassets_impl.h"
 
 namespace w3terr {
@@ -21,6 +16,8 @@ class W3MapInformatorImpl;
 class W3MapRuntimeManagerImpl;
 class W3MapSectionManagerImpl;
 class W3MapCollectorImpl;
+class W3MapBindings;
+class W3MapBindingsEditor;
 
 class W3MapNode final : public godot::VisualInstance3D, W3MapAssetsImpl { // NOLINT(fuchsia-multiple-inheritance)
     GDCLASS(W3MapNode, VisualInstance3D)
@@ -97,7 +94,9 @@ private:
     std::unique_ptr<W3MapCollectorImpl> collector_;
 
     std::unique_ptr<W3MapBindings, GodotObjectDeleter<W3MapBindings>> map_bindings_;
+#ifdef EDITOR_SUPPORT_ENABLE
     std::unique_ptr<W3MapBindingsEditor, GodotObjectDeleter<W3MapBindingsEditor>> map_bindings_editor_;
+#endif
 
     bool use_editor_camera_ = false;
     godot::ObjectID camera_id_;
