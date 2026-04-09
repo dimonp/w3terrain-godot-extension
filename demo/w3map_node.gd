@@ -20,11 +20,21 @@ func _on_map_initialized(_map_node: Object) -> void:
 	var map_name = map.get_map_name()
 	var map_size = map.get_map_size()
 	print("Map '%s' initilized." % [map_name])
-	
+
 	var map_info_ui = $"%MapInfoUI"
 	map_info_ui.map_name = map_name
 	map_info_ui.map_size = map_size
 
-func _on_map_info_ui_button_pressed_create_map(id: int) -> void:
-	var size := Vector2i(33, 33)
+func _on_map_info_ui_create_new_map(size_x: int, size_y: int) -> void:
+	var size := Vector2i(size_x, size_y)
 	editor.create_map(size)
+
+
+func _on_map_initialization_progress(map_node: Object, percent: int) -> void:
+	var pb = %ProgressBarMapLoad
+	pb.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	pb.value = percent;
+	if percent < 100:
+		pb.visible = true
+	else:
+		pb.visible = false

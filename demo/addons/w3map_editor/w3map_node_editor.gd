@@ -69,9 +69,11 @@ func _get_property_list() -> Array[Dictionary]:
 	]
 	return properties
 
-func brush_bbox() -> AABB:
+func brush_bbox():
 	var src_coord = cell_viewer["coords"]
-	var result_bbox: AABB = map.get_cell_bbox(src_coord)
+	var result_bbox = map.get_cell_bbox(src_coord)
+	if not result_bbox is AABB:
+		return null
 
 	for y in range(brush_size):
 		for x in range(brush_size):

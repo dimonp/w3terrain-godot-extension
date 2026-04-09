@@ -1,31 +1,29 @@
 [gd_scene format=3 uid="uid://wp360q0uvn8e"]
 
 [ext_resource type="Script" uid="uid://sco111ccfd77" path="res://debug_axis.gd" id="1_hh2g8"]
-[ext_resource type="PackedScene" uid="uid://dfw3uhng1yff6" path="res://scene_ui_cell.tscn" id="1_j0vv5"]
 [ext_resource type="Script" uid="uid://5b4p0xvske7f" path="res://camera.gd" id="2_hh2g8"]
 [ext_resource type="PackedScene" uid="uid://bkdf7cjgqflpn" path="res://scene_ui_map.tscn" id="2_oldun"]
-[ext_resource type="W3eResource" uid="uid://dddjvpl4fn1vk" path="res://assets/imported/Maps/Campaign/Demo01.w3e" id="3_j0vv5"]
-[ext_resource type="PackedScene" uid="uid://ci65yo853w07a" path="res://scene_ui_edit.tscn" id="4_t1enl"]
+[ext_resource type="W3eResource" uid="uid://4akrr5yfgfb5" path="res://assets/imported/Maps/Campaign/Demo01.w3e" id="3_j0vv5"]
 [ext_resource type="Script" uid="uid://cgdmqnmjqc686" path="res://debug_camera.gd" id="6_hehhk"]
-[ext_resource type="Texture2D" uid="uid://32fmlm75jcof" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_Dirt.dds" id="8_ol377"]
-[ext_resource type="Texture2D" uid="uid://80sys4bdqpx6" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_DirtRough.dds" id="9_gfchn"]
-[ext_resource type="Texture2D" uid="uid://bmniey06x0r2r" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_Rock.dds" id="10_sijmu"]
-[ext_resource type="Texture2D" uid="uid://bkq5lovaprn8q" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_DirtGrass.dds" id="11_oafgk"]
-[ext_resource type="Texture2D" uid="uid://bkjtp8v8klen4" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_Grass.dds" id="12_5ifa6"]
-[ext_resource type="Texture2D" uid="uid://b5axx0p3j1gmm" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_GrassDark.dds" id="13_fb1mb"]
+[ext_resource type="Texture2D" uid="uid://jp8nkky8lxef" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_Dirt.dds" id="8_ol377"]
+[ext_resource type="Texture2D" uid="uid://crox3ixedij0o" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_DirtRough.dds" id="9_gfchn"]
+[ext_resource type="Texture2D" uid="uid://bgdeliviyoxpc" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_Rock.dds" id="10_sijmu"]
+[ext_resource type="Texture2D" uid="uid://kqa1131h2uc3" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_DirtGrass.dds" id="11_oafgk"]
+[ext_resource type="Texture2D" uid="uid://cb4rm4f1ik4s0" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_Grass.dds" id="12_5ifa6"]
+[ext_resource type="Texture2D" uid="uid://ur1ggqtmlcml" path="res://assets/imported/TerrainArt/LordaeronSummer/Lords_GrassDark.dds" id="13_fb1mb"]
 [ext_resource type="Shader" uid="uid://dapke3xfnlcxa" path="res://assets/shaders/water.gdshader" id="14_5ifa6"]
 [ext_resource type="Texture2D" uid="uid://cgj68kqe14v38" path="res://assets/textures/water_foam.png" id="15_fb1mb"]
 [ext_resource type="Shader" uid="uid://btgygwwtwjpcm" path="res://assets/shaders/terrain_ground.gdshader" id="16_7ks05"]
-[ext_resource type="Texture2D" uid="uid://dyokdo0o4ynim" path="res://assets/imported/ReplaceableTextures/Cliff/Cliff0.dds" id="17_5qh2x"]
+[ext_resource type="Texture2D" uid="uid://4h7jch54vvai" path="res://assets/imported/ReplaceableTextures/Cliff/Cliff0.dds" id="17_5qh2x"]
 [ext_resource type="Shader" uid="uid://bwccr61ip4qcc" path="res://assets/shaders/terrain_cliff.gdshader" id="17_7v6eo"]
 [ext_resource type="Script" uid="uid://di0g2wcmhv174" path="res://map_cell_selector.gd" id="18_0sq0u"]
 [ext_resource type="Script" uid="uid://clefr3i4v05fs" path="res://w3map_node.gd" id="18_7ks05"]
-[ext_resource type="ArrayMesh" uid="uid://q68eu8u65jxg" path="res://assets/imported/Geosets/ground_cliffs.obj" id="18_vuprs"]
+[ext_resource type="ArrayMesh" uid="uid://ddpo8en18s2tx" path="res://assets/imported/Geosets/ground_cliffs.obj" id="18_vuprs"]
 [ext_resource type="Shader" uid="uid://dsot73q548dj" path="res://assets/shaders/wireframe.gdshader" id="19_5qh2x"]
 [ext_resource type="JSON" path="res://assets/imported/Geosets/ground_keys.json" id="19_qw60h"]
-[ext_resource type="ArrayMesh" uid="uid://di0b8tut6qup0" path="res://assets/imported/Geosets/ground_ramps.obj" id="20_2cxwy"]
+[ext_resource type="ArrayMesh" uid="uid://d3wc5586kb13g" path="res://assets/imported/Geosets/ground_ramps.obj" id="20_2cxwy"]
 [ext_resource type="Script" uid="uid://ch0rfoo3ylumt" path="res://static_body_3d.gd" id="20_vuprs"]
-[ext_resource type="Texture2D" uid="uid://vpmjcvosojf2" path="res://assets/imported/ReplaceableTextures/Cliff/Cliff1.dds" id="21_qi3jj"]
+[ext_resource type="Texture2D" uid="uid://clek2bqbss2gv" path="res://assets/imported/ReplaceableTextures/Cliff/Cliff1.dds" id="21_qi3jj"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hrm1c"]
 shading_mode = 0
@@ -193,7 +191,7 @@ shader = ExtResource("19_5qh2x")
 
 [sub_resource type="HeightMapShape3D" id="HeightMapShape3D_260s1"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_oldun"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wirlx"]
 shading_mode = 0
 vertex_color_use_as_albedo = true
 
@@ -214,30 +212,23 @@ anchor_right = 0.0
 anchor_bottom = 0.0
 grow_horizontal = 1
 grow_vertical = 1
+map_name = "Demo01.w3e"
+map_size = Vector2i(129, 97)
 
-[node name="CellInfoUI" parent="." unique_id=1291881064 instance=ExtResource("1_j0vv5")]
+[node name="ProgressBarMapLoad" type="ProgressBar" parent="." unique_id=410490120]
 unique_name_in_owner = true
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_left = 1.0
-offset_top = 160.0
-offset_right = 1.0
-offset_bottom = 160.0
-grow_horizontal = 1
-grow_vertical = 1
-
-[node name="EditorInfoUI" parent="." unique_id=1528573039 instance=ExtResource("4_t1enl")]
-unique_name_in_owner = true
-anchors_preset = 0
-anchor_right = 0.0
-anchor_bottom = 0.0
-offset_left = 1.0
-offset_top = 433.0
-offset_right = 1.0
-offset_bottom = 433.0
-grow_horizontal = 1
-grow_vertical = 1
+visible = false
+custom_minimum_size = Vector2(200, 0)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -2.0
+offset_top = -13.5
+offset_right = 198.0
+offset_bottom = 13.5
+value = 100.0
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=462441277]
 environment = SubResource("Environment_bnct2")
@@ -296,17 +287,11 @@ shape = SubResource("HeightMapShape3D_260s1")
 
 [node name="DebugAxis3D" type="MeshInstance3D" parent="W3MapNode/StaticBody3D" unique_id=1559298727]
 transform = Transform3D(1, 0, 0, 0, 1, -2.9802326e-08, 0, 2.9802326e-08, 1, 0, 0, 0)
-material_override = SubResource("StandardMaterial3D_oldun")
+material_override = SubResource("StandardMaterial3D_wirlx")
 skeleton = NodePath("../..")
 script = ExtResource("1_hh2g8")
 axis_size = 1000.0
 axis_thickness = 0.1
 
-[connection signal="button_pressed_create_map" from="MapInfoUI" to="W3MapNode" method="_on_map_info_ui_button_pressed_create_map"]
-[connection signal="height_decrease_button_pressed" from="EditorInfoUI" to="W3MapNode" method="_on_editor_info_ui_height_decrease_button_pressed"]
-[connection signal="height_increase_button_pressed" from="EditorInfoUI" to="W3MapNode" method="_on_editor_info_ui_height_increase_button_pressed"]
-[connection signal="layer_decrease_button_pressed" from="EditorInfoUI" to="W3MapNode" method="_on_editor_info_ui_layer_decrease_button_pressed"]
-[connection signal="layer_increase_button_pressed" from="EditorInfoUI" to="W3MapNode" method="_on_editor_info_ui_layer_increase_button_pressed"]
 [connection signal="map_initialized" from="W3MapNode" to="W3MapNode" method="_on_map_initialized"]
 [connection signal="map_initialized" from="W3MapNode" to="W3MapNode/StaticBody3D" method="_on_w_3_map_node_map_initialized"]
-[connection signal="selector_changed" from="W3MapNode/W3MapCellSelector" to="W3MapNode" method="_on_w_3_map_cell_selector_selector_changed"]

@@ -54,10 +54,18 @@ W3MapNode::load_map()
     });
 
     call_deferred("emit_signal", kSignalMapInitializationProgress, this, 0);
-    runtime_manager_ = std::make_unique<W3MapRuntimeManagerImpl>(get_assets(), informator_.get());
-    call_deferred("emit_signal", kSignalMapInitializationProgress, this, 50);
+    runtime_manager_ = std::make_unique<W3MapRuntimeManagerImpl>(
+        get_assets(),
+        informator_.get(),
+        [this, map_2d_size_y](int progress_row) {
+            int progress = 80 * progress_row / map_2d_size_y;
+            call_deferred("emit_signal", kSignalMapInitializationProgress, this, progress);
+        }
+    );
+
+    call_deferred("emit_signal", kSignalMapInitializationProgress, this, 80);
     sections_manager_ = std::make_unique<W3MapSectionManagerImpl>(get_assets(), runtime_manager_.get());
-    call_deferred("emit_signal", kSignalMapInitializationProgress, this, 70);
+    call_deferred("emit_signal", kSignalMapInitializationProgress, this, 85);
 
     math::bbox3 root_bbox;
     root_bbox.begin_extend();
@@ -65,7 +73,7 @@ W3MapNode::load_map()
         const auto section_bbox = sections_manager_->calc_section_bbox(section_id);
         root_bbox.extend(section_bbox);
     }
-    call_deferred("emit_signal", kSignalMapInitializationProgress, this, 80);
+    call_deferred("emit_signal", kSignalMapInitializationProgress, this, 90);
 
     // Extend root bounding box to power of two size (192 -> 256, 384 -> 512)
     // This is necessary for the quadtree to work with maps whose size is not a power of two.
@@ -83,7 +91,7 @@ W3MapNode::load_map()
     root_bbox.extend(ext_cell_position_x);
     ext_cell_position_z.y = cell00_height;
     root_bbox.extend(ext_cell_position_z);
-    call_deferred("emit_signal", kSignalMapInitializationProgress, this, 90);
+    call_deferred("emit_signal", kSignalMapInitializationProgress, this, 95);
 
     const uint8_t quad_tree_depth = static_cast<uint8_t>(std::log2(std::max(ext_map_size_x, ext_map_size_y) - 1)) - 1;
     collector_ = std::make_unique<W3MapCollectorImpl>(

@@ -6,7 +6,7 @@
 [ext_resource type="Script" uid="uid://cgdmqnmjqc686" path="res://debug_camera.gd" id="6_mfjjw"]
 [ext_resource type="W3eResource" uid="uid://s6njd2clu1h5" path="res://assets/test/Maps/Demo01.w3e" id="7_auh1n"]
 [ext_resource type="Texture2D" uid="uid://dur4qnv8xgdp7" path="res://assets/test/Ground/Ground1.png" id="8_awbb5"]
-[ext_resource type="Texture2D" uid="uid://b71jk1hmt24j6" path="res://assets/test/Ground/Ground0.png" id="9_bqkgf"]
+[ext_resource type="Texture2D" uid="uid://c7umj4uiacdkl" path="res://assets/test/Ground/Ground0.png" id="9_bqkgf"]
 [ext_resource type="Texture2D" uid="uid://bx7sydqrux548" path="res://assets/test/Ground/Ground13.png" id="9_tkeaa"]
 [ext_resource type="Texture2D" uid="uid://cxmv12pjaf6aa" path="res://assets/test/Ground/Ground2.png" id="10_07g38"]
 [ext_resource type="ArrayMesh" uid="uid://duus3haeuivrd" path="res://assets/test/Geosets/city_cliffs.obj" id="10_holi4"]
@@ -216,6 +216,21 @@ grow_vertical = 1
 map_name = "Demo01.w3e"
 map_size = Vector2i(129, 97)
 
+[node name="ProgressBarMapLoad" type="ProgressBar" parent="." unique_id=6386288]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(200, 0)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -2.0
+offset_top = -13.5
+offset_right = 198.0
+offset_bottom = 13.5
+value = 100.0
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=462441277]
 environment = SubResource("Environment_bnct2")
 
@@ -280,6 +295,5 @@ script = ExtResource("1_07g38")
 axis_size = 1000.0
 axis_thickness = 0.1
 
-[connection signal="button_pressed_create_map" from="MapInfoUI" to="W3MapNode" method="_on_map_info_ui_button_pressed_create_map"]
 [connection signal="map_initialized" from="W3MapNode" to="W3MapNode" method="_on_map_initialized"]
 [connection signal="map_initialized" from="W3MapNode" to="W3MapNode/StaticBody3D" method="_on_w_3_map_node_map_initialized"]

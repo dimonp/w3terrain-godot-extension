@@ -15,7 +15,11 @@ class W3MapInformator;
 
 class W3_API W3MapRuntimeManagerImpl final : public W3MapRuntimeManager {
 public:
-    W3MapRuntimeManagerImpl(const W3MapAssets* assets, const W3MapInformator* informator);
+    W3MapRuntimeManagerImpl(
+        const W3MapAssets* assets,
+        const W3MapInformator* informator,
+        const std::function<void(int)>& progress_callback = {}
+    );
 
     const CellPointRT& get_cellpoint_rt(const Coord2D& coords) const override;
 
@@ -26,7 +30,6 @@ public:
     math::bbox3 get_cell_bbox(const Coord2D& coords) const override;
     float get_cell_ground_height(const Coord2D& coords, float t_lerp, float s_lerp) const override;
 
-    void update_all_cells_rt() override;
     void update_cell_rt(const Coord2D& coords) override;
     void update_area_rt(const Coord2D& coords, int32_t area_margin) override;
 
@@ -38,6 +41,8 @@ public:
 
 private:
     const auto* w3e_map() const;
+
+    void initialize(const std::function<void(int)>& progress_callback);
 
     CellPointRT& get_cellpoint_rt(const Coord2D& coords);
 

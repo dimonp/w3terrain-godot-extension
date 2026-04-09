@@ -16,7 +16,9 @@ func _init():
 func _redraw(gizmo: EditorNode3DGizmo):
 	gizmo.clear()
 	var node = gizmo.get_node_3d()
-	update_mesh(node.brush_bbox(), gizmo)
+	var bbox = node.brush_bbox()
+	if bbox is AABB:
+		update_mesh(bbox, gizmo)
 	
 func update_mesh(aabb: AABB, gizmo: EditorNode3DGizmo):
 	var st = SurfaceTool.new()

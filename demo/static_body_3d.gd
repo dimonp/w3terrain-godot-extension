@@ -11,7 +11,7 @@ enum CellTypes {
 	WATER 	= 1 << 3
 }
 
-func _on_w_3_map_node_map_initialized(map_node: Object) -> void:
+func _on_w3_map_node_map_initialized(map_node: Object) -> void:
 	_map = map_node.map
 	collision_shape.shape = generate_terrain_collision()
 	collision_shape.owner = null

@@ -59,10 +59,11 @@ calc_tile_texture_indices_from_layer_code(
 
 W3MapRuntimeManagerImpl::W3MapRuntimeManagerImpl(
     const W3MapAssets* assets,
-    const W3MapInformator* informator
+    const W3MapInformator* informator,
+    const std::function<void(int)>& progress_callback
 ) : map_asset_(assets) , informator_(informator)
 {
-    update_all_cells_rt();
+    initialize(progress_callback);
 }
 
 inline
@@ -356,7 +357,7 @@ W3MapRuntimeManagerImpl::update_cell_rt(const Coord2D& coords)
 }
 
 void
-W3MapRuntimeManagerImpl::update_all_cells_rt()
+W3MapRuntimeManagerImpl::initialize(const std::function<void(int)>& progress_callback)
 {
     const auto map_size_x = w3e_map()->get_map_2d_size_x();
     const auto map_size_y = w3e_map()->get_map_2d_size_y();
@@ -366,6 +367,7 @@ W3MapRuntimeManagerImpl::update_all_cells_rt()
     cellpoints_rt_.resize(runtime_array_size);
 
     for(int32_t idx_2d_y = 0; idx_2d_y < map_size_y; ++idx_2d_y) {
+        progress_callback(idx_2d_y);
         for(int32_t idx_2d_x = 0; idx_2d_x < map_size_x; ++idx_2d_x) {
             update_cell_rt({ idx_2d_x, idx_2d_y });
         }

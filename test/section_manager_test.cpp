@@ -21,7 +21,6 @@ public:
     MOCK_METHOD(bool, test_cell_intersection, (const w3terr::Coord2D&, const w3terr::math::line3&), (const, override));
     MOCK_METHOD(std::optional<w3terr::math::vector3>, get_cell_intersection_point, (const w3terr::Coord2D&, const w3terr::math::line3&), (const, override));
 
-    MOCK_METHOD(void, update_all_cells_rt, (), (override));
     MOCK_METHOD(void, update_cell_rt, (const w3terr::Coord2D&), (override));
     MOCK_METHOD(void, update_area_rt, (const w3terr::Coord2D&, int32_t), (override));
     MOCK_METHOD(bool, is_dirty, (), (const, override));

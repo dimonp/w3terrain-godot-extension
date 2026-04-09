@@ -326,33 +326,6 @@ TEST_F(RuntimeManagerTestFixture, GetCellpointInfoForWater)
     EXPECT_TRUE(cell_rt.check_flag(w3terr::W3MapRuntimeManager::CellPointRT::WATER));
 }
 
-TEST_F(RuntimeManagerTestFixture, UpdateAllCellsRtAndCallsInformatorForEachCell)
-{
-    using W3CPInfo = w3terr::W3MapInformator::W3CPInfo;
-    W3CPInfo info {
-        .flags = W3CPInfo::GROUND,
-        .key = 0,
-        .ground_layers = {}
-    };
-
-    ON_CALL(informator_, collect_cellpoint_info(testing::_))
-        .WillByDefault(testing::Return(info));
-
-    w3terr::W3MapRuntimeManagerImpl sut(&assets_, &informator_);
-
-    // map size is 5x5 cellpoints
-    EXPECT_CALL(informator_, collect_cellpoint_info(testing::_))
-        .Times(25)
-        .WillRepeatedly(testing::Return(info));
-
-    sut.update_all_cells_rt();
-
-    // After update, dirty flag should be true
-    EXPECT_TRUE(sut.is_dirty());
-    // All cells should have ground flag? Not necessarily because info may be empty.
-}
-
-
 TEST_F(RuntimeManagerTestFixture, GetCellBboxAtMapEdge)
 {
     w3terr::W3MapRuntimeManagerImpl sut(&assets_, &informator_);

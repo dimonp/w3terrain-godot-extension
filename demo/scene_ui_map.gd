@@ -1,5 +1,6 @@
 extends Control
-signal button_pressed_create_map(id: int)
+
+signal create_new_map(size_x: int, size_y: int)
 
 @onready var cell_name_ctrl = $FoldableContainer/MarginContainer/VBoxContainer/HBoxContainerCellName/Text
 @onready var cell_size_ctrl = $FoldableContainer/MarginContainer/VBoxContainer/HBoxContainerCellSize/Text
@@ -14,6 +15,8 @@ signal button_pressed_create_map(id: int)
 		if cell_size_ctrl:
 			cell_size_ctrl.text = str(value)
 
+func _on_button_create_32_pressed() -> void:
+	emit_signal("create_new_map", 33, 33)
 
-func _on_button_pressed() -> void:
-	emit_signal("button_pressed_create_map", 1)
+func _on_button_create_1024_pressed() -> void:
+	emit_signal("create_new_map", 1025, 1025)

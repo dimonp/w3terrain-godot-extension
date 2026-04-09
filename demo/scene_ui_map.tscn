@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://bkdf7cjgqflpn"]
+[gd_scene format=3 uid="uid://bkdf7cjgqflpn"]
 
 [ext_resource type="Script" uid="uid://cvhkc37ku16cy" path="res://scene_ui_map.gd" id="1_hj02p"]
 
-[node name="MapInfoUI" type="Control"]
+[node name="MapInfoUI" type="Control" unique_id=786669594]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -11,59 +11,66 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_hj02p")
 
-[node name="FoldableContainer" type="FoldableContainer" parent="."]
+[node name="FoldableContainer" type="FoldableContainer" parent="." unique_id=1728572517]
 layout_mode = 0
 offset_right = 76.0
 offset_bottom = 65.0
 theme_override_colors/font_color = Color(0, 0.8745098, 0.8745098, 1)
 title = "Map"
 
-[node name="MarginContainer" type="MarginContainer" parent="FoldableContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="FoldableContainer" unique_id=458883285]
 layout_mode = 2
 theme_override_constants/margin_left = 5
 theme_override_constants/margin_top = 5
 theme_override_constants/margin_right = 5
 theme_override_constants/margin_bottom = 5
 
-[node name="VBoxContainer" type="VBoxContainer" parent="FoldableContainer/MarginContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="FoldableContainer/MarginContainer" unique_id=1810851327]
 layout_mode = 2
 
-[node name="HBoxContainerCellName" type="HBoxContainer" parent="FoldableContainer/MarginContainer/VBoxContainer"]
+[node name="HBoxContainerCellName" type="HBoxContainer" parent="FoldableContainer/MarginContainer/VBoxContainer" unique_id=1158624789]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="FoldableContainer/MarginContainer/VBoxContainer/HBoxContainerCellName"]
+[node name="Label" type="Label" parent="FoldableContainer/MarginContainer/VBoxContainer/HBoxContainerCellName" unique_id=26271870]
 layout_mode = 2
 size_flags_vertical = 0
 size_flags_stretch_ratio = 2.0
 text = "Name:"
 
-[node name="Text" type="Label" parent="FoldableContainer/MarginContainer/VBoxContainer/HBoxContainerCellName"]
+[node name="Text" type="Label" parent="FoldableContainer/MarginContainer/VBoxContainer/HBoxContainerCellName" unique_id=647334984]
 layout_mode = 2
 size_flags_vertical = 0
 theme_override_colors/font_color = Color(1, 1, 0, 1)
 
-[node name="HSeparator" type="HSeparator" parent="FoldableContainer/MarginContainer/VBoxContainer"]
+[node name="HSeparator" type="HSeparator" parent="FoldableContainer/MarginContainer/VBoxContainer" unique_id=1809947566]
 layout_mode = 2
 
-[node name="HBoxContainerCellSize" type="HBoxContainer" parent="FoldableContainer/MarginContainer/VBoxContainer"]
+[node name="HBoxContainerCellSize" type="HBoxContainer" parent="FoldableContainer/MarginContainer/VBoxContainer" unique_id=273281076]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="FoldableContainer/MarginContainer/VBoxContainer/HBoxContainerCellSize"]
+[node name="Label" type="Label" parent="FoldableContainer/MarginContainer/VBoxContainer/HBoxContainerCellSize" unique_id=909536401]
 layout_mode = 2
 size_flags_vertical = 0
 size_flags_stretch_ratio = 2.0
 text = "Size:"
 
-[node name="Text" type="Label" parent="FoldableContainer/MarginContainer/VBoxContainer/HBoxContainerCellSize"]
+[node name="Text" type="Label" parent="FoldableContainer/MarginContainer/VBoxContainer/HBoxContainerCellSize" unique_id=433695235]
 layout_mode = 2
 size_flags_vertical = 0
 theme_override_colors/font_color = Color(1, 1, 0, 1)
 
-[node name="HSeparator2" type="HSeparator" parent="FoldableContainer/MarginContainer/VBoxContainer"]
+[node name="HSeparator2" type="HSeparator" parent="FoldableContainer/MarginContainer/VBoxContainer" unique_id=450756436]
 layout_mode = 2
 
-[node name="Button" type="Button" parent="FoldableContainer/MarginContainer/VBoxContainer"]
+[node name="ButtonCreate32" type="Button" parent="FoldableContainer/MarginContainer/VBoxContainer" unique_id=306632937]
 layout_mode = 2
-text = "Create empty"
+text = "Create empty 32x32"
+alignment = 0
 
-[connection signal="pressed" from="FoldableContainer/MarginContainer/VBoxContainer/Button" to="." method="_on_button_pressed"]
+[node name="ButtonCreate1024" type="Button" parent="FoldableContainer/MarginContainer/VBoxContainer" unique_id=377199703]
+layout_mode = 2
+text = "Create empty 1024x1024"
+alignment = 0
+
+[connection signal="pressed" from="FoldableContainer/MarginContainer/VBoxContainer/ButtonCreate32" to="." method="_on_button_create_32_pressed"]
+[connection signal="pressed" from="FoldableContainer/MarginContainer/VBoxContainer/ButtonCreate1024" to="." method="_on_button_create_1024_pressed"]
