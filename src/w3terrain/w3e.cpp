@@ -10,7 +10,8 @@ W3e::initialize()
 {
     Expects(map_cells_.empty());
     if (map_size_x_ > 0 && map_size_y_ > 0) {
-        map_cells_.assign(static_cast<size_t>(map_size_x_) * map_size_y_, {});
+        size_t array_size = calc_array_size_from_map(map_size_x_, map_size_y_);
+        map_cells_.assign(array_size, {});
 
         for(int32_t i = 0; i < map_size_y_; ++i) {
             for(int32_t j = 0; j < map_size_x_; ++j) {
@@ -27,10 +28,16 @@ W3e::initialize()
 }
 
 bool
+W3e::check_dimension_2d(int32_t dim_2d_x, int32_t dim_2d_y)
+{
+    return dim_2d_x > 4 && dim_2d_y > 4 &&
+        (dim_2d_x - 1) % 4 == 0 && (dim_2d_y - 1) % 4 == 0;
+}
+
+bool
 W3e::set_dimension_2d(int32_t dim_2d_x, int32_t dim_2d_y)
 {
-    if (dim_2d_x > 4 && dim_2d_y > 4 &&
-        (dim_2d_x - 1) % 4 == 0 && (dim_2d_y - 1) % 4 == 0) {
+    if (check_dimension_2d(dim_2d_x, dim_2d_y)) {
         map_size_x_ = dim_2d_x;
         map_size_y_ = dim_2d_y;
         return true;

@@ -77,31 +77,9 @@ inline
 size_t
 W3MapRuntimeManagerImpl::map_cell_coords_to_idx(const Coord2D& coords) const
 {
-    // Iterate cellpoints in cache-friendly order
-    // cells:    0123456..n      0123456..n     0123456..n
-    // row 0: .. section 00 .... section 01 ... section 02 ...
-    // row 1: .. section 10 .... section 11 ... section 12 ...
-    // row 2: .. section 20 .... section 21 ... section 22 ...
-    // row 3: .. section 30 .... section 31 ... section 32 ...
-
-    const size_t num_sections_x = w3e_map()->get_map_2d_size_x() / kSectionDimension;
-    const int sec_x = coords.x / kSectionDimension;
-    const int sec_y = coords.y / kSectionDimension;
-    const int loc_x = coords.x % kSectionDimension;
-    const int loc_y = coords.y % kSectionDimension;
-
-    const size_t full_row_size = (static_cast<size_t>(num_sections_x * kSectionDimension) + 1) * kSectionDimension;
-    // Global offset to the start of the current horizontal band of sections
-    const size_t global_offset = sec_y * full_row_size;
-
-    // Offset to a specific section within a row
-    const size_t sec_in_row_offset = sec_x * static_cast<size_t>(kSectionDimension * kSectionDimension);
-
-    // Local offset within a section
-    const int current_sec_w = (sec_x < num_sections_x) ? kSectionDimension : 1;
-    const size_t local_offset = static_cast<size_t>(loc_y * current_sec_w) + loc_x;
-
-    return global_offset + sec_in_row_offset + local_offset;
+    return calc_array_index_from_coords(
+        coords.x, coords.y,
+        w3e_map()->get_map_2d_size_x());
 }
 
 inline
@@ -357,24 +335,6 @@ W3MapRuntimeManagerImpl::update_cell_rt(const Coord2D& coords)
 }
 
 void
-W3MapRuntimeManagerImpl::initialize(const std::function<void(int)>& progress_callback)
-{
-    const auto map_size_x = w3e_map()->get_map_2d_size_x();
-    const auto map_size_y = w3e_map()->get_map_2d_size_y();
-    const size_t runtime_array_size = static_cast<size_t>(
-        map_size_x + kSectionDimension - 1) * (map_size_y + kSectionDimension - 1 // + 1 padding cells
-    );
-    cellpoints_rt_.resize(runtime_array_size);
-
-    for(int32_t idx_2d_y = 0; idx_2d_y < map_size_y; ++idx_2d_y) {
-        progress_callback(idx_2d_y);
-        for(int32_t idx_2d_x = 0; idx_2d_x < map_size_x; ++idx_2d_x) {
-            update_cell_rt({ idx_2d_x, idx_2d_y });
-        }
-    }
-}
-
-void
 W3MapRuntimeManagerImpl::update_area_rt(const Coord2D& coords, int32_t area_margin)
 {
     for(int32_t idx_2d_y = coords.y - area_margin; idx_2d_y <= coords.y + area_margin; ++idx_2d_y) {
@@ -382,6 +342,22 @@ W3MapRuntimeManagerImpl::update_area_rt(const Coord2D& coords, int32_t area_marg
             if (!w3e_map()->is_valid_cell(idx_2d_x, idx_2d_y)) {
                 continue;
             }
+            update_cell_rt({ idx_2d_x, idx_2d_y });
+        }
+    }
+}
+
+void
+W3MapRuntimeManagerImpl::initialize(const std::function<void(int)>& progress_callback)
+{
+    const auto map_size_x = w3e_map()->get_map_2d_size_x();
+    const auto map_size_y = w3e_map()->get_map_2d_size_y();
+    const size_t runtime_array_size = calc_array_size_from_map(map_size_x, map_size_y);
+    cellpoints_rt_.resize(runtime_array_size);
+
+    for(int32_t idx_2d_y = 0; idx_2d_y < map_size_y; ++idx_2d_y) {
+        progress_callback(idx_2d_y);
+        for(int32_t idx_2d_x = 0; idx_2d_x < map_size_x; ++idx_2d_x) {
             update_cell_rt({ idx_2d_x, idx_2d_y });
         }
     }

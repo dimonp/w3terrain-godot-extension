@@ -132,6 +132,7 @@ public:
 protected:
     bool initialize();
     bool set_dimension_2d(int32_t dim_2d_x, int32_t dim_2d_y);
+    static bool check_dimension_2d(int32_t dim_2d_x, int32_t dim_2d_y);
 
     W3Array<W3eCell> map_cells_;
 
@@ -170,7 +171,8 @@ const W3eCell&
 W3e::get_cellpoint(int32_t coord_2d_x, int32_t coord_2d_y) const
 {
     w3_assert(is_valid_cellpoint(coord_2d_x, coord_2d_y));
-    return map_cells_[static_cast<size_t>(coord_2d_y * map_size_x_) + coord_2d_x];
+    size_t index = calc_array_index_from_coords(coord_2d_x, coord_2d_y, map_size_x_);
+    return map_cells_[index];
 }
 
 inline
@@ -178,7 +180,8 @@ W3eCell&
 W3e::get_cellpoint(int32_t coord_2d_x, int32_t coord_2d_y)
 {
     w3_assert(is_valid_cellpoint(coord_2d_x, coord_2d_y));
-    return map_cells_[static_cast<size_t>(coord_2d_y * map_size_x_) + coord_2d_x];
+    size_t index = calc_array_index_from_coords(coord_2d_x, coord_2d_y, map_size_x_);
+    return map_cells_[index];
 }
 
 inline
