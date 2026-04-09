@@ -129,12 +129,12 @@ void
 W3MapNode::on_geo_assets_changed()
 {
     w3_log_debug("W3MapNode::on_geo_assets_changed");
-    if (runtime_manager_) {
-        // TODO: should be changed
-        runtime_manager_ = std::make_unique<W3MapRuntimeManagerImpl>(
-            get_assets(),
-            informator_.get());
-    }
+
+    // TODO: should be changed
+    runtime_manager_ = std::make_unique<W3MapRuntimeManagerImpl>(
+        get_assets(),
+        informator_.get());
+
     if (sections_manager_) {
         sections_manager_->set_dirty_all();
     }
@@ -201,6 +201,7 @@ W3MapNode::_exit_tree()
 #endif
 
     if (load_thread_->is_started()) {
+        stop_loading_ = true;
         load_thread_->wait_to_finish();
     }
 }
@@ -231,6 +232,7 @@ W3MapNode::_process(double /*delta*/)
             load_thread_->wait_to_finish();
         }
         is_loading_ = true;
+        stop_loading_ = false;
         load_thread_->start(callable_mp(this, &W3MapNode::load_map));
         return;
     }

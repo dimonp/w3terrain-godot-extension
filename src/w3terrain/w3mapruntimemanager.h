@@ -18,7 +18,7 @@ public:
         union {
             struct { // ground type
                 uint32_t tileset_ids; // four packed tileset IDs
-                uint32_t uv_indices; // four packed ground tileset texture indices
+                uint32_t uv_indices;  // four packed ground tileset texture indices
             };
             struct { // geo type
                 uint16_t vertices_count;

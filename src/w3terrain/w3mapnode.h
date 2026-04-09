@@ -103,6 +103,7 @@ private:
 
     W3Ref<godot::Thread> load_thread_;
     std::atomic<bool> is_loading_ {false};
+    std::atomic<bool> stop_loading_ {false};
 
 #ifdef W3MAP_STATS_ENABLE
     static uint64_t get_cache_allocation_size();

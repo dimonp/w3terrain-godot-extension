@@ -14,7 +14,7 @@ inline constexpr float kGroundTextureTileSize       = 64.0F;
 
 inline
 std::size_t
-calc_array_size_from_map(uint32_t map_size_x, uint32_t map_size_y)
+calc_map_array_size(uint32_t map_size_x, uint32_t map_size_y)
 {
     const std::size_t array_size = static_cast<std::size_t>(
         map_size_x + kSectionDimension - 1) * (map_size_y + kSectionDimension - 1 // + 1 padding cells
@@ -24,7 +24,7 @@ calc_array_size_from_map(uint32_t map_size_x, uint32_t map_size_y)
 
 inline
 std::size_t
-calc_array_index_from_coords(uint32_t coord_x, uint32_t coord_y, uint32_t map_size_x)
+calc_map_array_index(uint32_t coord_x, uint32_t coord_y, uint32_t map_size_x)
 {
     // Iterate cellpoints in cache-friendly order
     // cells:    0123456..n      0123456..n     0123456..n

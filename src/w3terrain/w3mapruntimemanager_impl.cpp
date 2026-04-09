@@ -60,7 +60,7 @@ calc_tile_texture_indices_from_layer_code(
 W3MapRuntimeManagerImpl::W3MapRuntimeManagerImpl(
     const W3MapAssets* assets,
     const W3MapInformator* informator,
-    const std::function<void(int)>& progress_callback
+    const std::function<bool(int)>& progress_callback
 ) : map_asset_(assets) , informator_(informator)
 {
     initialize(progress_callback);
@@ -77,7 +77,7 @@ inline
 size_t
 W3MapRuntimeManagerImpl::map_cell_coords_to_idx(const Coord2D& coords) const
 {
-    return calc_array_index_from_coords(
+    return calc_map_array_index(
         coords.x, coords.y,
         w3e_map()->get_map_2d_size_x());
 }
@@ -348,15 +348,18 @@ W3MapRuntimeManagerImpl::update_area_rt(const Coord2D& coords, int32_t area_marg
 }
 
 void
-W3MapRuntimeManagerImpl::initialize(const std::function<void(int)>& progress_callback)
+W3MapRuntimeManagerImpl::initialize(const std::function<bool(int)>& progress_callback)
 {
     const auto map_size_x = w3e_map()->get_map_2d_size_x();
     const auto map_size_y = w3e_map()->get_map_2d_size_y();
-    const size_t runtime_array_size = calc_array_size_from_map(map_size_x, map_size_y);
+    const size_t runtime_array_size = calc_map_array_size(map_size_x, map_size_y);
     cellpoints_rt_.resize(runtime_array_size);
 
     for(int32_t idx_2d_y = 0; idx_2d_y < map_size_y; ++idx_2d_y) {
-        progress_callback(idx_2d_y);
+        if (progress_callback(idx_2d_y)) {
+            break;
+        }
+
         for(int32_t idx_2d_x = 0; idx_2d_x < map_size_x; ++idx_2d_x) {
             update_cell_rt({ idx_2d_x, idx_2d_y });
         }

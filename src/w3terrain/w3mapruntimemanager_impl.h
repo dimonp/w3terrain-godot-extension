@@ -18,7 +18,7 @@ public:
     W3MapRuntimeManagerImpl(
         const W3MapAssets* assets,
         const W3MapInformator* informator,
-        const std::function<void(int)>& progress_callback = {}
+        const std::function<bool(int)>& progress_callback = {}
     );
 
     const CellPointRT& get_cellpoint_rt(const Coord2D& coords) const override;
@@ -42,7 +42,7 @@ public:
 private:
     const auto* w3e_map() const;
 
-    void initialize(const std::function<void(int)>& progress_callback);
+    void initialize(const std::function<bool(int)>& progress_callback);
 
     CellPointRT& get_cellpoint_rt(const Coord2D& coords);
 

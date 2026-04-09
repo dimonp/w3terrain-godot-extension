@@ -10,7 +10,7 @@ W3e::initialize()
 {
     Expects(map_cells_.empty());
     if (map_size_x_ > 0 && map_size_y_ > 0) {
-        size_t array_size = calc_array_size_from_map(map_size_x_, map_size_y_);
+        size_t array_size = calc_map_array_size(map_size_x_, map_size_y_);
         map_cells_.assign(array_size, {});
 
         for(int32_t i = 0; i < map_size_y_; ++i) {

@@ -60,12 +60,17 @@ W3MapNode::load_map()
         [this, map_2d_size_y](int progress_row) {
             int progress = 80 * progress_row / map_2d_size_y;
             call_deferred("emit_signal", kSignalMapInitializationProgress, this, progress);
+            return stop_loading_.load();
         }
     );
 
     call_deferred("emit_signal", kSignalMapInitializationProgress, this, 80);
     sections_manager_ = std::make_unique<W3MapSectionManagerImpl>(get_assets(), runtime_manager_.get());
     call_deferred("emit_signal", kSignalMapInitializationProgress, this, 85);
+
+    if (stop_loading_) {
+        return;
+    }
 
     math::bbox3 root_bbox;
     root_bbox.begin_extend();

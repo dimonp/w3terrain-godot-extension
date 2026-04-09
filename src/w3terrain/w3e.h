@@ -171,7 +171,7 @@ const W3eCell&
 W3e::get_cellpoint(int32_t coord_2d_x, int32_t coord_2d_y) const
 {
     w3_assert(is_valid_cellpoint(coord_2d_x, coord_2d_y));
-    size_t index = calc_array_index_from_coords(coord_2d_x, coord_2d_y, map_size_x_);
+    size_t index = calc_map_array_index(coord_2d_x, coord_2d_y, map_size_x_);
     return map_cells_[index];
 }
 
@@ -180,7 +180,7 @@ W3eCell&
 W3e::get_cellpoint(int32_t coord_2d_x, int32_t coord_2d_y)
 {
     w3_assert(is_valid_cellpoint(coord_2d_x, coord_2d_y));
-    size_t index = calc_array_index_from_coords(coord_2d_x, coord_2d_y, map_size_x_);
+    size_t index = calc_map_array_index(coord_2d_x, coord_2d_y, map_size_x_);
     return map_cells_[index];
 }
 

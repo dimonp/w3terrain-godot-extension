@@ -77,8 +77,8 @@ void
 W3MapSectionManagerImpl::initialize_all_sections()
 {
     const auto* map_w3e = assets_->get_w3e();
-    sections_2d_x_size_ = map_w3e->get_map_2d_size_x() / kSectionDimension;
-    sections_2d_y_size_ = map_w3e->get_map_2d_size_y() / kSectionDimension;
+    sections_2d_x_size_ = map_w3e->get_map_2d_size_x() / static_cast<int32_t>(kSectionDimension);
+    sections_2d_y_size_ = map_w3e->get_map_2d_size_y() / static_cast<int32_t>(kSectionDimension);
 
     const size_t sections_array_size = static_cast<size_t>(sections_2d_x_size_) * sections_2d_y_size_;
     sections_array_.assign(sections_array_size, W3MapSection { runtime_ } );
@@ -104,8 +104,8 @@ Coord2D
 W3MapSectionManagerImpl::calc_section_origin(SectionId section_id) const
 {
     return {
-        static_cast<int32_t>((section_id - 1) % sections_2d_x_size_) * kSectionDimension,
-        static_cast<int32_t>((section_id - 1) / sections_2d_x_size_) * kSectionDimension
+        static_cast<int32_t>((section_id - 1) % sections_2d_x_size_ * kSectionDimension),
+        static_cast<int32_t>((section_id - 1) / sections_2d_x_size_ * kSectionDimension)
     };
 }
 
@@ -116,8 +116,8 @@ W3MapSectionManagerImpl::invalidate_sections_at_cellpoint(const Coord2D& coords)
     static constexpr int32_t kAreaMargin = 2;
     runtime_->update_area_rt(static_cast<Coord2D>(coords), kAreaMargin);
 
-    const int32_t section_2d_x = coords.x / kSectionDimension;
-    const int32_t section_2d_y = coords.y / kSectionDimension;
+    const int32_t section_2d_x = coords.x / static_cast<int32_t>(kSectionDimension);
+    const int32_t section_2d_y = coords.y / static_cast<int32_t>(kSectionDimension);
     static constexpr int32_t kSectionOffset = 1;
     for(int32_t idx_2d_y = section_2d_y - kSectionOffset; idx_2d_y <= section_2d_y + kSectionOffset; ++idx_2d_y) {
         for(int32_t idx_2d_x = section_2d_x - kSectionOffset; idx_2d_x <= section_2d_x + kSectionOffset; ++idx_2d_x) {
