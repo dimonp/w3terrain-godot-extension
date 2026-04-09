@@ -148,7 +148,7 @@ W3MapRuntimeManagerImpl::get_cellpoint_water_position(const Coord2D& coords) con
 }
 
 uint32_t
-W3MapRuntimeManagerImpl::get_cliff_geoset_id_for_geokey(const size_t geo_tileset_id, const uint32_t geo_key) const
+W3MapRuntimeManagerImpl::get_cliff_geo_id_for_geokey(const size_t geo_tileset_id, const uint32_t geo_key) const
 {
     const uint32_t geo_variation = geo_key >> 8U;
     const auto& keys_map = map_asset_->geo_asset_rt(geo_tileset_id).geo_cliff_keys_map;
@@ -172,7 +172,7 @@ W3MapRuntimeManagerImpl::get_cliff_geoset_id_for_geokey(const size_t geo_tileset
 }
 
 uint32_t
-W3MapRuntimeManagerImpl::get_ramp_geoset_id_for_geokey(const size_t geo_tileset_id, const uint32_t geo_key) const
+W3MapRuntimeManagerImpl::get_ramp_geo_id_for_geokey(const size_t geo_tileset_id, const uint32_t geo_key) const
 {
     const uint32_t geo_variation = geo_key >> 16U;
     const auto& keys_map = map_asset_->geo_asset_rt(geo_tileset_id).geo_ramp_keys_map;
@@ -281,65 +281,48 @@ W3MapRuntimeManagerImpl::update_runtime_ground(const auto& cell_info, CellPointR
 void
 W3MapRuntimeManagerImpl::update_runtime_cliff(const auto& cell_info, CellPointRT& cell_rt) const
 {
-    const uint32_t tileset_id = cell_info.geo_tileset;
-    const uint16_t geoset_id = get_cliff_geoset_id_for_geokey(tileset_id, cell_info.key);
+    const uint32_t geo_asset_idx = cell_info.geo_tileset;
+    const uint16_t geo_id = get_cliff_geo_id_for_geokey(geo_asset_idx, cell_info.key);
 
     cell_rt.flags |= CellPointRT::GEO_CLIFF;
-    cell_rt.geoset_id = geoset_id;
-    cell_rt.tileset_id = tileset_id;
+    cell_rt.geo_id = geo_id;
+    cell_rt.tileset_id = geo_asset_idx;
 
-    // get info about the cliff mesh
-    const W3Mesh *mesh_ptr = map_asset_->geo_asset_rt(tileset_id).cliff_geoset_mesh.ptr();
-    if (mesh_ptr == nullptr) {
-        w3_log_error("Cliff geoset mesh is null");
+    const auto& geo_asset =  map_asset_->geo_asset_rt(geo_asset_idx);
+    const int32_t geos_count = geo_asset.cliff_mesh_counts_storage.size();
+    if (geo_id >= geos_count) {
+        w3_log_error("Geoset id %d is more than the number(%d) of surfaces in cliff geoset.", geo_id, geos_count);
         return;
     }
 
-    const int32_t surfaces = mesh_ptr->get_surface_count();
-    if (geoset_id >= surfaces) {
-        w3_log_error("Geoset id %d is more than the number(%d) of surfaces in cliff geoset.", geoset_id, surfaces);
-        return;
-    }
-
-    const auto& geoset_surface = mesh_ptr->surface_get_arrays(geoset_id);
-    const godot::PackedVector3Array& vertices = geoset_surface[W3Mesh::ARRAY_VERTEX];
-    const godot::PackedInt32Array& indices = geoset_surface[W3Mesh::ARRAY_INDEX];
-
+    const auto& cliff_mesh_counts = geo_asset.cliff_mesh_counts_storage[geo_id];
     // update precached mesh
-    cell_rt.vertices_count = vertices.size();
-    cell_rt.indices_count = indices.size();
+    cell_rt.vertices_count = cliff_mesh_counts.first;
+    cell_rt.indices_count = cliff_mesh_counts.second;
 }
 
 void
 W3MapRuntimeManagerImpl::update_runtime_ramp(const auto& cell_info, CellPointRT& cell_rt) const
 {
-    const uint32_t tileset_id = cell_info.geo_tileset;
-    const uint16_t geoset_id = get_ramp_geoset_id_for_geokey(cell_info.geo_tileset, cell_info.key);
+    const uint32_t geo_asset_idx = cell_info.geo_tileset;
+    const uint16_t geo_id = get_ramp_geo_id_for_geokey(cell_info.geo_tileset, cell_info.key);
 
     cell_rt.flags |= CellPointRT::GEO_RAMP;
-    cell_rt.geoset_id = geoset_id;
-    cell_rt.tileset_id = tileset_id;
+    cell_rt.geo_id = geo_id;
+    cell_rt.tileset_id = geo_asset_idx;
 
-    // get info about the ramp mesh
-    const W3Mesh *mesh_ptr = map_asset_->geo_asset_rt(tileset_id).ramp_geoset_mesh.ptr();
-    if (mesh_ptr == nullptr) {
-        w3_log_error("Ramp geoset mesh is null");
+    const auto& geo_asset =  map_asset_->geo_asset_rt(geo_asset_idx);
+
+    const int32_t geos_count = geo_asset.ramp_mesh_counts_storage.size();
+    if (geo_id >= geos_count) {
+        w3_log_error("Geoset id %d is more than the number(%d) of surfaces in ramp geoset.", geo_id, geos_count);
         return;
     }
 
-    const int32_t surfaces = mesh_ptr->get_surface_count();
-    if (geoset_id >= surfaces) {
-        w3_log_error("Geoset id %d is more than the number(%d) of surfaces in ramp geoset.", geoset_id, surfaces);
-        return;
-    }
-
-    const auto& geoset_surface = mesh_ptr->surface_get_arrays(geoset_id);
-    const godot::PackedVector3Array& vertices = geoset_surface[W3Mesh::ARRAY_VERTEX];
-    const godot::PackedInt32Array& indices = geoset_surface[W3Mesh::ARRAY_INDEX];
-
+    const auto& ramp_mesh_counts = geo_asset.ramp_mesh_counts_storage[geo_id];
     // update precached mesh
-    cell_rt.vertices_count = vertices.size();
-    cell_rt.indices_count = indices.size();
+    cell_rt.vertices_count = ramp_mesh_counts.first;
+    cell_rt.indices_count = ramp_mesh_counts.second;
 }
 
 void

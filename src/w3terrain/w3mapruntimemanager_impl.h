@@ -41,8 +41,8 @@ private:
 
     CellPointRT& get_cellpoint_rt(const Coord2D& coords);
 
-    uint32_t get_cliff_geoset_id_for_geokey(size_t geo_tileset_id, uint32_t geo_key) const;
-    uint32_t get_ramp_geoset_id_for_geokey(size_t geo_tileset_id, uint32_t geo_key) const;
+    uint32_t get_cliff_geo_id_for_geokey(size_t geo_tileset_id, uint32_t geo_key) const;
+    uint32_t get_ramp_geo_id_for_geokey(size_t geo_tileset_id, uint32_t geo_key) const;
 
     void update_runtime_ground(const auto& cell_info, CellPointRT& cell_rt) const;
     void update_runtime_cliff(const auto& cell_info, CellPointRT& cell_rt) const;

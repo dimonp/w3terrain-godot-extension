@@ -20,6 +20,10 @@ W3MapNode::_bind_methods()
 {
     ADD_SIGNAL(godot::MethodInfo(kSignalMapInitialized, godot::PropertyInfo(godot::Variant::OBJECT, "map_node", godot::PROPERTY_HINT_NODE_TYPE, "W3MapNode")));
     ADD_SIGNAL(godot::MethodInfo(kSignalMapDestroyed, godot::PropertyInfo(godot::Variant::OBJECT, "map_node", godot::PROPERTY_HINT_NODE_TYPE, "W3MapNode")));
+    ADD_SIGNAL(godot::MethodInfo(kSignalMapInitializationProgress,
+        godot::PropertyInfo(godot::Variant::OBJECT, "map_node", godot::PROPERTY_HINT_NODE_TYPE, "W3MapNode"),
+        godot::PropertyInfo(godot::Variant::INT, "percent")
+    ));
     ADD_SIGNAL(godot::MethodInfo(kSignalMapAssetsChanged));
     ADD_SIGNAL(godot::MethodInfo(kSignalGroundAssetsChanged));
     ADD_SIGNAL(godot::MethodInfo(kSignalGeoAssetsChanged));
@@ -91,7 +95,9 @@ W3MapNode::_bind_methods()
 
 W3MapNode::W3MapNode()
     : informator_(new W3MapInformatorImpl(this))
-{}
+{
+    load_thread_.instantiate();
+}
 
 // Need it for PIMPL dependecies
 W3MapNode::~W3MapNode() = default;
@@ -190,6 +196,10 @@ W3MapNode::_exit_tree()
         perf->remove_custom_monitor(kStatCacheAllocationSizeId);
     }
 #endif
+
+    if (load_thread_->is_started()) {
+        load_thread_->wait_to_finish();
+    }
 }
 
 void
@@ -202,15 +212,24 @@ W3MapNode::_ready() {
 }
 
 void
-W3MapNode::_process(double  /*delta*/)
+W3MapNode::_process(double /*delta*/)
 {
-    if (!is_map_loaded()) {
+    if (!is_w3e_loaded()) {
         return;
     }
     if (!is_camera_valid()) {
         return;
     }
-    if (assets_dirty_flag_ && !refresh_runtime()) {
+    if (is_loading_) {
+        return;
+    }
+    if (assets_dirty_flag_ && !runtime_manager_) {
+        if (load_thread_->is_started()) {
+            load_thread_->wait_to_finish();
+        }
+
+        is_loading_ = true;
+        load_thread_->start(callable_mp(this, &W3MapNode::load_map));
         return;
     }
     collect_visible_sections();

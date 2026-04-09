@@ -40,7 +40,7 @@ pack_ramp_key(uint8_t layer0, uint8_t layer1, uint8_t layer2, uint8_t layer3, ui
 
 inline
 const auto*
-W3MapInformatorImpl::map() const
+W3MapInformatorImpl::w3e_map() const
 {
     return map_asset_->get_w3e();
 }
@@ -52,17 +52,17 @@ W3MapInformatorImpl::get_cell_ground_key(const Coord2D& coords) const
     const uint8_t t00 = get_cellpoint_ground_tileset_id({ coords.x,     coords.y     });
     const uint8_t t11 = get_cellpoint_ground_tileset_id({ coords.x + 1, coords.y + 1 });
     const uint8_t t01 = get_cellpoint_ground_tileset_id({ coords.x,     coords.y + 1 });
-    const uint8_t variation = map()->get_cellpoint(coords.x, coords.y).ground_variation;
+    const uint8_t variation = w3e_map()->get_cellpoint(coords.x, coords.y).ground_variation;
     return pack_ground_key(t10, t00, t11, t01, variation); // NOLINT(readability-suspicious-call-argument)
 }
 
 uint32_t
 W3MapInformatorImpl::get_cell_cliff_key(const Coord2D& coords) const
 {
-    const uint8_t l00 = map()->get_cellpoint(coords.x,     coords.y    ).height_layer;
-    const uint8_t l10 = map()->get_cellpoint(coords.x + 1, coords.y    ).height_layer;
-    const uint8_t l11 = map()->get_cellpoint(coords.x + 1, coords.y + 1).height_layer;
-    const uint8_t l01 = map()->get_cellpoint(coords.x,     coords.y + 1).height_layer;
+    const uint8_t l00 = w3e_map()->get_cellpoint(coords.x,     coords.y    ).height_layer;
+    const uint8_t l10 = w3e_map()->get_cellpoint(coords.x + 1, coords.y    ).height_layer;
+    const uint8_t l11 = w3e_map()->get_cellpoint(coords.x + 1, coords.y + 1).height_layer;
+    const uint8_t l01 = w3e_map()->get_cellpoint(coords.x,     coords.y + 1).height_layer;
     const uint8_t min_height_layer = math::w3_min4(l00, l10, l11, l01);
 
 #ifdef _DEBUG
@@ -70,7 +70,7 @@ W3MapInformatorImpl::get_cell_cliff_key(const Coord2D& coords) const
     uint32_t max_layer = math::w3_min4(l00, l10, l11, l01);
     w3_assert(max_layer - min_height_layer < 3);
 #endif
-    const uint8_t variation = map()->get_cellpoint(coords.x, coords.y).geo_variation;
+    const uint8_t variation = w3e_map()->get_cellpoint(coords.x, coords.y).geo_variation;
     return pack_cliff_key(
         l00 - min_height_layer,
         l10 - min_height_layer,
@@ -86,10 +86,10 @@ W3MapInformatorImpl::get_cell_ramp_key(const Coord2D& coords, uint8_t partition)
     const RampLayout::Id ramp_layout = get_cellpoint_ramp_layout_id(coords);
     switch (ramp_layout) {
     case RampLayout::Id::HIGH_WEST_EAST: {
-            const uint8_t hlayer00 = map()->get_cellpoint(coords.x,     coords.y    ).height_layer;
-            const uint8_t hlayer20 = map()->get_cellpoint(coords.x + 2, coords.y    ).height_layer;
-            const uint8_t hlayer21 = map()->get_cellpoint(coords.x + 2, coords.y + 1).height_layer;
-            const uint8_t hlayer01 = map()->get_cellpoint(coords.x,     coords.y + 1).height_layer;
+            const uint8_t hlayer00 = w3e_map()->get_cellpoint(coords.x,     coords.y    ).height_layer;
+            const uint8_t hlayer20 = w3e_map()->get_cellpoint(coords.x + 2, coords.y    ).height_layer;
+            const uint8_t hlayer21 = w3e_map()->get_cellpoint(coords.x + 2, coords.y + 1).height_layer;
+            const uint8_t hlayer01 = w3e_map()->get_cellpoint(coords.x,     coords.y + 1).height_layer;
             const uint8_t base_layer = math::w3_min4(hlayer00, hlayer20, hlayer21, hlayer01);
             return pack_ramp_key(
                 hlayer00 - base_layer,
@@ -101,10 +101,10 @@ W3MapInformatorImpl::get_cell_ramp_key(const Coord2D& coords, uint8_t partition)
             );
         }
     case RampLayout::Id::LOW_WEST_EAST: {
-            const uint8_t hlayer00 = map()->get_cellpoint(coords.x,     coords.y    ).height_layer;
-            const uint8_t hlayer20 = map()->get_cellpoint(coords.x + 2, coords.y    ).height_layer;
-            const uint8_t hlayer21 = map()->get_cellpoint(coords.x + 2, coords.y + 1).height_layer;
-            const uint8_t hlayer01 = map()->get_cellpoint(coords.x,     coords.y + 1).height_layer;
+            const uint8_t hlayer00 = w3e_map()->get_cellpoint(coords.x,     coords.y    ).height_layer;
+            const uint8_t hlayer20 = w3e_map()->get_cellpoint(coords.x + 2, coords.y    ).height_layer;
+            const uint8_t hlayer21 = w3e_map()->get_cellpoint(coords.x + 2, coords.y + 1).height_layer;
+            const uint8_t hlayer01 = w3e_map()->get_cellpoint(coords.x,     coords.y + 1).height_layer;
             const uint8_t base_layer = math::w3_min4(hlayer00, hlayer20, hlayer21, hlayer01);
             return pack_ramp_key(
                 hlayer00 - base_layer + 4,
@@ -116,10 +116,10 @@ W3MapInformatorImpl::get_cell_ramp_key(const Coord2D& coords, uint8_t partition)
             );
         }
     case RampLayout::Id::RIGHT_SOUTH_NORTH: {
-            const uint8_t hlayer00 = map()->get_cellpoint(coords.x,     coords.y    ).height_layer;
-            const uint8_t hlayer10 = map()->get_cellpoint(coords.x + 1, coords.y    ).height_layer;
-            const uint8_t hlayer12 = map()->get_cellpoint(coords.x + 1, coords.y + 2).height_layer;
-            const uint8_t hlayer02 = map()->get_cellpoint(coords.x,     coords.y + 2).height_layer;
+            const uint8_t hlayer00 = w3e_map()->get_cellpoint(coords.x,     coords.y    ).height_layer;
+            const uint8_t hlayer10 = w3e_map()->get_cellpoint(coords.x + 1, coords.y    ).height_layer;
+            const uint8_t hlayer12 = w3e_map()->get_cellpoint(coords.x + 1, coords.y + 2).height_layer;
+            const uint8_t hlayer02 = w3e_map()->get_cellpoint(coords.x,     coords.y + 2).height_layer;
             const uint8_t base_layer = math::w3_min4(hlayer00, hlayer10, hlayer12, hlayer02);
             return pack_ramp_key(
                 hlayer00 - base_layer,
@@ -131,10 +131,10 @@ W3MapInformatorImpl::get_cell_ramp_key(const Coord2D& coords, uint8_t partition)
             );
         }
     case RampLayout::Id::LEFT_SOUTH_NORTH: {
-            const uint8_t hlayer00 = map()->get_cellpoint(coords.x,     coords.y    ).height_layer;
-            const uint8_t hlayer10 = map()->get_cellpoint(coords.x + 1, coords.y    ).height_layer;
-            const uint8_t hlayer12 = map()->get_cellpoint(coords.x + 1, coords.y + 2).height_layer;
-            const uint8_t hlayer02 = map()->get_cellpoint(coords.x,     coords.y + 2).height_layer;
+            const uint8_t hlayer00 = w3e_map()->get_cellpoint(coords.x,     coords.y    ).height_layer;
+            const uint8_t hlayer10 = w3e_map()->get_cellpoint(coords.x + 1, coords.y    ).height_layer;
+            const uint8_t hlayer12 = w3e_map()->get_cellpoint(coords.x + 1, coords.y + 2).height_layer;
+            const uint8_t hlayer02 = w3e_map()->get_cellpoint(coords.x,     coords.y + 2).height_layer;
             const uint8_t base_layer = math::w3_min4(hlayer00, hlayer10, hlayer12, hlayer02);
             return pack_ramp_key(
                 hlayer00 - base_layer + 4,
@@ -178,7 +178,7 @@ W3MapInformatorImpl::get_cell_ramp_tileset_id(const Coord2D& coords, RampLayout:
 uint8_t
 W3MapInformatorImpl::get_cellpoint_ramp_tileset_id(const Coord2D& coords) const
 {
-    w3_assert(map()->get_cellpoint(coords.x, coords.y).check_flag(W3eCell::RAMP));
+    w3_assert(w3e_map()->get_cellpoint(coords.x, coords.y).check_flag(W3eCell::RAMP));
 
     static constexpr std::array<Delta2D, 8> kRampNearPattern = {{
         {-1, -1}, {0, -1}, { 1, -1}, { 1, 0}, { 1,  1}, {0,  1}, {-1,  1}, {-1, 0}
@@ -187,19 +187,19 @@ W3MapInformatorImpl::get_cellpoint_ramp_tileset_id(const Coord2D& coords) const
         {-2, -2}, {0, -2}, { 2, -2}, { 2, 0}, { 2,  2}, {0,  2}, {-2,  2}, {-2, 0}
     }};
 
-    const uint32_t base_layer_height = map()->get_cellpoint(coords.x, coords.y).height_layer;
+    const uint32_t base_layer_height = w3e_map()->get_cellpoint(coords.x, coords.y).height_layer;
 
     for (const auto& pattern : kRampNearPattern) {
         const int32_t loc_idx_2d_x = coords.x + pattern.dx;
         const int32_t loc_idx_2d_y = coords.y + pattern.dy;
 
-        if (!map()->is_valid_cellpoint(loc_idx_2d_x, loc_idx_2d_y)) {
+        if (!w3e_map()->is_valid_cellpoint(loc_idx_2d_x, loc_idx_2d_y)) {
             continue;
         }
 
-        const W3eCell &cell_point = map()->get_cellpoint(loc_idx_2d_x, loc_idx_2d_y);
+        const W3eCell &cell_point = w3e_map()->get_cellpoint(loc_idx_2d_x, loc_idx_2d_y);
         if (cell_point.check_flag(W3eCell::RAMP) && (cell_point.height_layer != base_layer_height)) {
-            return map()->get_cellpoint(loc_idx_2d_x, loc_idx_2d_y).geo_tileset;
+            return w3e_map()->get_cellpoint(loc_idx_2d_x, loc_idx_2d_y).geo_tileset;
         }
     }
 
@@ -208,13 +208,13 @@ W3MapInformatorImpl::get_cellpoint_ramp_tileset_id(const Coord2D& coords) const
         const int32_t loc_idx_2d_y = coords.y + pattern.dy;
 
         if (loc_idx_2d_x + 2 < 0 || loc_idx_2d_y + 2 < 0 ||
-            loc_idx_2d_x >= map()->get_map_2d_size_x() - 2 || loc_idx_2d_y >= map()->get_map_2d_size_y() - 2) {
+            loc_idx_2d_x >= w3e_map()->get_map_2d_size_x() - 2 || loc_idx_2d_y >= w3e_map()->get_map_2d_size_y() - 2) {
             continue;
         }
 
-        const W3eCell &cell_point = map()->get_cellpoint(loc_idx_2d_x, loc_idx_2d_y);
+        const W3eCell &cell_point = w3e_map()->get_cellpoint(loc_idx_2d_x, loc_idx_2d_y);
         if (cell_point.check_flag(W3eCell::RAMP) && (cell_point.height_layer != base_layer_height)) {
-            return map()->get_cellpoint(loc_idx_2d_x, loc_idx_2d_y).geo_tileset;
+            return w3e_map()->get_cellpoint(loc_idx_2d_x, loc_idx_2d_y).geo_tileset;
         }
     }
 
@@ -230,47 +230,47 @@ W3MapInformatorImpl::get_cellpoint_ground_tileset_id(const Coord2D& coords) cons
         {0, 0},{-1, 0}, {0, -1}, {-1, -1}
     }};
 
-    const auto& geo_tilesets = map_asset_->geo_assets_rt();
+    const auto& geo_assets = map_asset_->geo_assets_rt();
 
     // return ramp ground id, if we have neighbours ramps
     for (const auto& pattern : kTmNearPattern2) {
         const int32_t loc_idx_2d_x = coords.x + pattern.dx;
         const int32_t loc_idx_2d_y = coords.y + pattern.dy;
 
-        if (!map()->is_valid_cellpoint(loc_idx_2d_x, loc_idx_2d_y)) {
+        if (!w3e_map()->is_valid_cellpoint(loc_idx_2d_x, loc_idx_2d_y)) {
             break; // Ramp should not be here
         }
 
         const RampLayout::Id rpl0 = get_cellpoint_ramp_layout_id({ loc_idx_2d_x, loc_idx_2d_y });
         if (rpl0 != RampLayout::Id::UNKNOWN) {
             const uint32_t tileset_id = get_cell_ramp_tileset_id({ loc_idx_2d_x, loc_idx_2d_y }, rpl0);
-            w3_assert(tileset_id < geo_tilesets.size());
+            w3_assert(tileset_id < geo_assets.size());
 
-            const auto geo_resource = geo_tilesets[tileset_id];
+            const auto geo_resource = geo_assets[tileset_id];
             return geo_resource.ground_tileset_id;
         }
 
         const RampLayout::Id rpl1 = get_cellpoint_ramp_layout_id({ loc_idx_2d_x - 1, loc_idx_2d_y });
         if (rpl1 == RampLayout::Id::HIGH_WEST_EAST || rpl1 == RampLayout::Id::LOW_WEST_EAST) {
             const uint32_t tileset_id = get_cell_ramp_tileset_id({ loc_idx_2d_x - 1, loc_idx_2d_y }, rpl1);
-            w3_assert(tileset_id < geo_tilesets.size());
+            w3_assert(tileset_id < geo_assets.size());
 
-            const auto geo_resource = geo_tilesets[tileset_id];
+            const auto geo_resource = geo_assets[tileset_id];
             return geo_resource.ground_tileset_id;
         }
 
         const RampLayout::Id rpl2 = get_cellpoint_ramp_layout_id({ loc_idx_2d_x, loc_idx_2d_y - 1 });
         if (rpl2 == RampLayout::Id::RIGHT_SOUTH_NORTH || rpl2 == RampLayout::Id::LEFT_SOUTH_NORTH) {
             const uint32_t tileset_id = get_cell_ramp_tileset_id({ loc_idx_2d_x, loc_idx_2d_y - 1 }, rpl2);
-            w3_assert(tileset_id < geo_tilesets.size());
+            w3_assert(tileset_id < geo_assets.size());
 
-            const auto geo_resource = geo_tilesets[tileset_id];
+            const auto geo_resource = geo_assets[tileset_id];
             return geo_resource.ground_tileset_id;
         }
     }
 
-    if (map()->get_cellpoint(coords.x, coords.y).check_flag(W3eCell::RAMP)) {
-        return map()->get_cellpoint(coords.x, coords.y).ground_tileset;
+    if (w3e_map()->get_cellpoint(coords.x, coords.y).check_flag(W3eCell::RAMP)) {
+        return w3e_map()->get_cellpoint(coords.x, coords.y).ground_tileset;
     }
 
     // return cliff ground id, if we have neighbours cliffs
@@ -282,33 +282,33 @@ W3MapInformatorImpl::get_cellpoint_ground_tileset_id(const Coord2D& coords) cons
             continue;
         }
 
-        uint32_t tileset_id = map()->get_cellpoint(loc_idx_2d_x, loc_idx_2d_y).geo_tileset;
+        uint32_t tileset_id = w3e_map()->get_cellpoint(loc_idx_2d_x, loc_idx_2d_y).geo_tileset;
         if (tileset_id == 15) { // ???
-            tileset_id = geo_tilesets.size() - 1;
+            tileset_id = geo_assets.size() - 1;
         }
 
-        const auto& geo_resource = geo_tilesets[tileset_id];
+        const auto& geo_resource = geo_assets[tileset_id];
         return geo_resource.ground_tileset_id;
     }
-    return map()->get_cellpoint(coords.x, coords.y).ground_tileset;
+    return w3e_map()->get_cellpoint(coords.x, coords.y).ground_tileset;
 }
 
 bool
 W3MapInformatorImpl::check_cell_ramp_for_layout(const Coord2D& coords, const RampLayout& ramp_layout) const
 {
-    const auto is_delta_valid = [map_ptr = map(), &coords] (const Delta2D& delta) -> bool {
+    const auto is_delta_valid = [map_ptr = w3e_map(), &coords] (const Delta2D& delta) -> bool {
         return  coords.x >= 0 && coords.y >= 0 &&
                 coords.x + delta.dx < map_ptr->get_map_2d_size_x() &&
                 coords.y + delta.dy < map_ptr->get_map_2d_size_y();
     };
 
-    const auto is_ramp = [map_ptr = map(), &coords] (const Delta2D& delta) -> bool {
+    const auto is_ramp = [map_ptr = w3e_map(), &coords] (const Delta2D& delta) -> bool {
         return map_ptr->get_cellpoint(
             coords.x + delta.dx,
             coords.y + delta.dy).check_flag(W3eCell::RAMP);
     };
 
-    const auto layer = [map_ptr = map(), &coords] (const Delta2D& delta) -> uint8_t {
+    const auto layer = [map_ptr = w3e_map(), &coords] (const Delta2D& delta) -> uint8_t {
         return map_ptr->get_cellpoint(
             coords.x + delta.dx,
             coords.y + delta.dy).height_layer;
@@ -402,17 +402,17 @@ W3MapInformatorImpl::get_cellpoint_ramp_flag(const Coord2D& coords) const
         {0, -1}, {1, 0}, {0, 1}, {-1, 0}
     }};
 
-    if (map()->get_cellpoint(coords.x, coords.y).check_flag(W3eCell::RAMP)) {
-        const uint8_t base_layer_height = map()->get_cellpoint(coords.x, coords.y).height_layer;
+    if (w3e_map()->get_cellpoint(coords.x, coords.y).check_flag(W3eCell::RAMP)) {
+        const uint8_t base_layer_height = w3e_map()->get_cellpoint(coords.x, coords.y).height_layer;
 
         for (const auto& pattern : kTmNearPattern0) {
             const int32_t loc_idx_2d_x = coords.x + pattern.dx;
             const int32_t loc_idx_2d_y = coords.y + pattern.dy;
-            if (!map()->is_valid_cellpoint(loc_idx_2d_x, loc_idx_2d_y)) {
+            if (!w3e_map()->is_valid_cellpoint(loc_idx_2d_x, loc_idx_2d_y)) {
                 continue;
             }
 
-            const W3eCell &cell_point = map()->get_cellpoint(loc_idx_2d_x, loc_idx_2d_y);
+            const W3eCell &cell_point = w3e_map()->get_cellpoint(loc_idx_2d_x, loc_idx_2d_y);
             if (cell_point.check_flag(W3eCell::RAMP) && (cell_point.height_layer > base_layer_height)) {
                 return W3CPInfo::RAMP_MIDDLE;
             }
@@ -436,11 +436,11 @@ W3MapInformatorImpl::get_cellpoint_water_flag(const Coord2D& coords) const
     for (const auto& pattern : kTmNearPattern1) {
         const int32_t loc_idx_2d_x = coords.x + pattern.dx;
         const int32_t loc_idx_2d_y = coords.y + pattern.dy;
-        if (!map()->is_valid_cellpoint(loc_idx_2d_x, loc_idx_2d_y)) {
+        if (!w3e_map()->is_valid_cellpoint(loc_idx_2d_x, loc_idx_2d_y)) {
             continue;
         }
 
-        const W3eCell &cell_point = map()->get_cellpoint(loc_idx_2d_x, loc_idx_2d_y);
+        const W3eCell &cell_point = w3e_map()->get_cellpoint(loc_idx_2d_x, loc_idx_2d_y);
         if (cell_point.check_flag(W3eCell::WATER) && (cell_point.calc_total_height() < cell_point.get_water_height())) {
             return W3CPInfo::WATER;
         }
@@ -451,14 +451,14 @@ W3MapInformatorImpl::get_cellpoint_water_flag(const Coord2D& coords) const
 bool
 W3MapInformatorImpl::check_cell_is_cliff(const Coord2D& coords) const
 {
-    if (!map()->is_valid_cell(coords.x, coords.y)) {
+    if (!w3e_map()->is_valid_cell(coords.x, coords.y)) {
         return false;
     }
 
-    const W3eCell &cell_point0 = map()->get_cellpoint(coords.x,     coords.y);
-    const W3eCell &cell_point1 = map()->get_cellpoint(coords.x + 1, coords.y);
-    const W3eCell &cell_point2 = map()->get_cellpoint(coords.x + 1, coords.y + 1);
-    const W3eCell &cell_point3 = map()->get_cellpoint(coords.x,     coords.y + 1);
+    const W3eCell &cell_point0 = w3e_map()->get_cellpoint(coords.x,     coords.y);
+    const W3eCell &cell_point1 = w3e_map()->get_cellpoint(coords.x + 1, coords.y);
+    const W3eCell &cell_point2 = w3e_map()->get_cellpoint(coords.x + 1, coords.y + 1);
+    const W3eCell &cell_point3 = w3e_map()->get_cellpoint(coords.x,     coords.y + 1);
 
     if (cell_point0.check_flag(W3eCell::RAMP) &&
         cell_point1.check_flag(W3eCell::RAMP) &&

@@ -25,6 +25,9 @@ public:
         W3FlatMap<uint32_t, uint32_t> geo_ramp_keys_map;
         W3Ref<W3Texture> texture;
         uint32_t ground_tileset_id = 0;
+
+        W3Array<W3UInt16Pair> cliff_mesh_counts_storage;
+        W3Array<W3UInt16Pair> ramp_mesh_counts_storage;
     };
 
     virtual const W3e* get_w3e() const = 0;
@@ -37,7 +40,7 @@ public:
     const GeoAsset& geo_asset_rt(size_t index) const;
     uint32_t geo_assets_size_rt() const;
 
-    bool is_map_loaded() const;
+    bool is_w3e_loaded() const;
     bool is_assets_dirty() const;
 
 protected:
@@ -49,7 +52,7 @@ protected:
 
 inline
 bool
-W3MapAssets::is_map_loaded() const
+W3MapAssets::is_w3e_loaded() const
 {
     return get_w3e() != nullptr;
 }

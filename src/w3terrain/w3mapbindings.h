@@ -22,7 +22,7 @@ protected:
     godot::Variant get_map_size() const;
     godot::Variant get_map_name() const;
     godot::Variant get_cell_bbox(const godot::Vector2i& coords) const;
-    godot::Variant get_cellpoint_grond_tileset(const godot::Vector2i& coords) const;
+    godot::Variant get_cellpoint_ground_tileset(const godot::Vector2i& coords) const;
     godot::Variant get_cellpoint_geo_tileset(const godot::Vector2i& coords) const;
     godot::Variant get_cellpoint_type(const godot::Vector2i& coords) const;
     godot::Variant get_cellpoint_layer(const godot::Vector2i& coords) const;

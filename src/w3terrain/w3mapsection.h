@@ -20,7 +20,6 @@ public:
 
     struct CachedMesh {
         CachedMesh() noexcept;
-        ~CachedMesh() noexcept;
 
         template<typename VT, typename IT>
         W3Pair<std::span<const VT>, std::span<const IT>> get_cached_mesh_data() const noexcept

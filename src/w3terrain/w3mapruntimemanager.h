@@ -24,7 +24,7 @@ public:
                 uint16_t vertices_count;
                 uint16_t indices_count;
                 uint16_t tileset_id;
-                uint16_t geoset_id;
+                uint16_t geo_id;
             };
         };
 

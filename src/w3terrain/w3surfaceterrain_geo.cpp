@@ -134,7 +134,7 @@ W3SurfaceTerrain::precache_geo_cells(uint32_t section_id, size_t tileset_id) con
         const float dh11 = runtime_manager->get_cellpoint_ground_height({ cell_coord.x + 1, cell_coord.y + 1 });
         const float dh01 = runtime_manager->get_cellpoint_ground_height({ cell_coord.x,     cell_coord.y + 1 });
 
-        const auto& mesh_arrays = gro_mesh_ptr->surface_get_arrays(cell_rt00.geoset_id);
+        const auto& mesh_arrays = gro_mesh_ptr->surface_get_arrays(cell_rt00.geo_id);
         const godot::PackedVector3Array& src_vertices = mesh_arrays[W3Mesh::ARRAY_VERTEX];
         const godot::PackedVector3Array& src_normales = mesh_arrays[W3Mesh::ARRAY_NORMAL];
         const godot::PackedVector2Array& src_uvs = mesh_arrays[W3Mesh::ARRAY_TEX_UV];

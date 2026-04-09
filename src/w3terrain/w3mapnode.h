@@ -6,6 +6,7 @@
 
 #include <godot_cpp/classes/camera3d.hpp>
 #include <godot_cpp/classes/visual_instance3d.hpp>
+#include <godot_cpp/classes/thread.hpp>
 
 #include "w3defs.h"
 #include "w3mapassets_impl.h"
@@ -24,6 +25,7 @@ class W3MapNode final : public godot::VisualInstance3D, W3MapAssetsImpl { // NOL
 public:
     static constexpr auto kSignalMapInitialized  = "map_initialized";
     static constexpr auto kSignalMapDestroyed  = "map_destroyed";
+    static constexpr auto kSignalMapInitializationProgress  = "map_initialization_progress";
     static constexpr auto kSignalMapAssetsChanged  = "map_assets_changed";
     static constexpr auto kSignalGroundAssetsChanged = "ground_assets_changed";
     static constexpr auto kSignalGeoAssetsChanged = "geo_assets_changed";
@@ -53,8 +55,6 @@ public:
 #ifdef EDITOR_SUPPORT_ENABLE
     W3MapBindingsEditor* get_bindings_editor() const;
 #endif
-    bool refresh_runtime();
-
     const W3MapAssets* get_assets() const;
     const W3MapRuntimeManagerImpl* get_runtime_manager() const;
     W3MapSectionManagerImpl* get_section_manager() const;
@@ -83,7 +83,7 @@ private:
     static constexpr auto kStatCacheAllocationSizeId = "W3Terrain/cache_allocation_size";
 #endif
 
-    bool load_map();
+    void load_map();
     void reset_runtime();
 
     void collect_visible_sections();
@@ -100,6 +100,9 @@ private:
 
     bool use_editor_camera_ = false;
     godot::ObjectID camera_id_;
+
+    W3Ref<godot::Thread> load_thread_;
+    std::atomic<bool> is_loading_ {false};
 
 #ifdef W3MAP_STATS_ENABLE
     static uint64_t get_cache_allocation_size();

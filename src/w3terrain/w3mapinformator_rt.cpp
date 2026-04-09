@@ -43,7 +43,7 @@ extract_ground_tileset_id(const uint32_t packed_ids, const uint8_t layer_idx)
 
 inline
 const auto*
-W3MapInformatorImpl::map() const
+W3MapInformatorImpl::w3e_map() const
 {
     return map_asset_->get_w3e();
 }
@@ -112,7 +112,7 @@ W3MapInformatorImpl::collect_cellpoint_ground_info(const Coord2D& coords, W3CPIn
 bool
 W3MapInformatorImpl::collect_cellpoint_cliff_info(const Coord2D& coords, W3CPInfo& info) const
 {
-    info.geo_tileset = map()->get_cellpoint(coords.x, coords.y).geo_tileset;
+    info.geo_tileset = w3e_map()->get_cellpoint(coords.x, coords.y).geo_tileset;
     info.flags |= W3CPInfo::GEOCLIFF;
     info.key = get_cell_cliff_key(coords);
     return true;
@@ -122,16 +122,16 @@ W3MapInformatorImpl::W3CPInfo
 W3MapInformatorImpl::collect_cellpoint_info(const Coord2D& coords) const
 {
     W3CPInfo cellpoint_info = { 0 };
-    cellpoint_info.normal = map()->calc_cellpoint_normal(coords.x, coords.y);
+    cellpoint_info.normal = w3e_map()->calc_cellpoint_normal(coords.x, coords.y);
     cellpoint_info.flags = get_cellpoint_ramp_flag(coords);
     cellpoint_info.flags |= get_cellpoint_water_flag(coords);
 
-    const W3eCell& map_cell_point = map()->get_cellpoint(coords.x, coords.y);
+    const W3eCell& map_cell_point = w3e_map()->get_cellpoint(coords.x, coords.y);
     cellpoint_info.height_layer = map_cell_point.height_layer;
     cellpoint_info.ground_height = map_cell_point.ground_height;
     cellpoint_info.water_height = map_cell_point.water_height;
 
-    if (coords.y == map()->get_map_2d_size_y() - 1 || coords.x == map()->get_map_2d_size_x() - 1) {
+    if (coords.y == w3e_map()->get_map_2d_size_y() - 1 || coords.x == w3e_map()->get_map_2d_size_x() - 1) {
         return cellpoint_info;
     }
 
@@ -140,7 +140,7 @@ W3MapInformatorImpl::collect_cellpoint_info(const Coord2D& coords) const
     collect_cellpoint_cliff_info(coords, cellpoint_info);
 
     if (cellpoint_info.geo_tileset == 15) {
-        cellpoint_info.geo_tileset = map()->get_geo_tilesets_count() - 1;
+        cellpoint_info.geo_tileset = w3e_map()->get_geo_tilesets_count() - 1;
     }
     return cellpoint_info;
 }

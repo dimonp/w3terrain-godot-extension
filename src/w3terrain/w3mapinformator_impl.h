@@ -49,7 +49,7 @@ private:
     bool collect_cellpoint_ground_info(const Coord2D& coords, W3CPInfo& info) const;
     bool collect_cellpoint_cliff_info(const Coord2D& coords, W3CPInfo& info) const;
 
-    const auto* map() const;
+    const auto* w3e_map() const;
 
     gsl::not_null<const W3MapAssets*> map_asset_;
 };

@@ -49,11 +49,13 @@ protected:
     bool set_ground_assets(const godot::TypedArray<W3Texture>& assets);
 
     void prepare_geo_assets_rt();
+    void fill_mesh_counts_storage(size_t asset_idx);
+    void check_and_warning_geo_asset(size_t asset_idx) const;
 
     bool load_geo_config(size_t tileset_id, const W3Ref<godot::JSON>& config);
 
-    template<typename TMap>
-    static bool parse_geoset_resource(const godot::Dictionary& geoset, TMap &geo_keys_map);
+    template<typename TKeysMap>
+    static bool parse_geoset_resource(const godot::Dictionary& geoset, TKeysMap &geo_keys_map);
 
     W3Ref<W3eResource> map_w3e_;
     godot::TypedArray<W3GeoResource> geo_assets_;

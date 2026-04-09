@@ -69,15 +69,83 @@ W3MapAssetsImpl::set_ground_assets(const godot::TypedArray<W3Texture>& assets)
 }
 
 void
+W3MapAssetsImpl::check_and_warning_geo_asset(size_t asset_idx) const
+{
+    W3Ref<W3GeoResource> geo_resource = geo_assets_[static_cast<int32_t>(asset_idx)];
+    const auto& cliff_mesh = geo_resource->get_cliff_geoset_mesh();
+    if (cliff_mesh.is_null()) {
+        w3_log_error("Cliff mesh %d is not defined.", asset_idx);
+    }
+
+    const auto& ramp_mesh = geo_resource->get_ramp_geoset_mesh();
+    if (ramp_mesh.is_null()) {
+        w3_log_error("Ramp mesh %d is not defined.", asset_idx);
+    }
+
+    const auto& geo_asset_rt = geo_assets_rt_[asset_idx];
+    if (geo_asset_rt.geo_cliff_keys_map.size() != cliff_mesh->get_surface_count()) {
+        w3_log_error("Cliff mesh %d has %d surfaces, but %d cliff keys in config.",
+            asset_idx,
+            static_cast<size_t>(cliff_mesh->get_surface_count()),
+            geo_asset_rt.geo_cliff_keys_map.size());
+    }
+
+    if (geo_asset_rt.geo_ramp_keys_map.size() != ramp_mesh->get_surface_count()) {
+        w3_log_error("Ramp mesh %d has %d surfaces, but %d ramp keys in config",
+            asset_idx,
+            static_cast<size_t>(cliff_mesh->get_surface_count()),
+            geo_asset_rt.geo_ramp_keys_map.size());
+    }
+}
+
+void
+W3MapAssetsImpl::fill_mesh_counts_storage(size_t asset_idx)
+{
+    const W3Mesh *cliff_mesh = geo_assets_rt_[asset_idx].cliff_geoset_mesh.ptr();
+    if (cliff_mesh != nullptr) {
+        auto& cliff_geo_count= geo_assets_rt_[asset_idx].cliff_mesh_counts_storage;
+        const int32_t surface_count = cliff_mesh->get_surface_count();
+        cliff_geo_count.resize(surface_count);
+        for(size_t cliff_geo_idx = 0; cliff_geo_idx < cliff_geo_count.size(); ++cliff_geo_idx) {
+            const auto& surface = cliff_mesh->surface_get_arrays(static_cast<int32_t>(cliff_geo_idx));
+            const godot::PackedVector3Array& vertices = surface[W3Mesh::ARRAY_VERTEX];
+            const godot::PackedInt32Array& indices = surface[W3Mesh::ARRAY_INDEX];
+
+            cliff_geo_count[cliff_geo_idx] = {
+                vertices.size(),
+                indices.size()
+            };
+        }
+    }
+
+    const W3Mesh *ramp_mesh = geo_assets_rt_[asset_idx].ramp_geoset_mesh.ptr();
+    if (ramp_mesh != nullptr) {
+        auto& ramp_geo_count= geo_assets_rt_[asset_idx].ramp_mesh_counts_storage;
+        const int32_t surface_count = ramp_mesh->get_surface_count();
+        ramp_geo_count.resize(surface_count);
+        for(size_t ramp_geo_idx = 0; ramp_geo_idx < ramp_geo_count.size(); ++ramp_geo_idx) {
+            const auto& surface = ramp_mesh->surface_get_arrays(static_cast<int32_t>(ramp_geo_idx));
+            const godot::PackedVector3Array& vertices = surface[W3Mesh::ARRAY_VERTEX];
+            const godot::PackedInt32Array& indices = surface[W3Mesh::ARRAY_INDEX];
+
+            ramp_geo_count[ramp_geo_idx] = {
+                vertices.size(),
+                indices.size()
+            };
+        }
+    }
+}
+
+void
 W3MapAssetsImpl::prepare_geo_assets_rt()
 {
-    const size_t geo_tileset_size = geo_assets_.size();
+    const size_t geo_assets_size = geo_assets_.size();
     geo_assets_rt_.clear();
-    geo_assets_rt_.resize(geo_tileset_size);
+    geo_assets_rt_.resize(geo_assets_size);
     assets_dirty_flag_ = true;
 
     // load cliff textures
-    for(int64_t i = 0; i < geo_tileset_size; ++i) {
+    for(int64_t i = 0; i < geo_assets_size; ++i) {
         W3Ref<W3GeoResource> geo_resource = geo_assets_[i];
         if (!geo_resource.is_valid()) {
             w3_log_error("Geo resource %d is not defined.", i);
@@ -93,34 +161,8 @@ W3MapAssetsImpl::prepare_geo_assets_rt()
         geo_tileset_rt.ground_tileset_id = geo_resource->get_ground_tileset_id();
 
         load_geo_config(i, geo_resource->get_geoset_config());
-
-        const auto& cliff_mesh = geo_resource->get_cliff_geoset_mesh();
-        if (cliff_mesh.is_null()) {
-            w3_log_error("Cliff mesh %d is not defined.", i);
-            continue;
-        }
-
-        const auto& ramp_mesh = geo_resource->get_ramp_geoset_mesh();
-        if (ramp_mesh.is_null()) {
-            w3_log_error("Ramp mesh %d is not defined.", i);
-            continue;
-        }
-
-        if (geo_tileset_rt.geo_cliff_keys_map.size() != cliff_mesh->get_surface_count()) {
-            w3_log_error("Cliff mesh %d has %d surfaces, but %d cliff keys in config.",
-                i,
-                static_cast<size_t>(cliff_mesh->get_surface_count()),
-                geo_tileset_rt.geo_cliff_keys_map.size());
-            continue;
-        }
-
-        if (geo_tileset_rt.geo_ramp_keys_map.size() != ramp_mesh->get_surface_count()) {
-            w3_log_error("Ramp mesh %d has %d surfaces, but %d ramp keys in config",
-                i,
-                static_cast<size_t>(cliff_mesh->get_surface_count()),
-                geo_tileset_rt.geo_ramp_keys_map.size());
-            continue;
-        }
+        check_and_warning_geo_asset(i);
+        fill_mesh_counts_storage(i);
     }
 }
 
@@ -168,9 +210,9 @@ W3MapAssetsImpl::load_geo_config(size_t tileset_id, const W3Ref<godot::JSON>& co
     return true;
 }
 
-template<typename TMap>
+template<typename TKeysMap>
 bool
-W3MapAssetsImpl::parse_geoset_resource(const godot::Dictionary& geoset, TMap &geo_keys_map)
+W3MapAssetsImpl::parse_geoset_resource(const godot::Dictionary& geoset, TKeysMap &geo_keys_map)
 {
     size_t geoset_groups_count = static_cast<size_t>(geoset["count"]);
     if (geoset_groups_count == 0) {

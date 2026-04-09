@@ -18,13 +18,6 @@ W3MapSection::CachedMesh::CachedMesh() noexcept
     new (storage_.data()) LRUHandle();
 }
 
-W3MapSection::CachedMesh::~CachedMesh() noexcept
-{
-    // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast)
-    LRUHandle* cache_mem_handle = reinterpret_cast<LRUHandle*>(storage_.data());
-    get_lrumm_instance()->free(cache_mem_handle);
-}
-
 auto*
 W3MapSection::CachedMesh::get_cache_handle() const
 {

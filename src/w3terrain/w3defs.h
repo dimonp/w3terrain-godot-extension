@@ -50,6 +50,7 @@ template <typename T>
 using W3Array = std::vector<T>;
 
 using W3UInt8Pair = W3Pair<uint8_t, uint8_t>;
+using W3UInt16Pair = W3Pair<uint16_t, uint16_t>;
 
 inline void w3_assert(bool p_condition) {
     assert(p_condition);
