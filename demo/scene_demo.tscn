@@ -197,15 +197,9 @@ vertex_color_use_as_albedo = true
 
 [node name="Main" type="Node3D" unique_id=370783374]
 
-[node name="DebugAxis3D" type="MeshInstance3D" parent="." unique_id=1195886150]
-visible = false
-material_override = SubResource("StandardMaterial3D_hrm1c")
-skeleton = NodePath("../FreeLookCamera")
-script = ExtResource("1_hh2g8")
-axis_size = 1000.0
-axis_thickness = 2.0
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=328647670]
 
-[node name="MapInfoUI" parent="." unique_id=187275123 instance=ExtResource("2_oldun")]
+[node name="MapInfoUI" parent="CanvasLayer" unique_id=187275123 instance=ExtResource("2_oldun")]
 unique_name_in_owner = true
 anchors_preset = 0
 anchor_right = 0.0
@@ -215,7 +209,7 @@ grow_vertical = 1
 map_name = "Demo01.w3e"
 map_size = Vector2i(129, 97)
 
-[node name="ProgressBarMapLoad" type="ProgressBar" parent="." unique_id=410490120]
+[node name="ProgressBarMapLoad" type="ProgressBar" parent="CanvasLayer" unique_id=410490120]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(200, 0)
@@ -229,6 +223,14 @@ offset_top = -13.5
 offset_right = 198.0
 offset_bottom = 13.5
 value = 100.0
+
+[node name="DebugAxis3D" type="MeshInstance3D" parent="." unique_id=1195886150]
+visible = false
+material_override = SubResource("StandardMaterial3D_hrm1c")
+skeleton = NodePath("../FreeLookCamera")
+script = ExtResource("1_hh2g8")
+axis_size = 1000.0
+axis_thickness = 2.0
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=462441277]
 environment = SubResource("Environment_bnct2")

@@ -268,17 +268,19 @@ albedo_texture = ExtResource("26_otsph")
 
 [node name="Main" type="Node3D" unique_id=1944748486]
 
-[node name="MapInfoUI" parent="." unique_id=1489392481 instance=ExtResource("1_urnxt")]
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=962886295]
+
+[node name="MapInfoUI" parent="CanvasLayer" unique_id=786669594 instance=ExtResource("1_urnxt")]
 unique_name_in_owner = true
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
 grow_horizontal = 1
 grow_vertical = 1
-map_name = "legends.w3e"
-map_size = Vector2i(129, 129)
+map_name = "Demo01.w3e"
+map_size = Vector2i(129, 97)
 
-[node name="ProgressBarMapLoad" type="ProgressBar" parent="." unique_id=1270406864]
+[node name="ProgressBarMapLoad" type="ProgressBar" parent="CanvasLayer" unique_id=835009819]
 unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(200, 0)
@@ -289,7 +291,7 @@ anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -2.0
 offset_top = -13.5
-offset_right = 2.0
+offset_right = 198.0
 offset_bottom = 13.5
 value = 100.0
 
@@ -358,7 +360,6 @@ transform = Transform3D(1, 0, 0, 0, 0.38268346, 0.92387956, 0, -0.92387956, 0.38
 mesh = SubResource("CapsuleMesh_fnoqs")
 surface_material_override/0 = SubResource("StandardMaterial3D_d7rpo")
 
-[connection signal="create_new_map" from="MapInfoUI" to="W3MapNode" method="_on_map_info_ui_create_new_map"]
 [connection signal="map_initialization_progress" from="W3MapNode" to="W3MapNode" method="_on_map_initialization_progress"]
 [connection signal="map_initialized" from="W3MapNode" to="W3MapNode" method="_on_map_initialized"]
 [connection signal="selector_changed" from="W3MapNode" to="W3MapNode/W3MapCellSelector" method="_on_w3_map_node_selector_changed"]
