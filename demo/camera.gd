@@ -15,7 +15,7 @@ var _direction = Vector3(0.0, 0.0, 0.0)
 var _velocity = Vector3(0.0, 0.0, 0.0)
 var _acceleration = 30
 var _deceleration = -10
-var _vel_multiplier = 400
+var _vel_multiplier = 500
 
 # Keyboard state
 var _w = false
@@ -27,10 +27,6 @@ var _e = false
 var _shift = false
 var _alt = false
 
-# Internal multiplier to keep movement smooth
-var _touch_multiplier: float = 0.25
-var _move_speed: float = 2.0
-var _rotation_speed: float = 0.5
 # Dictionary to track active touches
 var _touches = {}
 
@@ -100,7 +96,7 @@ func _update_movement(delta):
 		(_e as float) - (_q as float),
 		(_s as float) - (_w as float)
 	)
-
+	
 	# Computes the change in velocity due to desired direction and "drag"
 	# The "drag" is a constant acceleration on the camera to bring it's velocity to 0
 	var offset = _direction.normalized() * _acceleration * _vel_multiplier * delta \
@@ -118,10 +114,17 @@ func _update_movement(delta):
 	else:
 		# Clamps speed to stay within maximum value (_vel_multiplier)
 		_velocity.x = clamp(_velocity.x + offset.x, -_vel_multiplier, _vel_multiplier)
-		_velocity.y = clamp(_velocity.y + offset.y, -_vel_multiplier, _vel_multiplier)
 		_velocity.z = clamp(_velocity.z + offset.z, -_vel_multiplier, _vel_multiplier)
+		_velocity.y = clamp(_velocity.y + offset.y, -_vel_multiplier, _vel_multiplier)
 
-		translate(_velocity * delta * speed_multi)
+		var velocity_xz = _velocity * delta * speed_multi
+		_handle_movement(Vector2(-velocity_xz.x, velocity_xz.z))
+
+		# Clamps speed to stay within maximum value (_vel_multiplier)
+		var velocity_y = _velocity * delta * speed_multi
+		velocity_y.x = 0
+		velocity_y.z = 0
+		global_translate(velocity_y)
 
 # Updates mouse look
 func _update_mouselook():
@@ -140,7 +143,7 @@ func _update_mouselook():
 		rotate_object_local(Vector3(1,0,0), deg_to_rad(-pitch))
 
 func _handle_rotation(relative: Vector2) -> void:
-	var rotation_amount = relative * sensitivity * _rotation_speed
+	var rotation_amount = relative * sensitivity
 
 	# Horizontal (Y-axis)
 	rotate_y(deg_to_rad(-rotation_amount.x))
@@ -164,4 +167,4 @@ func _handle_movement(relative: Vector2) -> void:
 	dir += forward * -relative.y
 
 	# Apply movement scaled by speed and sensitivity
-	global_translate(dir * _move_speed * sensitivity)
+	global_translate(dir)

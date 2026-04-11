@@ -8,10 +8,9 @@ func _has_gizmo(node: Node3D) -> bool:
 	
 func _init():
 	var mat = StandardMaterial3D.new()
-	mat.vertex_color_use_as_albedo = true # <--- ГЛАВНОЕ: разрешаем цвета вершин
-	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED # Чтобы цвета были яркими
+	mat.vertex_color_use_as_albedo = true
+	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	add_material("main", mat)
-	create_handle_material("handles") # Для точек, за которые можно тянуть
 
 func _redraw(gizmo: EditorNode3DGizmo):
 	gizmo.clear()
