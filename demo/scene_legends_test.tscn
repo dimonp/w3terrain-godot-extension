@@ -386,5 +386,6 @@ transform = Transform3D(1, 0, 0, 0, 0.38268346, 0.92387956, 0, -0.92387956, 0.38
 mesh = SubResource("CapsuleMesh_fnoqs")
 surface_material_override/0 = SubResource("StandardMaterial3D_d7rpo")
 
+[connection signal="create_new_map" from="CanvasLayer/MapInfoUI" to="W3MapNode" method="_on_map_info_ui_create_new_map"]
 [connection signal="map_initialized" from="W3MapNode" to="W3MapNode" method="_on_map_initialized"]
 [connection signal="map_initialized" from="W3MapNode" to="W3MapNode/StaticBody3D" method="_on_w3_map_node_map_initialized"]

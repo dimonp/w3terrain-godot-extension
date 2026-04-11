@@ -295,5 +295,6 @@ script = ExtResource("1_hh2g8")
 axis_size = 1000.0
 axis_thickness = 0.1
 
+[connection signal="create_new_map" from="CanvasLayer/MapInfoUI" to="W3MapNode" method="_on_map_info_ui_create_new_map"]
 [connection signal="map_initialized" from="W3MapNode" to="W3MapNode" method="_on_map_initialized"]
 [connection signal="map_initialized" from="W3MapNode" to="W3MapNode/StaticBody3D" method="_on_w_3_map_node_map_initialized"]

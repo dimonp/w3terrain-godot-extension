@@ -17,6 +17,7 @@
 [ext_resource type="Texture2D" uid="uid://4h7jch54vvai" path="res://assets/imported/ReplaceableTextures/Cliff/Cliff0.dds" id="16_v064l"]
 [ext_resource type="JSON" path="res://assets/imported/Geosets/ground_keys.json" id="17_j2ifq"]
 [ext_resource type="ArrayMesh" uid="uid://ddpo8en18s2tx" path="res://assets/imported/Geosets/ground_cliffs.obj" id="17_tl6ok"]
+[ext_resource type="Script" uid="uid://clefr3i4v05fs" path="res://w3map_node.gd" id="18_tl6ok"]
 [ext_resource type="ArrayMesh" uid="uid://d3wc5586kb13g" path="res://assets/imported/Geosets/ground_ramps.obj" id="19_0m8ng"]
 [ext_resource type="Texture2D" uid="uid://clek2bqbss2gv" path="res://assets/imported/ReplaceableTextures/Cliff/Cliff1.dds" id="20_k2sr4"]
 [ext_resource type="Shader" uid="uid://dapke3xfnlcxa" path="res://assets/shaders/water.gdshader" id="21_jfoyk"]
@@ -330,6 +331,7 @@ camera = NodePath("../FreeLookCamera")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10240, 0, 10240)
 top_level = true
 visible = false
+script = ExtResource("18_tl6ok")
 
 [node name="W3SurfaceWater" type="W3SurfaceWater" parent="W3MapNode" unique_id=667545736 node_paths=PackedStringArray("map_node")]
 water_material = SubResource("ShaderMaterial_1spff")
@@ -364,3 +366,5 @@ surface_material_override/0 = SubResource("ShaderMaterial_d7rpo")
 transform = Transform3D(1, 0, 0, 0, 0.38268346, 0.92387956, 0, -0.92387956, 0.38268346, 975.7988, -96.208984, -2242.396)
 mesh = SubResource("CapsuleMesh_fnoqs")
 surface_material_override/0 = SubResource("StandardMaterial3D_d7rpo")
+
+[connection signal="create_new_map" from="CanvasLayer/MapInfoUI" to="W3MapNode" method="_on_map_info_ui_create_new_map"]
