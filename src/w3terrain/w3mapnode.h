@@ -68,9 +68,9 @@ public:
     void on_geo_resource_changed();
     void on_frame_rendered();
 
+    void _notification(int p_what);
     void _enter_tree() override;
     void _exit_tree() override;
-    void _ready() override;
     void _process(double delta) override;
 
     godot::AABB _get_aabb() const override;

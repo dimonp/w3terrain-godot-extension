@@ -41,7 +41,7 @@ private:
     static constexpr auto kStatGeoTilesPrecachedId = "W3Terrain/stat_geo_tiles_precached";
 #endif
 
-    static constexpr int32_t kMaxGPUMeshes = godot::RenderingServer::MAX_MESH_SURFACES / 2;
+    static constexpr int32_t kMaxGPUMeshes = std::min(64, godot::RenderingServer::MAX_MESH_SURFACES);
 
     struct CachedVertex {
         math::vector3 pos;

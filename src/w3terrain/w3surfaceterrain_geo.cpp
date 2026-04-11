@@ -18,20 +18,12 @@ W3SurfaceTerrain::render_geos(const W3Array<uint32_t>& sections, bool render_as_
     for(int64_t tileset_id = 0; tileset_id < assets->geo_assets_size_rt(); ++tileset_id ) {
         const W3MapAssets::GeoAsset& geo_type = assets->geo_asset_rt(tileset_id);
 
-        begin_render(render_as_normals);
-        if (!render_as_normals) {
-            surface_tool_->set_material(geo_material_asset_);
-        } else {
-            surface_tool_->set_material(debug_material_);
-        }
-
         float texture_index = static_cast<float>(tileset_id);
         surface_tool_->set_custom(0, godot::Color(texture_index, 0.0F, 0.0F));
 
         for(const uint32_t section_id : sections) {
             render_geo_cells(section_id, tileset_id, render_as_normals);
         }
-        end_render();
     }
 }
 

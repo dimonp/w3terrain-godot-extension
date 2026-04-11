@@ -3,8 +3,6 @@
 #include <godot_cpp/classes/performance.hpp>
 
 #include "w3mapcollector_impl.h"
-#include "w3mapruntimemanager_impl.h"
-#include "w3mapsectionmanager_impl.h"
 #include "w3mapnode.h"
 
 namespace w3terr {
@@ -120,8 +118,7 @@ W3SurfaceTerrain::_process(double  /*delta*/)
     const auto* assets = get_assets();
     // release all early rendered meshes in the GPU only if the maximum count is reached
     // or runtime data is outdated
-    const size_t total_tilesets = static_cast<size_t>(assets->ground_assets_size_rt()) + assets->geo_assets_size_rt();
-    if (is_mesh_dirty() || mesh_->get_surface_count() + total_tilesets > kMaxGPUMeshes) {
+    if (is_mesh_dirty() || mesh_->get_surface_count() + 3 > kMaxGPUMeshes) {
         reset_rendered();
     }
 
@@ -165,17 +162,30 @@ W3SurfaceTerrain::render(const W3Array<uint32_t>& sections)
         return;
     }
 
-    // mark all sections as rendered
+    // Mark all sections as rendered
     for(const uint32_t section_id : not_rendered_sections_) {
         section_rendered_flags_[section_id] = true;
     }
 
+    // Render cliff/ramp cells
+    begin_render(false);
+    surface_tool_->set_material(geo_material_asset_);
     render_geos(not_rendered_sections_, false);
-    render_grounds(not_rendered_sections_, false);
+    end_render();
 
+    // Render ground cells
+    begin_render(false);
+    surface_tool_->set_material(ground_material_asset_);
+    render_grounds(not_rendered_sections_, false);
+    end_render();
+
+    // Rendering normals for debugging purposes
     if (render_normals_) {
+        begin_render(true);
+        surface_tool_->set_material(debug_material_);
         render_geos(not_rendered_sections_, true);
         render_grounds(not_rendered_sections_, true);
+        end_render();
     }
 }
 

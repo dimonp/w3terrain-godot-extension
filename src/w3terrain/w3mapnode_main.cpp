@@ -150,6 +150,18 @@ W3MapNode::on_geo_resource_changed()
 }
 
 void
+W3MapNode::_notification(int p_what)
+{
+    if (p_what == NOTIFICATION_READY) {
+        auto* rsrv = godot::RenderingServer::get_singleton();
+        const auto callable_frame_post_draw = callable_mp(this, &W3MapNode::on_frame_rendered);
+        if (!rsrv->is_connected("frame_post_draw", callable_frame_post_draw)) {
+            rsrv->connect("frame_post_draw", callable_frame_post_draw);
+        }
+    }
+}
+
+void
 W3MapNode::_enter_tree() {
     const auto callable_map_resource_changed = callable_mp(this, &W3MapNode::on_map_resource_changed);
     if (!is_connected(kSignalMapAssetsChanged, callable_map_resource_changed)) {
@@ -203,15 +215,6 @@ W3MapNode::_exit_tree()
     if (load_thread_->is_started()) {
         stop_loading_ = true;
         load_thread_->wait_to_finish();
-    }
-}
-
-void
-W3MapNode::_ready() {
-    auto* rsrv = godot::RenderingServer::get_singleton();
-    const auto callable_frame_post_draw = callable_mp(this, &W3MapNode::on_frame_rendered);
-    if (!rsrv->is_connected("frame_post_draw", callable_frame_post_draw)) {
-        rsrv->connect("frame_post_draw", callable_frame_post_draw);
     }
 }
 
