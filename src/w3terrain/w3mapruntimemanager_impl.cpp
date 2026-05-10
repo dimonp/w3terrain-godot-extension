@@ -356,7 +356,7 @@ W3MapRuntimeManagerImpl::initialize(const std::function<bool(int)>& progress_cal
     cellpoints_rt_.resize(runtime_array_size);
 
     for(int32_t idx_2d_y = 0; idx_2d_y < map_size_y; ++idx_2d_y) {
-        if (progress_callback(idx_2d_y)) {
+        if (progress_callback && progress_callback(idx_2d_y)) {
             break;
         }
 
