@@ -47,13 +47,21 @@ W3SurfaceTerrain::_notification(int p_what)
     // avoid to save dinamicaly created resources to scene file
     switch (p_what) {
     case NOTIFICATION_EDITOR_PRE_SAVE: {
-        ground_material_asset_->set_shader_parameter("texture_array", nullptr);
-        geo_material_asset_->set_shader_parameter("texture_array", nullptr);
+        if (ground_material_asset_.is_valid()) {
+            ground_material_asset_->set_shader_parameter("texture_array", nullptr);
+        }
+        if (geo_material_asset_.is_valid()) {
+            geo_material_asset_->set_shader_parameter("texture_array", nullptr);
+        }
         break;
     }
     case NOTIFICATION_EDITOR_POST_SAVE: {
-        ground_material_asset_->set_shader_parameter("texture_array", ground_textures_array_);
-        geo_material_asset_->set_shader_parameter("texture_array", geo_textures_array_);
+        if (ground_material_asset_.is_valid()) {
+            ground_material_asset_->set_shader_parameter("texture_array", ground_textures_array_);
+        }
+        if (geo_material_asset_.is_valid()) {
+            geo_material_asset_->set_shader_parameter("texture_array", geo_textures_array_);
+        }
         break;
     }
     default:
