@@ -99,44 +99,6 @@ W3MapAssetsImpl::check_and_warning_geo_asset(size_t asset_idx) const
 }
 
 void
-W3MapAssetsImpl::fill_mesh_counts_storage(size_t asset_idx)
-{
-    const W3Mesh *cliff_mesh = geo_assets_rt_[asset_idx].cliff_geoset_mesh.ptr();
-    if (cliff_mesh != nullptr) {
-        auto& cliff_geo_count= geo_assets_rt_[asset_idx].cliff_mesh_counts_storage;
-        const int32_t surface_count = cliff_mesh->get_surface_count();
-        cliff_geo_count.resize(surface_count);
-        for(size_t cliff_geo_idx = 0; cliff_geo_idx < cliff_geo_count.size(); ++cliff_geo_idx) {
-            const auto& surface = cliff_mesh->surface_get_arrays(static_cast<int32_t>(cliff_geo_idx));
-            const godot::PackedVector3Array& vertices = surface[W3Mesh::ARRAY_VERTEX];
-            const godot::PackedInt32Array& indices = surface[W3Mesh::ARRAY_INDEX];
-
-            cliff_geo_count[cliff_geo_idx] = {
-                vertices.size(),
-                indices.size()
-            };
-        }
-    }
-
-    const W3Mesh *ramp_mesh = geo_assets_rt_[asset_idx].ramp_geoset_mesh.ptr();
-    if (ramp_mesh != nullptr) {
-        auto& ramp_geo_count= geo_assets_rt_[asset_idx].ramp_mesh_counts_storage;
-        const int32_t surface_count = ramp_mesh->get_surface_count();
-        ramp_geo_count.resize(surface_count);
-        for(size_t ramp_geo_idx = 0; ramp_geo_idx < ramp_geo_count.size(); ++ramp_geo_idx) {
-            const auto& surface = ramp_mesh->surface_get_arrays(static_cast<int32_t>(ramp_geo_idx));
-            const godot::PackedVector3Array& vertices = surface[W3Mesh::ARRAY_VERTEX];
-            const godot::PackedInt32Array& indices = surface[W3Mesh::ARRAY_INDEX];
-
-            ramp_geo_count[ramp_geo_idx] = {
-                vertices.size(),
-                indices.size()
-            };
-        }
-    }
-}
-
-void
 W3MapAssetsImpl::prepare_geo_assets_rt()
 {
     const size_t geo_assets_size = geo_assets_.size();
@@ -162,7 +124,6 @@ W3MapAssetsImpl::prepare_geo_assets_rt()
 
         load_geo_config(i, geo_resource->get_geoset_config());
         check_and_warning_geo_asset(i);
-        fill_mesh_counts_storage(i);
     }
 }
 

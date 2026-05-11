@@ -2,14 +2,18 @@
 #define _W3MAPSECTION__H
 
 #include <bitset>
-#include <span>
 
 #include "w3defs.h"
 #include "w3map.h"
 
+#include <godot_cpp/classes/rendering_server.hpp>
+
+
 namespace w3terr {
 
 class W3MapRuntimeManager;
+
+#define RS godot::RenderingServer::get_singleton()
 
 class W3_API W3MapSection {
 public:
@@ -17,72 +21,6 @@ public:
 
     explicit W3MapSection(const W3MapRuntimeManager* map_runtime): runtime_manager_(map_runtime) {}
     void initialize(size_t ground_tilesets_size, size_t geo_tilesets_size);
-
-    struct CachedMesh {
-        CachedMesh() noexcept;
-
-        template<typename VT, typename IT>
-        W3Pair<std::span<const VT>, std::span<const IT>> get_cached_mesh_data() const noexcept
-        {
-            w3_assert(vertices_count_ > 0 && indices_count_ > 0);
-            const void* cached_buffer = get_cached_buffer();
-            if (cached_buffer == nullptr) { return {}; }
-            return {
-                { static_cast<const VT*>(cached_buffer), vertices_count_ },
-                // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast, cppcoreguidelines-pro-bounds-pointer-arithmetic)
-                { reinterpret_cast<const IT*>(static_cast<const char*>(cached_buffer) + (vertices_count_ * sizeof(VT))), indices_count_ }
-            };
-        }
-
-        template<typename VT, typename IT>
-        W3Pair<std::span<VT>, std::span<IT>> allocate_mesh_data() const noexcept
-        {
-            w3_assert(vertices_count_ > 0 && indices_count_ > 0);
-            const size_t alloc_size = (vertices_count_ * sizeof(VT)) + (indices_count_ * sizeof(IT));
-            void* cached_buffer = alloc_cached_buffer(alloc_size);
-            if (cached_buffer == nullptr) { return {}; }
-            return {
-                { static_cast<VT*>(cached_buffer), vertices_count_},
-                // NOLINTNEXTLINE(cppcoreguidelines-pro-type-reinterpret-cast, cppcoreguidelines-pro-bounds-pointer-arithmetic)
-                { reinterpret_cast<IT*>(static_cast<char*>(cached_buffer) + (vertices_count_ * sizeof(VT))), indices_count_}
-            };
-        }
-
-        bool is_used() const { return usage_flags_.any(); }
-        bool is_used_by(size_t flag) const { return usage_flags_[flag]; }
-
-        uint32_t vertices_count() const { return vertices_count_; }
-        uint32_t indices_count() const { return indices_count_; }
-
-    private:
-        const void* get_cached_buffer() const;
-        void* alloc_cached_buffer(size_t alloc_size) const;
-        auto* get_cache_handle() const;
-
-        uint32_t vertices_count_ = 0;
-        uint32_t indices_count_ = 0;
-        std::bitset<kNumberOfCells> usage_flags_;
-
-        // fast pimpl storage for lru cache handle
-        static constexpr std::size_t kPimplSize = sizeof(void*);
-        static constexpr std::size_t kPimplAlign = alignof(void*);
-        alignas(kPimplAlign) mutable std::array<std::byte, kPimplSize> storage_ = {};
-
-        friend class W3MapSection;
-    };
-
-    uint32_t get_ground_vertices_count(size_t tileset_id) const;
-    uint32_t get_geo_vertices_count(size_t tileset_id) const;
-    uint32_t get_water_vertices_count() const;
-
-    size_t get_ground_tilesets_size() const;
-    size_t get_geo_tilesets_size() const;
-
-    const CachedMesh& get_cached_ground_mesh(size_t tileset_id) const;
-    const CachedMesh& get_cached_geo_mesh(size_t tileset_id) const;
-    const CachedMesh& get_cached_waters_mesh() const;
-
-    uint32_t map_ground_tileset_to_layer(size_t tileset_id) const;
 
     void update_all_cells(const Coord2D& section_origin);
     bool refresh(const Coord2D& section_origin);
@@ -92,84 +30,63 @@ public:
 
     static Coord2D calc_cell_coord_from_idx(const Coord2D& section_origin, size_t cell_idx);
 
+    W3Array<std::bitset<kNumberOfCells>> ground_tileset_usage;
+    W3Array<std::bitset<kNumberOfCells>> geo_tileset_usage;
+    std::bitset<kNumberOfCells> water_usage;
+
+    W3Array<uint32_t> ground_tileset_to_layer_map;
+
+    mutable struct RenderedMesh {
+        godot::RID instance_rid;
+        godot::RID mesh_rid;
+        int8_t surface_idx_ground = -1;
+        int8_t surface_idx_geo = -1;
+        int8_t surface_idx_water = -1;
+
+        ~RenderedMesh() {
+            free();
+        }
+
+        const godot::RID& get_mesh_rid()
+        {
+            if (!mesh_rid.is_valid()) {
+                mesh_rid = RS->mesh_create();
+            }
+            return mesh_rid;
+        }
+
+        const godot::RID& get_inst_rid()
+        {
+            if (!instance_rid.is_valid()) {
+                instance_rid = RS->instance_create();
+            }
+            return instance_rid;
+        }
+
+        void free()
+        {
+            if (instance_rid.is_valid()) {
+                RS->free_rid(instance_rid);
+                instance_rid = {};
+            }
+            if (mesh_rid.is_valid()) {
+                RS->free_rid(mesh_rid);
+                mesh_rid = {};
+            }
+            surface_idx_ground = -1;
+            surface_idx_geo = -1;
+            surface_idx_water = -1;
+        }
+    } rendered_mesh;
+
 private:
     void free_cached_data();
     void update_cell(const Coord2D& cell_coords, size_t cell_idx);
 
-    W3Array<CachedMesh> ground_cached_meshes_;
-    W3Array<CachedMesh> geo_cached_meshes_;
-    CachedMesh water_mesh_;
-
-    W3Array<uint32_t> ground_tileset_to_layer_map_;
-    bool dirty_ = true;
-
     const W3MapRuntimeManager* runtime_manager_;
+
+    bool dirty_ = true;
 };
-
-inline
-uint32_t
-W3MapSection::get_ground_vertices_count(size_t tileset_id) const
-{
-    w3_assert(tileset_id < get_ground_tilesets_size());
-    return ground_cached_meshes_[tileset_id].vertices_count_;
-}
-
-inline
-uint32_t
-W3MapSection::get_geo_vertices_count(size_t tileset_id) const
-{
-    w3_assert(tileset_id < get_ground_tilesets_size());
-    return geo_cached_meshes_[tileset_id].vertices_count_;
-}
-
-inline
-uint32_t
-W3MapSection::get_water_vertices_count() const
-{
-    return water_mesh_.vertices_count_;
-}
-
-inline
-size_t
-W3MapSection::get_ground_tilesets_size() const
-{
-    return ground_cached_meshes_.size();
-}
-
-inline
-size_t
-W3MapSection::get_geo_tilesets_size() const
-{
-    return geo_cached_meshes_.size();
-}
-
-inline
-const W3MapSection::CachedMesh&
-W3MapSection::get_cached_ground_mesh(size_t tileset_id) const
-{
-    return ground_cached_meshes_[tileset_id];
-}
-
-inline
-const W3MapSection::CachedMesh&
-W3MapSection::get_cached_geo_mesh(size_t tileset_id) const
-{
-    return geo_cached_meshes_[tileset_id];
-}
-
-inline
-const W3MapSection::CachedMesh&
-W3MapSection::get_cached_waters_mesh() const
-{
-    return water_mesh_;
-}
-
-inline
-uint32_t
-W3MapSection::map_ground_tileset_to_layer(size_t tileset_id) const
-{
-    return ground_tileset_to_layer_map_[tileset_id];
-}
 
 inline
 void

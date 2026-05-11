@@ -1,6 +1,7 @@
 #include "w3surfacewater.h"
 
 #include <godot_cpp/classes/performance.hpp>
+#include <godot_cpp/classes/world3d.hpp>
 
 #include "w3mapruntimemanager_impl.h"
 #include "w3mapcollector_impl.h"
@@ -14,7 +15,7 @@ void
 W3SurfaceWater::_bind_methods()
 {
     godot::ClassDB::bind_method(godot::D_METHOD("get_water_material"), &W3SurfaceWater::get_water_material);
-    godot::ClassDB::bind_method(godot::D_METHOD("set_water_material", "ground_material"), &W3SurfaceWater::set_water_material);
+    godot::ClassDB::bind_method(godot::D_METHOD("set_water_material", "water_material"), &W3SurfaceWater::set_water_material);
     ADD_PROPERTY(
         godot::PropertyInfo(godot::Variant::OBJECT, "water_material",
             godot::PROPERTY_HINT_RESOURCE_TYPE,
@@ -36,10 +37,12 @@ W3SurfaceWater::set_water_material(const W3Ref<W3Marerial>& material)
 
 void
 W3SurfaceWater::_enter_tree() {
+    W3Surface::_enter_tree();
+
 #ifdef W3MAP_STATS_ENABLE
     godot::Performance *perf = godot::Performance::get_singleton();
-    const auto stat_ground_tiles_precached_callable = callable_mp(this, &W3SurfaceWater::get_stat_water_tiles_precached);
-    perf->add_custom_monitor(kStatWaterTilesPrecachedId, stat_ground_tiles_precached_callable);
+    const auto stat_ground_tiles_precached_callable = callable_mp(this, &W3SurfaceWater::get_stat_water_tiles_rendered);
+    perf->add_custom_monitor(kStatWaterTilesRenderedId, stat_ground_tiles_precached_callable);
 #endif
 }
 
@@ -48,10 +51,11 @@ W3SurfaceWater::_exit_tree()
 {
 #ifdef W3MAP_STATS_ENABLE
     godot::Performance *perf = godot::Performance::get_singleton();
-    if (perf->has_custom_monitor(kStatWaterTilesPrecachedId)) {
-        perf->remove_custom_monitor(kStatWaterTilesPrecachedId);
+    if (perf->has_custom_monitor(kStatWaterTilesRenderedId)) {
+        perf->remove_custom_monitor(kStatWaterTilesRenderedId);
     }
 #endif
+    clear_rendered();
 }
 
 void
@@ -61,17 +65,13 @@ W3SurfaceWater::_process(double  /*delta*/)
         return;
     }
 
-    const auto* assets = get_assets();
-    // release all early rendered meshes in the GPU only if the maximum count is reached
-    // or runtime data is outdated
-    if (is_mesh_dirty() || mesh_->get_surface_count() + 1 > kMaxGPUMeshes) {
-        mesh_->clear_surfaces();
-        section_rendered_flags_.clear();
-    }
-
     const auto* collector = get_collector();
     if (collector == nullptr) {
         return;
+    }
+
+    if (is_mesh_dirty()) {
+        clear_rendered();
     }
 
     const W3Array<uint32_t>& visible_sections = collector->get_visible_sections();
@@ -79,84 +79,66 @@ W3SurfaceWater::_process(double  /*delta*/)
         return;
     }
 
-    render(visible_sections);
+    if (is_visible_in_tree()) {
+        render(visible_sections);
+    }
 }
 
 void
 W3SurfaceWater::render(const W3Array<uint32_t>& collected_sections)
 {
-    not_rendered_sections_.clear();
+    const auto* section_manager = get_section_manager();
 
-    // filter already rendered sections
-    std::ranges::copy_if (collected_sections,
-        std::back_inserter(not_rendered_sections_),
-        [&rendered_flags = section_rendered_flags_](uint32_t section_id) {
-            if (rendered_flags.size() <= section_id) {
-                rendered_flags.resize(static_cast<size_t>(section_id) + 1);
+#ifdef W3MAP_STATS_ENABLE
+        stat_water_tiles_rendered_ = 0;
+#endif
+
+    for(const auto section_id : collected_sections) {
+        const W3MapSection& section = section_manager->get_section_by_id(section_id);
+        if (rendered_sections_.has(section_id)) {
+            if (section.rendered_mesh.surface_idx_water < 0) {
+                rendered_sections_.remove(section_id);
+            } else {
+                rendered_sections_.touch(section_id);
+                continue;
             }
-            return !rendered_flags[section_id];
-        });
-
-    if (not_rendered_sections_.empty()) {
-        return;
+        }
+        render_section(section_id);
     }
-
-    begin_render();
-    surface_tool_->set_material(water_material_asset_);
-    for(const auto section_id : not_rendered_sections_) {
-        section_rendered_flags_[section_id] = true;
-        render_cells(section_id);
-    }
-    end_render();
 }
 
 void
-W3SurfaceWater::render_cells(const uint32_t section_id)
+W3SurfaceWater::render_section(const uint32_t section_id)
 {
     const auto* section_manager = get_section_manager();
     const W3MapSection& section = section_manager->get_section_by_id(section_id);
-    if (section.get_water_vertices_count() > 0) {
-        const W3MapSection::CachedMesh &cached_mesh = section.get_cached_waters_mesh();
-        if (!cached_mesh.is_used()) {
-            return;
-        }
+    if (!section.water_usage.any()) {
+        return;
+    }
 
-        auto [vertices, indices] = cached_mesh.get_cached_mesh_data<CachedVertex, uint16_t>();
-        if (vertices.empty()) {
+    const auto& mesh_rid = section.rendered_mesh.get_mesh_rid();
+    int32_t surface_idx = RS->mesh_get_surface_count(mesh_rid);
+    section.rendered_mesh.surface_idx_water = static_cast<int8_t>(surface_idx);
 
-#ifdef W3MAP_STATS_ENABLE
-    stat_water_tiles_precached_ = 0;
-#endif
-            std::tie(vertices, indices) = precache_cells(section_id);
-        }
+    begin_render(section_id);
+    render_section_cells(section_id);
+    end_render(section_id);
 
-        render_cached_mesh(vertices, indices);
+    if (water_material_asset_.is_valid()) {
+        RS->mesh_surface_set_material(mesh_rid, surface_idx, water_material_asset_->get_rid());
     }
 }
 
-W3Pair<W3SurfaceWater::VertexSpan, W3SurfaceWater::IndexSpan>
-W3SurfaceWater::precache_cells(const uint32_t section_id) const
+void
+W3SurfaceWater::render_section_cells(const uint32_t section_id)
 {
     const auto* section_manager = get_section_manager();
-
     const W3MapSection& section = section_manager->get_section_by_id(section_id);
-    const W3MapSection::CachedMesh &cached_mesh = section.get_cached_waters_mesh();
-
-    // alloc lru cache memory
-    auto [vertices, indices] = cached_mesh.allocate_mesh_data<CachedVertex, uint16_t>();
-    if (vertices.empty()) {
-        w3_log_error("Can't allocate memory in cache.");
-        return {};
-    }
-
-    uint16_t dest_vertex_idx = 0;
-    uint16_t dest_index_idx = 0;
-
     const auto* runtime_manager = get_map_node()->get_runtime_manager();
 
     // for each cell in this section
     for(size_t cell_idx = 0; cell_idx < W3MapSection::kNumberOfCells; ++cell_idx) {
-        if (!cached_mesh.is_used_by(cell_idx)) { // Is there water in the cell?
+        if (!section.water_usage[cell_idx]) { // Is there water in the cell?
             continue;
         }
 
@@ -166,58 +148,45 @@ W3SurfaceWater::precache_cells(const uint32_t section_id) const
         const math::vector3 base_water_pos = runtime_manager->get_cellpoint_water_position(cell_coord);
         const float water_height = base_water_pos.y;
 
+        static const auto kNormalUp = math::vector3(0.0F, 1.0F, 0.0F);
+
         // vertex 00
-        vertices[dest_vertex_idx].pos = base_water_pos;
-        ++dest_vertex_idx;
+        surface_tool_->set_normal(kNormalUp);
+        surface_tool_->add_vertex(base_water_pos);
 
         math::vector3 cellpoint_position;
         // vertex 10
         cellpoint_position = runtime_manager->get_cellpoint_position({ cell_coord.x + 1, cell_coord.y });
-        vertices[dest_vertex_idx].pos = cellpoint_position;
-        vertices[dest_vertex_idx].pos.y = water_height;
-        ++dest_vertex_idx;
+        cellpoint_position.y = water_height;
+        surface_tool_->set_normal(kNormalUp);
+        surface_tool_->add_vertex(cellpoint_position);
 
         // vertex 01
         cellpoint_position = runtime_manager->get_cellpoint_position({ cell_coord.x, cell_coord.y + 1 });
-        vertices[dest_vertex_idx].pos = cellpoint_position;
-        vertices[dest_vertex_idx].pos.y = water_height;
-        ++dest_vertex_idx;
+        cellpoint_position.y = water_height;
+        surface_tool_->set_normal(kNormalUp);
+        surface_tool_->add_vertex(cellpoint_position);
 
         // vertex 11
         cellpoint_position = runtime_manager->get_cellpoint_position({ cell_coord.x + 1, cell_coord.y + 1 });
-        vertices[dest_vertex_idx].pos = cellpoint_position;
-        vertices[dest_vertex_idx].pos.y = water_height;
-        ++dest_vertex_idx;
+        cellpoint_position.y = water_height;
+        surface_tool_->set_normal(kNormalUp);
+        surface_tool_->add_vertex(cellpoint_position);
 
         // cell indices counterclockwise
-        indices[dest_index_idx++] = dest_vertex_idx - 4; // 0
-        indices[dest_index_idx++] = dest_vertex_idx - 1; // 3
-        indices[dest_index_idx++] = dest_vertex_idx - 3; // 1
-        indices[dest_index_idx++] = dest_vertex_idx - 4; // 0
-        indices[dest_index_idx++] = dest_vertex_idx - 2; // 2
-        indices[dest_index_idx++] = dest_vertex_idx - 1; // 3
+        surface_tool_->add_index(static_cast<int32_t>(vertices_counter_));
+        surface_tool_->add_index(static_cast<int32_t>(vertices_counter_ + 3));
+        surface_tool_->add_index(static_cast<int32_t>(vertices_counter_ + 1));
+        surface_tool_->add_index(static_cast<int32_t>(vertices_counter_));
+        surface_tool_->add_index(static_cast<int32_t>(vertices_counter_ + 2));
+        surface_tool_->add_index(static_cast<int32_t>(vertices_counter_ + 3));
+
+        vertices_counter_ += 4;
 
 #ifdef W3MAP_STATS_ENABLE
-        stat_water_tiles_precached_++;
+        stat_water_tiles_rendered_++;
 #endif
     }
-    return { vertices, indices };
-}
-
-void
-W3SurfaceWater::render_cached_mesh(VertexSpan vertices, IndexSpan indices)
-{
-    static const auto kNormalUp = math::vector3(0.0F, 1.0F, 0.0F);
-    for(const auto& vertex : vertices) {
-        surface_tool_->set_normal(kNormalUp);
-        surface_tool_->add_vertex(vertex.pos);
-    }
-
-    for(const auto index : indices) {
-        surface_tool_->add_index(static_cast<int32_t>(index + vertices_counter_));
-    }
-
-    vertices_counter_ += static_cast<int64_t>(vertices.size());
 }
 
 }  // namespace w3terr

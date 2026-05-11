@@ -31,7 +31,7 @@ void initialize_gdextension_types(godot::ModuleInitializationLevel p_level)
 	GDREGISTER_CLASS(w3terr::W3eResourceSaver);
 	GDREGISTER_CLASS(w3terr::W3MapNode);
 	GDREGISTER_CLASS(w3terr::W3GeoResource);
-	GDREGISTER_CLASS(w3terr::W3Surface)
+	GDREGISTER_ABSTRACT_CLASS(w3terr::W3Surface)
 	GDREGISTER_CLASS(w3terr::W3SurfaceTerrain);
 	GDREGISTER_CLASS(w3terr::W3SurfaceWater);
 	GDREGISTER_CLASS(w3terr::W3MapBindings);

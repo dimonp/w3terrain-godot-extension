@@ -8,42 +8,13 @@
 
 namespace w3terr {
 
-#define RS godot::RenderingServer::get_singleton()
-
 void
 W3Surface::_notification(int p_what)
 {
     switch (p_what) {
-    case NOTIFICATION_READY: {
-        mesh_.instantiate();
-        instance_rid_ = RS->instance_create();
-        const godot::RID scenario_rid = get_world_3d()->get_scenario();
-        RS->instance_set_scenario(instance_rid_, scenario_rid);
-        RS->instance_set_base(instance_rid_, mesh_->get_rid());
-
-        if (map_node_ptr_ == nullptr) {
-            map_node_ptr_ = godot::Object::cast_to<W3MapNode>(get_parent());
-        }
-        break;
-    }
-    case NOTIFICATION_TRANSFORM_CHANGED: {
-        if (instance_rid_.is_valid()) {
-            RS->instance_set_transform(instance_rid_, get_global_transform());
-        }
-        break;
-    }
-    case NOTIFICATION_PREDELETE: {
-        if (instance_rid_.is_valid()) {
-            mesh_.unref();
-            RS->free_rid(instance_rid_);
-        }
-        break;
-    }
+    case NOTIFICATION_TRANSFORM_CHANGED:
     case NOTIFICATION_VISIBILITY_CHANGED: {
-        if (instance_rid_.is_valid()) {
-            bool visible = is_visible_in_tree();
-            RS->instance_set_visible(instance_rid_, visible);
-        }
+        clear_rendered();
         break;
     }
     default:
@@ -54,23 +25,6 @@ W3Surface::_notification(int p_what)
 void
 W3Surface::_bind_methods()
 {
-    godot::ClassDB::bind_method(godot::D_METHOD("begin_render", "render_lines"), &W3Surface::begin_render, DEFVAL(false));
-    godot::ClassDB::bind_method(godot::D_METHOD("end_render"), &W3Surface::end_render);
-
-    godot::ClassDB::bind_method(godot::D_METHOD("get_mesh"), &W3Surface::get_mesh);
-    ADD_PROPERTY(godot::PropertyInfo(
-            godot::Variant::OBJECT, "_mesh",
-            godot::PROPERTY_HINT_RESOURCE_TYPE, "ArrayMesh",
-            godot::PROPERTY_USAGE_INTERNAL),
-        "", "get_mesh");
-
-    godot::ClassDB::bind_method(godot::D_METHOD("get_surface_tool"), &W3Surface::get_surface_tool);
-    ADD_PROPERTY(godot::PropertyInfo(
-            godot::Variant::OBJECT, "_surface_tool",
-            godot::PROPERTY_HINT_RESOURCE_TYPE, "SurfaceTool",
-            godot::PROPERTY_USAGE_INTERNAL),
-        "", "get_surface_tool");
-
     godot::ClassDB::bind_method(godot::D_METHOD("get_map_node"), &W3Surface::get_map_node);
     godot::ClassDB::bind_method(godot::D_METHOD("set_map_node", "map_node"), &W3Surface::set_map_node);
     ADD_PROPERTY(godot::PropertyInfo(
@@ -78,21 +32,61 @@ W3Surface::_bind_methods()
             godot::PROPERTY_HINT_NODE_TYPE, "W3MapNode"),
         "set_map_node", "get_map_node");
 
+    godot::ClassDB::bind_method(godot::D_METHOD("get_debug_material"), &W3Surface::get_debug_material);
+    godot::ClassDB::bind_method(godot::D_METHOD("set_debug_material", "debug_material"), &W3Surface::set_debug_material);
+    ADD_PROPERTY(
+        godot::PropertyInfo(godot::Variant::OBJECT, "debug_material",
+            godot::PROPERTY_HINT_RESOURCE_TYPE,
+            "Material"),
+        "set_debug_material", "get_debug_material");
+
+    godot::ClassDB::bind_method(godot::D_METHOD("get_render_debug"), &W3Surface::get_render_debug);
+    godot::ClassDB::bind_method(godot::D_METHOD("set_render_debug", "p_camera"), &W3Surface::set_render_debug);
+    ADD_PROPERTY(godot::PropertyInfo(godot::Variant::BOOL, "render_debug"),
+        "set_render_debug", "get_render_debug"
+    );
 }
 
-W3Ref<W3Mesh>
-W3Surface::get_mesh() const {
-	return mesh_;
-}
-
-void
-W3Surface::end_render()
+godot::AABB
+W3Surface::_get_aabb() const
 {
-    surface_tool_->commit(mesh_);
+    return map_node_ptr_->get_aabb();
 }
 
 void
-W3Surface::begin_render(bool render_lines)
+W3Surface::_enter_tree() {
+    if (map_node_ptr_ == nullptr) {
+        map_node_ptr_ = Object::cast_to<W3MapNode>(get_parent());
+    }
+}
+
+bool
+W3Surface::get_render_debug() const
+{
+    return render_debug_;
+}
+
+void
+W3Surface::set_render_debug(bool flag)
+{
+    clear_rendered();
+    render_debug_ = flag;
+}
+
+W3Ref<W3Marerial>
+W3Surface::get_debug_material() const
+{
+    return debug_material_;
+}
+
+void
+W3Surface::set_debug_material(const W3Ref<W3Marerial>& material)
+{
+    debug_material_ = material;
+}
+
+void
+W3Surface::begin_render(const uint32_t section_id, bool render_lines)
 {
     if (surface_tool_.is_null()) {
         surface_tool_.instantiate();
@@ -101,13 +95,69 @@ W3Surface::begin_render(bool render_lines)
     surface_tool_->clear();
     surface_tool_->begin(render_lines ? W3Mesh::PRIMITIVE_LINES: W3Mesh::PRIMITIVE_TRIANGLES);
     surface_tool_->set_custom_format(0, godot::SurfaceTool::CUSTOM_R_FLOAT);
+
     vertices_counter_ = 0;
+
+    const auto* section_manager = get_section_manager();
+    const W3MapSection& section = section_manager->get_section_by_id(section_id);
+
+    const auto& mesh_rid = section.rendered_mesh.get_mesh_rid();
+    int32_t surface_idx = RS->mesh_get_surface_count(mesh_rid);
+
+    auto evicted = rendered_sections_.put(section_id);
+    if (evicted.has_value()) {
+        const auto& evicted_section_id = evicted.value();
+        const W3MapSection& evicted_section = section_manager->get_section_by_id(evicted_section_id);
+        evicted_section.rendered_mesh.free();
+    }
 }
 
-W3Ref<godot::SurfaceTool>
-W3Surface::get_surface_tool() const
+void
+W3Surface::end_render(const uint32_t section_id)
 {
-    return surface_tool_;
+    const auto* section_manager = get_section_manager();
+    const W3MapSection& section = section_manager->get_section_by_id(section_id);
+
+    auto mesh_array =  surface_tool_->commit_to_arrays();
+
+    static const uint64_t kCustom0Type = godot::Mesh::ARRAY_CUSTOM_R_FLOAT;
+    static const uint64_t kFormat = godot::Mesh::ARRAY_FORMAT_VERTEX |
+        godot::Mesh::ARRAY_FORMAT_TEX_UV |
+        godot::Mesh::ARRAY_FORMAT_NORMAL |
+        godot::Mesh::ARRAY_FORMAT_CUSTOM0 |
+        godot::Mesh::ARRAY_FORMAT_INDEX |
+        (kCustom0Type << godot::Mesh::ARRAY_FORMAT_CUSTOM0_SHIFT);
+
+    const auto& mesh_rid = section.rendered_mesh.get_mesh_rid();
+    RS->mesh_add_surface_from_arrays(
+        mesh_rid,
+        godot::RenderingServer::PRIMITIVE_TRIANGLES,
+        mesh_array,
+        godot::Array(),
+        godot::Dictionary(),
+        static_cast<int64_t>(kFormat)
+    );
+
+    const auto& instance_rid = section.rendered_mesh.get_inst_rid();
+    RS->instance_set_base(instance_rid, mesh_rid);
+    RS->instance_set_transform(instance_rid, get_global_transform());
+    RS->instance_set_scenario(instance_rid, get_world_3d()->get_scenario());
+    RS->instance_set_layer_mask(instance_rid, get_layer_mask());
+}
+
+void
+W3Surface::clear_rendered()
+{
+    const auto* section_manager = get_section_manager();
+    if (section_manager != nullptr) {
+        for(auto section_id : rendered_sections_) {
+            if (section_manager->is_valid_section_id(section_id)) {
+                const W3MapSection& section = section_manager->get_section_by_id(section_id);
+                section.rendered_mesh.free();
+            }
+        }
+    }
+    rendered_sections_.clear();
 }
 
 bool

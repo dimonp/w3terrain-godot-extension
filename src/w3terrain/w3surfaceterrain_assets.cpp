@@ -43,7 +43,7 @@ W3SurfaceTerrain::get_render_normals() const
 void
 W3SurfaceTerrain::set_render_normals(bool flag)
 {
-    reset_rendered();
+    clear_rendered();
     render_normals_ = flag;
 }
 

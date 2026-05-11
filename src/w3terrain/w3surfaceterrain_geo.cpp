@@ -1,7 +1,5 @@
 #include "w3surfaceterrain.h"
 
-#include <godot_cpp/classes/performance.hpp>
-
 #include "w3mapruntimemanager_impl.h"
 #include "w3mapsectionmanager_impl.h"
 #include "w3mapsection.h"
@@ -11,86 +9,70 @@ namespace w3terr {
 
 
 void
-W3SurfaceTerrain::render_geos(const W3Array<uint32_t>& sections, bool render_as_normals)
+W3SurfaceTerrain::render_section_geo(uint32_t section_id)
 {
+    const auto* section_manager = get_section_manager();
     const auto* assets = get_assets();
-    // for each geo tilset layer
+
+    const W3MapSection& section = section_manager->get_section_by_id(section_id);
+
+    bool has_any_active = std::ranges::any_of(
+        section.geo_tileset_usage,
+        [](const auto& bits) {
+            return bits.any();
+        });
+    if (!has_any_active) {
+        return;
+    }
+
+    if (rendered_sections_.has(section_id)) {
+        if (section.rendered_mesh.surface_idx_geo < 0) {
+            rendered_sections_.remove(section_id);
+        } else {
+            rendered_sections_.touch(section_id);
+            return;
+        }
+    }
+
+    const auto& mesh_rid = section.rendered_mesh.get_mesh_rid();
+    int32_t surface_idx = RS->mesh_get_surface_count(mesh_rid);
+    section.rendered_mesh.surface_idx_geo = static_cast<int8_t>(surface_idx);
+
+    begin_render(section_id);
+
+    // for each geo tileset layer
     for(int64_t tileset_id = 0; tileset_id < assets->geo_assets_size_rt(); ++tileset_id ) {
-        const W3MapAssets::GeoAsset& geo_type = assets->geo_asset_rt(tileset_id);
+        if (!section.geo_tileset_usage[tileset_id].any()) {
+            continue;
+        }
 
         float texture_index = static_cast<float>(tileset_id);
         surface_tool_->set_custom(0, godot::Color(texture_index, 0.0F, 0.0F));
 
-        for(const uint32_t section_id : sections) {
-            render_geo_cells(section_id, tileset_id, render_as_normals);
-        }
+        render_geo_cells(section_id, tileset_id);
+    }
+
+    end_render(section_id);
+
+    if (geo_material_asset_.is_valid()) {
+        RS->mesh_surface_set_material(mesh_rid, surface_idx, geo_material_asset_->get_rid());
     }
 }
 
 void
-W3SurfaceTerrain::render_geo_cells(uint32_t section_id, size_t tileset_id, bool render_as_normals)
+W3SurfaceTerrain::render_geo_cells(uint32_t section_id, size_t tileset_id) // NOLINT(readability-function-cognitive-complexity)
 {
-    const auto* section_manager = get_section_manager();
-    const W3MapSection& section = section_manager->get_section_by_id(section_id);
-
-    if (tileset_id >= section.get_geo_tilesets_size() || section.get_geo_vertices_count(tileset_id) == 0) {
-        return;
-    }
-
-    const W3MapSection::CachedMesh &cached_mesh = section.get_cached_geo_mesh(tileset_id);
-    if (!cached_mesh.is_used()) { // this tileset is not used in this section
-        return;
-    }
-
-    auto [vertices, indices] = cached_mesh.get_cached_mesh_data<CachedVertex, uint16_t>();
-    if (vertices.empty()) {
-
-#ifdef W3MAP_STATS_ENABLE
-        stat_geo_tiles_precached_ = 0;
-#endif
-
-        std::tie(vertices, indices) = precache_geo_cells(section_id, tileset_id);
-    }
-
-    if (!render_as_normals) {
-        render_cached_mesh(vertices, indices);
-    } else {
-        render_cached_mesh_normals(vertices);
-    }
-}
-
-/*
-    Generate and precache a mesh for sections with given geo tileset
-*/
-W3Pair<W3SurfaceTerrain::VertexSpan, W3SurfaceTerrain::IndexSpan>
-W3SurfaceTerrain::precache_geo_cells(uint32_t section_id, size_t tileset_id) const // NOLINT(readability-function-cognitive-complexity)
-{
+    const auto* assets = get_assets();
     const auto* section_manager = get_section_manager();
     const auto* runtime_manager = get_runtime_manager();
 
     const W3MapSection& section = section_manager->get_section_by_id(section_id);
-    const W3MapSection::CachedMesh &cached_mesh = section.get_cached_geo_mesh(tileset_id);
 
-    // alloc lru cache memory
-    auto [vertices, indices] = cached_mesh.allocate_mesh_data<CachedVertex, uint16_t>();
-    if (vertices.empty()) {
-        w3_log_error("Can't allocate geo vertices cache.");
-        return {};
-    }
-
-    size_t dest_vertex_idx = 0;
-    size_t dest_index_idx = 0;
-    size_t dest_index_offeset = 0;
-
-    const auto* assets = get_assets();
     // for each cell in this section
     for(size_t cell_idx = 0; cell_idx < W3MapSection::kNumberOfCells; ++cell_idx) {
-        if (!cached_mesh.is_used_by(cell_idx)) { // // Does the cell use this tile set?
+        if (!section.geo_tileset_usage[tileset_id][cell_idx]) { // Is there water in the cell?
             continue;
         }
-
-        w3_assert(dest_vertex_idx < cached_mesh.vertices_count());
-        w3_assert(dest_index_idx < cached_mesh.indices_count());
 
         const auto section_origin = section_manager->calc_section_origin(section_id);
         const auto cell_coord = W3MapSection::calc_cell_coord_from_idx(section_origin, cell_idx);
@@ -132,8 +114,8 @@ W3SurfaceTerrain::precache_geo_cells(uint32_t section_id, size_t tileset_id) con
         const godot::PackedVector2Array& src_uvs = mesh_arrays[W3Mesh::ARRAY_TEX_UV];
         const godot::PackedInt32Array& src_indices = mesh_arrays[W3Mesh::ARRAY_INDEX];
 
-        const size_t src_vertices_size = src_vertices.size();
-        const size_t src_indices_size = src_indices.size();
+        const int64_t src_vertices_size = src_vertices.size();
+        const int64_t src_indices_size = src_indices.size();
 
         // put vertices to cache buffer
         for (int64_t src_vertex_idx = 0 ; src_vertex_idx < src_vertices_size; ++src_vertex_idx) {
@@ -143,12 +125,6 @@ W3SurfaceTerrain::precache_geo_cells(uint32_t section_id, size_t tileset_id) con
             // adjust inner vertices height
             const float delta_h = math::w3_lerp_bi(dh00, dh01, dh10, dh11, t_lerp, s_lerp);
 
-            vertices[dest_vertex_idx].pos = {
-                pos.x + src_vertices[src_vertex_idx].x,
-                pos.y + src_vertices[src_vertex_idx].y + delta_h,
-                pos.z + src_vertices[src_vertex_idx].z
-            };
-
             // cell edge stat
             const bool edge10 = std::abs(t_lerp) < 0.01F;
             const bool edge23 = std::abs(t_lerp - 1.0F) < 0.01F;
@@ -157,42 +133,45 @@ W3SurfaceTerrain::precache_geo_cells(uint32_t section_id, size_t tileset_id) con
 
             // correct corner normals
             if (edge10 && edge03) {
-                vertices[dest_vertex_idx].norm = math::unpack_vector3_from_32bit(cell_rt00.packed_normal);
+                surface_tool_->set_normal(math::unpack_vector3_from_32bit(cell_rt00.packed_normal));
             } else if (edge10 && edge12) {
-                vertices[dest_vertex_idx].norm = math::unpack_vector3_from_32bit(cell_rt10.packed_normal);
+                surface_tool_->set_normal(math::unpack_vector3_from_32bit(cell_rt10.packed_normal));
             } else if (edge23 && edge12) {
-                vertices[dest_vertex_idx].norm = math::unpack_vector3_from_32bit(cell_rt11.packed_normal);
+                surface_tool_->set_normal(math::unpack_vector3_from_32bit(cell_rt11.packed_normal));
             } else if (edge23 && edge03) {
-                vertices[dest_vertex_idx].norm = math::unpack_vector3_from_32bit(cell_rt01.packed_normal);
+                surface_tool_->set_normal(math::unpack_vector3_from_32bit(cell_rt01.packed_normal));
             } else {
-                vertices[dest_vertex_idx].norm = src_normales[src_vertex_idx];
-
+                math::vector3 normal = src_normales[src_vertex_idx];
                 // correct edge normals
                 if (edge10 || edge23) {
-                    vertices[dest_vertex_idx].norm.z = 0;
+                    normal.z = 0;
                 } else if (edge03 || edge12) {
-                    vertices[dest_vertex_idx].norm.x = 0;
+                    normal.x = 0;
                 }
+                normal.normalize();
 
-                vertices[dest_vertex_idx].norm.normalize();
+                surface_tool_->set_normal(normal);
             }
 
-            vertices[dest_vertex_idx].uv = src_uvs[src_vertex_idx];
-            dest_vertex_idx++;
+            surface_tool_->set_uv(src_uvs[src_vertex_idx]);
+            surface_tool_->add_vertex({
+                pos.x + src_vertices[src_vertex_idx].x,
+                pos.y + src_vertices[src_vertex_idx].y + delta_h,
+                pos.z + src_vertices[src_vertex_idx].z
+            });
         }
 
         // put indices to cache buffer
         for (int64_t src_index_idx = 0 ; src_index_idx < src_indices_size; ++src_index_idx) {
-            indices[dest_index_idx++] = dest_index_offeset + src_indices[src_index_idx];
+            surface_tool_->add_index(static_cast<int32_t>(vertices_counter_ + src_indices[src_index_idx]));
         }
 
-        dest_index_offeset += src_vertices_size;
+        vertices_counter_ += src_vertices_size;
 
 #ifdef W3MAP_STATS_ENABLE
-        stat_geo_tiles_precached_++;
+        stat_geo_tiles_rendered_++;
 #endif
     }
-    return { vertices, indices };
 }
 
 }  // namespace w3terr

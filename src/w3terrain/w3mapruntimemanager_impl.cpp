@@ -266,18 +266,6 @@ W3MapRuntimeManagerImpl::update_runtime_cliff(const auto& cell_info, CellPointRT
     cell_rt.flags |= CellPointRT::GEO_CLIFF;
     cell_rt.geo_id = geo_id;
     cell_rt.tileset_id = geo_asset_idx;
-
-    const auto& geo_asset =  map_asset_->geo_asset_rt(geo_asset_idx);
-    const int32_t geos_count = geo_asset.cliff_mesh_counts_storage.size();
-    if (geo_id >= geos_count) {
-        w3_log_error("Geoset id %d is more than the number(%d) of surfaces in cliff geoset.", geo_id, geos_count);
-        return;
-    }
-
-    const auto& cliff_mesh_counts = geo_asset.cliff_mesh_counts_storage[geo_id];
-    // update precached mesh
-    cell_rt.vertices_count = cliff_mesh_counts.first;
-    cell_rt.indices_count = cliff_mesh_counts.second;
 }
 
 void
@@ -289,19 +277,6 @@ W3MapRuntimeManagerImpl::update_runtime_ramp(const auto& cell_info, CellPointRT&
     cell_rt.flags |= CellPointRT::GEO_RAMP;
     cell_rt.geo_id = geo_id;
     cell_rt.tileset_id = geo_asset_idx;
-
-    const auto& geo_asset =  map_asset_->geo_asset_rt(geo_asset_idx);
-
-    const int32_t geos_count = geo_asset.ramp_mesh_counts_storage.size();
-    if (geo_id >= geos_count) {
-        w3_log_error("Geoset id %d is more than the number(%d) of surfaces in ramp geoset.", geo_id, geos_count);
-        return;
-    }
-
-    const auto& ramp_mesh_counts = geo_asset.ramp_mesh_counts_storage[geo_id];
-    // update precached mesh
-    cell_rt.vertices_count = ramp_mesh_counts.first;
-    cell_rt.indices_count = ramp_mesh_counts.second;
 }
 
 void
@@ -356,7 +331,7 @@ W3MapRuntimeManagerImpl::initialize(const std::function<bool(int)>& progress_cal
     cellpoints_rt_.resize(runtime_array_size);
 
     for(int32_t idx_2d_y = 0; idx_2d_y < map_size_y; ++idx_2d_y) {
-        if (progress_callback(idx_2d_y)) {
+        if (progress_callback && progress_callback(idx_2d_y)) {
             break;
         }
 

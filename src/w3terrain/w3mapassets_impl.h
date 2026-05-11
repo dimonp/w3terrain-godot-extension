@@ -49,7 +49,6 @@ protected:
     bool set_ground_assets(const godot::TypedArray<W3Texture>& assets);
 
     void prepare_geo_assets_rt();
-    void fill_mesh_counts_storage(size_t asset_idx);
     void check_and_warning_geo_asset(size_t asset_idx) const;
 
     bool load_geo_config(size_t tileset_id, const W3Ref<godot::JSON>& config);

@@ -65,23 +65,6 @@ target_link_libraries(godot-cpp PRIVATE ${LIBNAME}_options)
 set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${godot-cpp_SOURCE_DIR}/cmake")
 include(GodotCPPModule)
 
-set(LRUMM_BUILD_TESTING OFF)
-set(LRUMM_ENABLE_SANITIZERS OFF)
-set(LRUMM_ENABLE_EXCEPTIONS OFF)
-
-# Ensure lru_memory_manager submodule has been updated
-if(NOT EXISTS "${CMAKE_CURRENT_LIST_DIR}/lru_memory_manager/src")
-    message(NOTICE "lru_memory_manager bindings source not found")
-    message(NOTICE "initializing/updating the lru_memory_manager submodule...")
-
-    # update the c++ bindings submodule to populate it with the necessary source for the library
-    execute_process(
-        COMMAND git submodule update --init lru_memory_manager
-        WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
-        COMMAND_ERROR_IS_FATAL ANY)
-endif()
-add_subdirectory(lru_memory_manager SYSTEM)
-
 set(QUADTREE_BUILD_TESTING OFF)
 set(QUADTREE_ENABLE_SANITIZERS OFF)
 set(QUADTREE_BUILD_MATH OFF)
@@ -141,7 +124,6 @@ if(DOC_XML)
 endif()
 
 target_link_libraries(${LIBNAME} PRIVATE godot::cpp)
-target_link_libraries(${LIBNAME} PRIVATE lrumm::lru_memory_manager)
 target_link_libraries(${LIBNAME} PRIVATE quadtree::quadtree)
 target_link_libraries(${LIBNAME} PRIVATE Microsoft.GSL::GSL)
 

@@ -1,19 +1,10 @@
 #include "w3mapsectionmanager_impl.h"
 
-#include <lru_memory_manager/lrumemorymanager.h>
-
 #include "w3mapassets.h"
 #include "w3mapruntimemanager_impl.h"
 
 
 namespace w3terr {
-
-// NOLINTNEXTLINE(misc-use-internal-linkage)
-lrumm::LRUMemoryManager* get_lrumm_instance()
-{
-    static lrumm::LRUMemoryManager lru_memory_manager;
-    return &lru_memory_manager;
-}
 
 W3MapSectionManagerImpl::W3MapSectionManagerImpl(
     const W3MapAssets* assets,
@@ -23,10 +14,7 @@ W3MapSectionManagerImpl::W3MapSectionManagerImpl(
     initialize_all_sections();
 }
 
-W3MapSectionManagerImpl::~W3MapSectionManagerImpl() noexcept
-{
-    get_lrumm_instance()->arena_clean();
-}
+W3MapSectionManagerImpl::~W3MapSectionManagerImpl() noexcept = default;
 
 inline
 W3MapSectionManagerImpl::SectionId
@@ -133,7 +121,8 @@ W3MapSectionManagerImpl::invalidate_sections_at_cellpoint(const Coord2D& coords)
 uint64_t
 W3MapSectionManagerImpl::get_cache_allocation_size()
 {
-    return get_lrumm_instance()->get_allocated_memory_size();
+    // return get_lrumm_instance()->get_allocated_memory_size();
+    return 0;
 }
 
 

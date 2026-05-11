@@ -2,8 +2,10 @@
 
 #include <godot_cpp/classes/performance.hpp>
 
-#include "w3mapcollector_impl.h"
 #include "w3mapnode.h"
+#include "w3mapcollector_impl.h"
+#include "w3mapsectionmanager_impl.h"
+#include "w3mapsection.h"
 
 namespace w3terr {
 
@@ -47,13 +49,21 @@ W3SurfaceTerrain::_notification(int p_what)
     // avoid to save dinamicaly created resources to scene file
     switch (p_what) {
     case NOTIFICATION_EDITOR_PRE_SAVE: {
-        ground_material_asset_->set_shader_parameter("texture_array", nullptr);
-        geo_material_asset_->set_shader_parameter("texture_array", nullptr);
+        if (ground_material_asset_.is_valid()) {
+            ground_material_asset_->set_shader_parameter("texture_array", nullptr);
+        }
+        if (geo_material_asset_.is_valid()) {
+            geo_material_asset_->set_shader_parameter("texture_array", nullptr);
+        }
         break;
     }
     case NOTIFICATION_EDITOR_POST_SAVE: {
-        ground_material_asset_->set_shader_parameter("texture_array", ground_textures_array_);
-        geo_material_asset_->set_shader_parameter("texture_array", geo_textures_array_);
+        if (ground_material_asset_.is_valid()) {
+            ground_material_asset_->set_shader_parameter("texture_array", ground_textures_array_);
+        }
+        if (geo_material_asset_.is_valid()) {
+            geo_material_asset_->set_shader_parameter("texture_array", geo_textures_array_);
+        }
         break;
     }
     default:
@@ -62,7 +72,10 @@ W3SurfaceTerrain::_notification(int p_what)
 }
 
 void
-W3SurfaceTerrain::_enter_tree() {
+W3SurfaceTerrain::_enter_tree()
+{
+    W3Surface::_enter_tree();
+
     const auto callable_ground_assets_changed = callable_mp(this, &W3SurfaceTerrain::on_ground_assets_changed);
     if (!get_map_node()->is_connected(W3MapNode::kSignalGroundAssetsChanged, callable_ground_assets_changed)) {
         get_map_node()->connect(W3MapNode::kSignalGroundAssetsChanged, callable_ground_assets_changed);
@@ -75,10 +88,10 @@ W3SurfaceTerrain::_enter_tree() {
 
 #ifdef W3MAP_STATS_ENABLE
     godot::Performance *perf = godot::Performance::get_singleton();
-    const auto stat_ground_tiles_precached_callable = callable_mp(this, &W3SurfaceTerrain::get_stat_ground_tiles_precached);
-    perf->add_custom_monitor(kStatGroundTilesPrecachedId, stat_ground_tiles_precached_callable);
-    const auto stat_geo_tiles_precached_callable = callable_mp(this, &W3SurfaceTerrain::get_stat_geo_tiles_precached);
-    perf->add_custom_monitor(kStatGeoTilesPrecachedId, stat_geo_tiles_precached_callable);
+    const auto stat_ground_tiles_precached_callable = callable_mp(this, &W3SurfaceTerrain::get_stat_ground_tiles_rendered);
+    perf->add_custom_monitor(kStatGroundTilesRenderedId, stat_ground_tiles_precached_callable);
+    const auto stat_geo_tiles_precached_callable = callable_mp(this, &W3SurfaceTerrain::get_stat_geo_tiles_rendered);
+    perf->add_custom_monitor(kStatGeoTilesRenderedId, stat_geo_tiles_precached_callable);
 #endif
 }
 
@@ -87,13 +100,14 @@ W3SurfaceTerrain::_exit_tree()
 {
 #ifdef W3MAP_STATS_ENABLE
     godot::Performance *perf = godot::Performance::get_singleton();
-    if (perf->has_custom_monitor(kStatGroundTilesPrecachedId)) {
-        perf->remove_custom_monitor(kStatGroundTilesPrecachedId);
+    if (perf->has_custom_monitor(kStatGroundTilesRenderedId)) {
+        perf->remove_custom_monitor(kStatGroundTilesRenderedId);
     }
-    if (perf->has_custom_monitor(kStatGeoTilesPrecachedId)) {
-        perf->remove_custom_monitor(kStatGeoTilesPrecachedId);
+    if (perf->has_custom_monitor(kStatGeoTilesRenderedId)) {
+        perf->remove_custom_monitor(kStatGeoTilesRenderedId);
     }
 #endif
+    clear_rendered();
 }
 
 void
@@ -103,28 +117,25 @@ W3SurfaceTerrain::_process(double  /*delta*/)
         return;
     }
 
+    const auto* collector = get_collector();
+    if (collector == nullptr) {
+        return;
+    }
+
     if (ground_assets_dirty_flag_) {
         load_ground_materials();
-        reset_rendered();
+        clear_rendered();
         ground_assets_dirty_flag_ = false;
     }
 
     if (geo_assets_dirty_flag_) {
         load_geo_materials();
-        reset_rendered();
+        clear_rendered();
         geo_assets_dirty_flag_ = false;
     }
 
-    const auto* assets = get_assets();
-    // release all early rendered meshes in the GPU only if the maximum count is reached
-    // or runtime data is outdated
-    if (is_mesh_dirty() || mesh_->get_surface_count() + 3 > kMaxGPUMeshes) {
-        reset_rendered();
-    }
-
-    const auto* collector = get_collector();
-    if (collector == nullptr) {
-        return;
+    if (is_mesh_dirty()) {
+        clear_rendered();
     }
 
     const W3Array<uint32_t>& visible_sections = collector->get_visible_sections();
@@ -132,87 +143,31 @@ W3SurfaceTerrain::_process(double  /*delta*/)
         return;
     }
 
-    render(visible_sections);
-}
-
-void
-W3SurfaceTerrain::reset_rendered()
-{
-    if (mesh_.is_valid()) {
-        mesh_->clear_surfaces();
+    if (is_visible_in_tree()) {
+        render(visible_sections);
     }
-    section_rendered_flags_.clear();
 }
 
 void
 W3SurfaceTerrain::render(const W3Array<uint32_t>& sections)
 {
-    not_rendered_sections_.clear();
-    // filter already rendered sections
-    std::ranges::copy_if (sections,
-        std::back_inserter(not_rendered_sections_),
-        [&rendered_flags = section_rendered_flags_](uint32_t section_id) {
-            if (rendered_flags.size() <= section_id) {
-                rendered_flags.resize(static_cast<size_t>(section_id) + 1);
-            }
-            return !rendered_flags[section_id];
-        });
+    const auto* section_manager = get_section_manager();
 
-    if (not_rendered_sections_.empty()) {
-        return;
+#ifdef W3MAP_STATS_ENABLE
+    stat_ground_tiles_rendered_ = 0;
+    stat_geo_tiles_rendered_ = 0;
+#endif
+
+    for(const uint32_t section_id : sections) {
+        const W3MapSection& section = section_manager->get_section_by_id(section_id);
+
+        render_section_ground(section_id);
+        render_section_geo(section_id);
+
+        // Rendering normals for debugging purposes
+        if (render_normals_) {
+        }
     }
-
-    // Mark all sections as rendered
-    for(const uint32_t section_id : not_rendered_sections_) {
-        section_rendered_flags_[section_id] = true;
-    }
-
-    // Render cliff/ramp cells
-    begin_render(false);
-    surface_tool_->set_material(geo_material_asset_);
-    render_geos(not_rendered_sections_, false);
-    end_render();
-
-    // Render ground cells
-    begin_render(false);
-    surface_tool_->set_material(ground_material_asset_);
-    render_grounds(not_rendered_sections_, false);
-    end_render();
-
-    // Rendering normals for debugging purposes
-    if (render_normals_) {
-        begin_render(true);
-        surface_tool_->set_material(debug_material_);
-        render_geos(not_rendered_sections_, true);
-        render_grounds(not_rendered_sections_, true);
-        end_render();
-    }
-}
-
-void
-W3SurfaceTerrain::render_cached_mesh(VertexSpan vertices, IndexSpan indices)
-{
-    for(const auto& vertex : vertices) {
-        surface_tool_->set_uv(vertex.uv);
-        surface_tool_->set_normal(vertex.norm);
-        surface_tool_->add_vertex(vertex.pos);
-    }
-
-    for(const auto index : indices) {
-        surface_tool_->add_index(static_cast<int32_t>(index + vertices_counter_));
-    }
-    vertices_counter_ += static_cast<int64_t>(vertices.size());
-}
-
-void
-W3SurfaceTerrain::render_cached_mesh_normals(VertexSpan vertices)
-{
-    constexpr float kNormalScaleFactor = 10.0;
-    for(const auto& vertex : vertices) {
-        surface_tool_->add_vertex(vertex.pos);
-        surface_tool_->add_vertex(vertex.pos + vertex.norm * kNormalScaleFactor);
-    }
-    vertices_counter_ += static_cast<int64_t>(vertices.size());
 }
 
 }  // namespace w3terr
