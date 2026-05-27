@@ -9,7 +9,7 @@ namespace w3terr {
 void
 W3MapBindingsEditor::_bind_methods()
 {
-    godot::ClassDB::bind_method(godot::D_METHOD("create_map", "size"), &W3MapBindingsEditor::create_map);
+    godot::ClassDB::bind_method(godot::D_METHOD("create_map", "size", "ground_tilesets", "geo_tilesets"), &W3MapBindingsEditor::create_map);
 
     godot::ClassDB::bind_method(godot::D_METHOD("increase_cellpoint_layer", "coord"), &W3MapBindingsEditor::increase_cellpoint_layer);
     godot::ClassDB::bind_method(godot::D_METHOD("decrease_cellpoint_layer", "coord"), &W3MapBindingsEditor::decrease_cellpoint_layer);
@@ -31,15 +31,14 @@ W3MapBindingsEditor::w3e_map() const
 }
 
 void
-W3MapBindingsEditor::create_map(const godot::Vector2i& size) const
+W3MapBindingsEditor::create_map(const godot::Vector2i& size, uint8_t ground_tilesets, uint8_t geo_tilesets) const
 {
     Expects(map_node_ != nullptr);
     if ((size.x - 1) % 4 != 0 || (size.y - 1) % 4 != 0) {
         w3_log_error("Map size must be multiple of 4 plus 1 (33, 65, 129, 192, 257, 401).");
         return;
     }
-
-    map_node_->create_empty_map(size.x, size.y);
+    map_node_->create_empty_map(size.x, size.y, ground_tilesets, geo_tilesets);
 }
 
 bool

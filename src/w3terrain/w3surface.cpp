@@ -4,6 +4,7 @@
 
 #include "w3mapruntimemanager_impl.h"
 #include "w3mapsectionmanager_impl.h"
+#include "w3mapsectionrenderedcache.h"
 #include "w3mapnode.h"
 
 namespace w3terr {
@@ -85,7 +86,7 @@ W3Surface::set_debug_material(const W3Ref<W3Marerial>& material)
     debug_material_ = material;
 }
 
-void
+int8_t
 W3Surface::begin_render(const uint32_t section_id, bool render_lines)
 {
     if (surface_tool_.is_null()) {
@@ -98,26 +99,14 @@ W3Surface::begin_render(const uint32_t section_id, bool render_lines)
 
     vertices_counter_ = 0;
 
-    const auto* section_manager = get_section_manager();
-    const W3MapSection& section = section_manager->get_section_by_id(section_id);
-
-    const auto& mesh_rid = section.rendered_mesh.get_mesh_rid();
-    int32_t surface_idx = RS->mesh_get_surface_count(mesh_rid);
-
-    auto evicted = rendered_sections_.put(section_id);
-    if (evicted.has_value()) {
-        const auto& evicted_section_id = evicted.value();
-        const W3MapSection& evicted_section = section_manager->get_section_by_id(evicted_section_id);
-        evicted_section.rendered_mesh.free();
-    }
+    auto* rendered_sections_cache = get_rendered_sections_cache();
+    const auto* section = rendered_sections_cache->get_or_create(section_id);
+    return static_cast<int8_t>(RS->mesh_get_surface_count(section->get_mesh_rid()));
 }
 
-void
+RenderedSection*
 W3Surface::end_render(const uint32_t section_id)
 {
-    const auto* section_manager = get_section_manager();
-    const W3MapSection& section = section_manager->get_section_by_id(section_id);
-
     auto mesh_array =  surface_tool_->commit_to_arrays();
 
     static const uint64_t kCustom0Type = godot::Mesh::ARRAY_CUSTOM_R_FLOAT;
@@ -128,7 +117,11 @@ W3Surface::end_render(const uint32_t section_id)
         godot::Mesh::ARRAY_FORMAT_INDEX |
         (kCustom0Type << godot::Mesh::ARRAY_FORMAT_CUSTOM0_SHIFT);
 
-    const auto& mesh_rid = section.rendered_mesh.get_mesh_rid();
+    auto* rendered_sections_cache = get_rendered_sections_cache();
+    auto* mesh = rendered_sections_cache->get_rendered(section_id);
+    assert(mesh != nullptr);
+
+    const auto& mesh_rid = mesh->get_mesh_rid();
     RS->mesh_add_surface_from_arrays(
         mesh_rid,
         godot::RenderingServer::PRIMITIVE_TRIANGLES,
@@ -138,26 +131,26 @@ W3Surface::end_render(const uint32_t section_id)
         static_cast<int64_t>(kFormat)
     );
 
-    const auto& instance_rid = section.rendered_mesh.get_inst_rid();
+    const auto& instance_rid = mesh->get_instance_rid();
     RS->instance_set_base(instance_rid, mesh_rid);
     RS->instance_set_transform(instance_rid, get_global_transform());
     RS->instance_set_scenario(instance_rid, get_world_3d()->get_scenario());
     RS->instance_set_layer_mask(instance_rid, get_layer_mask());
+
+    return mesh;
 }
 
 void
 W3Surface::clear_rendered()
 {
-    const auto* section_manager = get_section_manager();
-    if (section_manager != nullptr) {
-        for(auto section_id : rendered_sections_) {
-            if (section_manager->is_valid_section_id(section_id)) {
-                const W3MapSection& section = section_manager->get_section_by_id(section_id);
-                section.rendered_mesh.free();
-            }
-        }
+    if (map_node_ptr_ == nullptr) {
+        return;
     }
-    rendered_sections_.clear();
+
+    auto* rendered_sections_cache = get_rendered_sections_cache();
+    if (rendered_sections_cache != nullptr) {
+        rendered_sections_cache->clear_all();
+    }
 }
 
 bool
@@ -195,6 +188,13 @@ W3Surface::get_collector() const
 {
     return map_node_ptr_->get_collector();
 }
+
+W3SectionRenderedCache*
+W3Surface::get_rendered_sections_cache() const
+{
+    return map_node_ptr_->get_rendered_sections_cache();
+}
+
 
 W3MapNode*
 W3Surface::get_map_node() const

@@ -19,6 +19,7 @@ class W3MapSectionManagerImpl;
 class W3MapCollectorImpl;
 class W3MapBindings;
 class W3MapBindingsEditor;
+class W3SectionRenderedCache;
 
 class W3MapNode final : public godot::VisualInstance3D, W3MapAssetsImpl { // NOLINT(fuchsia-multiple-inheritance)
     GDCLASS(W3MapNode, VisualInstance3D)
@@ -33,7 +34,7 @@ public:
     W3MapNode();
     ~W3MapNode() final;
 
-    bool create_empty_map(int32_t dim_2d_x, int32_t dim_2d_y);
+    bool create_empty_map(int32_t dim_2d_x, int32_t dim_2d_y, uint32_t ground_tilesets, uint32_t geo_tilesets);
 
     W3Ref<W3eResource> get_w3e_resource() const;
     void set_w3e_resource(const W3Ref<W3eResource>& map);
@@ -59,6 +60,7 @@ public:
     const W3MapRuntimeManagerImpl* get_runtime_manager() const;
     W3MapSectionManagerImpl* get_section_manager() const;
     const W3MapCollectorImpl* get_collector() const;
+    W3SectionRenderedCache* get_rendered_sections_cache() const;
 
     std::optional<Coord2D> get_intersected_cell(const math::line3& line, math::vector3 &ipoint) const;
 
@@ -80,7 +82,8 @@ protected:
 
 private:
 #ifdef W3MAP_STATS_ENABLE
-    static constexpr auto kStatCacheAllocationSizeId = "W3Terrain/cache_allocation_size";
+    static constexpr auto kStatCachedSectionsCount = "W3Terrain/cached_sections_count";
+    static constexpr auto kStatVisibleSectionsCount = "W3Terrain/visible_sections_count";
 #endif
 
     void load_map();
@@ -92,6 +95,7 @@ private:
     std::unique_ptr<W3MapRuntimeManagerImpl> runtime_manager_;
     std::unique_ptr<W3MapSectionManagerImpl> sections_manager_;
     std::unique_ptr<W3MapCollectorImpl> collector_;
+    std::unique_ptr<W3SectionRenderedCache> rendered_sections_cache_;
 
     std::unique_ptr<W3MapBindings, GodotObjectDeleter<W3MapBindings>> map_bindings_;
 #ifdef EDITOR_SUPPORT_ENABLE
@@ -106,7 +110,8 @@ private:
     std::atomic<bool> stop_loading_ {false};
 
 #ifdef W3MAP_STATS_ENABLE
-    static uint64_t get_cache_allocation_size();
+    uint64_t get_cached_sections_count() const;
+    uint64_t get_visible_sections_count() const;
 #endif
 
 };
@@ -137,6 +142,13 @@ const W3MapCollectorImpl*
 W3MapNode::get_collector() const
 {
     return collector_.get();
+}
+
+inline
+W3SectionRenderedCache*
+W3MapNode::get_rendered_sections_cache() const
+{
+    return rendered_sections_cache_.get();
 }
 
 inline

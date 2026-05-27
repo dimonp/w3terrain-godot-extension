@@ -6,6 +6,7 @@
 #include "w3mapruntimemanager_impl.h"
 #include "w3mapcollector_impl.h"
 #include "w3mapsectionmanager_impl.h"
+#include "w3mapsectionrenderedcache.h"
 #include "w3mapsection.h"
 #include "w3mapnode.h"
 
@@ -87,22 +88,17 @@ W3SurfaceWater::_process(double  /*delta*/)
 void
 W3SurfaceWater::render(const W3Array<uint32_t>& collected_sections)
 {
-    const auto* section_manager = get_section_manager();
-
 #ifdef W3MAP_STATS_ENABLE
         stat_water_tiles_rendered_ = 0;
 #endif
 
+    auto* rendered_sections_cache = get_rendered_sections_cache();
     for(const auto section_id : collected_sections) {
-        const W3MapSection& section = section_manager->get_section_by_id(section_id);
-        if (rendered_sections_.has(section_id)) {
-            if (section.rendered_mesh.surface_idx_water < 0) {
-                rendered_sections_.remove(section_id);
-            } else {
-                rendered_sections_.touch(section_id);
-                continue;
-            }
+        auto* rendered_section = rendered_sections_cache->get_rendered(section_id);
+        if (rendered_section != nullptr && rendered_section->surface_idx_water >= 0) {
+            continue;
         }
+
         render_section(section_id);
     }
 }
@@ -112,20 +108,18 @@ W3SurfaceWater::render_section(const uint32_t section_id)
 {
     const auto* section_manager = get_section_manager();
     const W3MapSection& section = section_manager->get_section_by_id(section_id);
-    if (!section.water_usage.any()) {
+    const auto& water_usage = section.get_water_usage();
+    if (!water_usage.any()) {
         return;
     }
 
-    const auto& mesh_rid = section.rendered_mesh.get_mesh_rid();
-    int32_t surface_idx = RS->mesh_get_surface_count(mesh_rid);
-    section.rendered_mesh.surface_idx_water = static_cast<int8_t>(surface_idx);
-
-    begin_render(section_id);
+    int8_t surface_idx = begin_render(section_id);
     render_section_cells(section_id);
-    end_render(section_id);
+    auto* rendered_mesh = end_render(section_id);
+    rendered_mesh->surface_idx_water = surface_idx;
 
     if (water_material_asset_.is_valid()) {
-        RS->mesh_surface_set_material(mesh_rid, surface_idx, water_material_asset_->get_rid());
+        RS->mesh_surface_set_material(rendered_mesh->get_mesh_rid(), surface_idx, water_material_asset_->get_rid());
     }
 }
 
@@ -133,12 +127,13 @@ void
 W3SurfaceWater::render_section_cells(const uint32_t section_id)
 {
     const auto* section_manager = get_section_manager();
-    const W3MapSection& section = section_manager->get_section_by_id(section_id);
     const auto* runtime_manager = get_map_node()->get_runtime_manager();
+    const W3MapSection& section = section_manager->get_section_by_id(section_id);
+    const auto& water_usage = section.get_water_usage();
 
     // for each cell in this section
     for(size_t cell_idx = 0; cell_idx < W3MapSection::kNumberOfCells; ++cell_idx) {
-        if (!section.water_usage[cell_idx]) { // Is there water in the cell?
+        if (!water_usage[cell_idx]) { // Is there water in the cell?
             continue;
         }
 

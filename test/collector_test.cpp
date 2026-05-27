@@ -10,19 +10,6 @@
 
 namespace {
 
-void gdextension_get_godot_version2(GDExtensionGodotVersion2 *r_godot_version) {
-	r_godot_version->major = GODOT_VERSION_MAJOR;
-	r_godot_version->minor = GODOT_VERSION_MINOR;
-}
-void mock_print_error(const char* p_description, const char* p_function, const char* p_file, int32_t p_line, bool p_editor_notify) {}
-
-void* test_get_proc_address(const char* p_name) {
-    std::string name = p_name;
-    if (name == "print_error") { return reinterpret_cast<void*>(mock_print_error); }
-    if (name == "get_godot_version2") { return reinterpret_cast<void*>(&gdextension_get_godot_version2); }
-    return nullptr;
-}
-
 class MockSectionManager : public w3terr::W3MapSectionManager {
   public:
 
@@ -81,33 +68,6 @@ protected:
             .WillByDefault(::testing::Return(
                 w3terr::math::bbox3 { {0.0F, 0.0F, -512.0F}, {512.0F, 0.0F, 0.0F} }));
 
-    }
-
-    static void SetUpTestSuite() {
-        // Указатель на библиотеку (в тестах может быть произвольным)
-        GDExtensionClassLibraryPtr library = nullptr;
-
-        // Структура инициализации, которую мы заполним
-        static GDExtensionInitialization init_res;
-
-        // Инициализируем привязки godot-cpp
-        // Это заполняет godot::internal::gdextension_interface и другие статические члены
-        godot::GDExtensionBinding::InitObject init_obj(
-            (GDExtensionInterfaceGetProcAddress)test_get_proc_address,
-            library,
-            &init_res
-        );
-
-        // Регистрируем уровни инициализации (как в обычном register_types.cpp)
-        init_obj.register_initializer([](godot::ModuleInitializationLevel p_level) {
-            if (p_level == godot::MODULE_INITIALIZATION_LEVEL_SCENE) {
-                // Здесь регистрируются ваши классы: GDREGISTER_CLASS(MyClass);
-            }
-        });
-
-        init_obj.set_minimum_library_initialization_level(godot::MODULE_INITIALIZATION_LEVEL_SCENE);
-        // Запускаем инициализацию до нужного уровня
-        init_obj.init();
     }
 
     void TearDown() override {}

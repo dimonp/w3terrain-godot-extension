@@ -5,8 +5,9 @@
 
 #include "w3mapinformator_impl.h"
 #include "w3mapruntimemanager_impl.h"
-#include "w3mapcollector_impl.h"
 #include "w3mapsectionmanager_impl.h"
+#include "w3mapcollector_impl.h"
+#include "w3mapsectionrenderedcache.h"
 #include "w3mapbindings.h"
 #ifdef EDITOR_SUPPORT_ENABLE
 #include "w3mapbindingseditor.h"
@@ -95,6 +96,7 @@ W3MapNode::_bind_methods()
 
 W3MapNode::W3MapNode()
     : informator_(new W3MapInformatorImpl(this))
+    , rendered_sections_cache_(new W3SectionRenderedCache())
 {
     load_thread_.instantiate();
 }
@@ -162,7 +164,8 @@ W3MapNode::_notification(int p_what)
 }
 
 void
-W3MapNode::_enter_tree() {
+W3MapNode::_enter_tree()
+{
     const auto callable_map_resource_changed = callable_mp(this, &W3MapNode::on_map_resource_changed);
     if (!is_connected(kSignalMapAssetsChanged, callable_map_resource_changed)) {
         connect(kSignalMapAssetsChanged, callable_map_resource_changed);
@@ -197,8 +200,12 @@ W3MapNode::_enter_tree() {
 
 #ifdef W3MAP_STATS_ENABLE
     godot::Performance *perf = godot::Performance::get_singleton();
-    const auto cache_allocation_size_callable = callable_mp_static(&W3MapNode::get_cache_allocation_size);
-    perf->add_custom_monitor(kStatCacheAllocationSizeId, cache_allocation_size_callable);
+
+    const auto cached_sections_count_callable = callable_mp(this, &W3MapNode::get_cached_sections_count);
+    perf->add_custom_monitor(kStatCachedSectionsCount, cached_sections_count_callable);
+
+    const auto visible_sections_count_callable = callable_mp(this, &W3MapNode::get_visible_sections_count);
+    perf->add_custom_monitor(kStatVisibleSectionsCount, visible_sections_count_callable);
 #endif
 }
 
@@ -207,8 +214,11 @@ W3MapNode::_exit_tree()
 {
 #ifdef W3MAP_STATS_ENABLE
     godot::Performance *perf = godot::Performance::get_singleton();
-    if (perf->has_custom_monitor(kStatCacheAllocationSizeId)) {
-        perf->remove_custom_monitor(kStatCacheAllocationSizeId);
+    if (perf->has_custom_monitor(kStatCachedSectionsCount)) {
+        perf->remove_custom_monitor(kStatCachedSectionsCount);
+    }
+    if (perf->has_custom_monitor(kStatVisibleSectionsCount)) {
+        perf->remove_custom_monitor(kStatVisibleSectionsCount);
     }
 #endif
 
@@ -325,12 +335,14 @@ W3MapNode::use_editor_camera(bool flag)
 #endif
 
 godot::Camera3D*
-W3MapNode::get_camera() const {
+W3MapNode::get_camera() const
+{
     return Object::cast_to<godot::Camera3D>(godot::ObjectDB::get_instance(camera_id_));
 }
 
 void
-W3MapNode::set_camera(godot::Camera3D* p_camera) {
+W3MapNode::set_camera(godot::Camera3D* p_camera)
+{
     if (p_camera != nullptr) {
         camera_id_ = p_camera->get_instance_id();
     } else {
@@ -338,10 +350,22 @@ W3MapNode::set_camera(godot::Camera3D* p_camera) {
     }
 }
 
+#ifdef W3MAP_STATS_ENABLE
 uint64_t
-W3MapNode::get_cache_allocation_size() {
-    return W3MapSectionManagerImpl::get_cache_allocation_size();
+W3MapNode::get_cached_sections_count() const
+{
+    return rendered_sections_cache_->get_cached_count();
 }
+
+uint64_t
+W3MapNode::get_visible_sections_count() const
+{
+    if (collector_) {
+        return collector_->get_visible_sections().size();
+    }
+    return 0;
+}
+#endif
 
 
 }  // namespace w3terr

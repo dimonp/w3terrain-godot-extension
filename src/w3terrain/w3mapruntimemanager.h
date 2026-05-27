@@ -21,8 +21,8 @@ public:
                 uint32_t uv_indices;  // four packed ground tileset texture indices
             };
             struct { // geo type
-                uint32_t tileset_id;
-                uint32_t geo_id;
+                uint16_t tileset_id;
+                uint16_t geo_id;
             };
         };
 

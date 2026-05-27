@@ -2,6 +2,7 @@
 #define _W3MAPSECTION__H
 
 #include <bitset>
+#include <span>
 
 #include "w3defs.h"
 #include "w3map.h"
@@ -19,74 +20,95 @@ class W3_API W3MapSection {
 public:
     static constexpr int32_t kNumberOfCells = kSectionDimension * kSectionDimension;
 
-    explicit W3MapSection(const W3MapRuntimeManager* map_runtime): runtime_manager_(map_runtime) {}
-    void initialize(size_t ground_tilesets_size, size_t geo_tilesets_size);
+    W3MapSection(uint8_t  ground_tilesets_size, uint8_t geo_tilesets_size);
+    W3MapSection(const W3MapSection&) = delete;
+    W3MapSection& operator=(const W3MapSection&) = delete;
+    W3MapSection(W3MapSection&&) noexcept;
+    W3MapSection& operator=(W3MapSection&&) noexcept;
+    ~W3MapSection() noexcept;
 
-    void update_all_cells(const Coord2D& section_origin);
-    bool refresh(const Coord2D& section_origin);
+    void update_all_cells(const Coord2D& section_origin, W3MapRuntimeManager* runtime);
+    bool refresh(const Coord2D& section_origin, W3MapRuntimeManager* runtime);
 
     void set_dirty(bool flag = true);
     bool is_dirty() const;
 
     static Coord2D calc_cell_coord_from_idx(const Coord2D& section_origin, size_t cell_idx);
 
-    W3Array<std::bitset<kNumberOfCells>> ground_tileset_usage;
-    W3Array<std::bitset<kNumberOfCells>> geo_tileset_usage;
-    std::bitset<kNumberOfCells> water_usage;
+    using TilesetUsage = std::bitset<kNumberOfCells>;
 
-    W3Array<uint32_t> ground_tileset_to_layer_map;
-
-    mutable struct RenderedMesh {
-        godot::RID instance_rid;
-        godot::RID mesh_rid;
-        int8_t surface_idx_ground = -1;
-        int8_t surface_idx_geo = -1;
-        int8_t surface_idx_water = -1;
-
-        ~RenderedMesh() {
-            free();
-        }
-
-        const godot::RID& get_mesh_rid()
-        {
-            if (!mesh_rid.is_valid()) {
-                mesh_rid = RS->mesh_create();
-            }
-            return mesh_rid;
-        }
-
-        const godot::RID& get_inst_rid()
-        {
-            if (!instance_rid.is_valid()) {
-                instance_rid = RS->instance_create();
-            }
-            return instance_rid;
-        }
-
-        void free()
-        {
-            if (instance_rid.is_valid()) {
-                RS->free_rid(instance_rid);
-                instance_rid = {};
-            }
-            if (mesh_rid.is_valid()) {
-                RS->free_rid(mesh_rid);
-                mesh_rid = {};
-            }
-            surface_idx_ground = -1;
-            surface_idx_geo = -1;
-            surface_idx_water = -1;
-        }
-    } rendered_mesh;
+    std::span<uint32_t> get_ground_tileset_to_layer_map() const;
+    std::span<const TilesetUsage> get_ground_tileset_usage() const;
+    std::span<const TilesetUsage> get_geo_tileset_usage() const;
+    const TilesetUsage& get_water_usage() const;
 
 private:
-    void free_cached_data();
-    void update_cell(const Coord2D& cell_coords, size_t cell_idx);
+    void update_cell(const Coord2D& cell_coords, size_t cell_idx, W3MapRuntimeManager* runtime);
 
-    const W3MapRuntimeManager* runtime_manager_;
+    TilesetUsage* ground_usage_ptr() const;
+    TilesetUsage* geo_usage_ptr() const;
+    TilesetUsage* water_usage_ptr() const;
+
+    uint32_t* ground_tileset_to_layer_map_;
+    TilesetUsage* tilesets_usage_;
+
+    uint8_t ground_tilesets_size_;
+    uint8_t geo_tilesets_size_;
 
     bool dirty_ = true;
 };
+
+inline
+W3MapSection::TilesetUsage*
+W3MapSection::ground_usage_ptr() const
+{
+    return tilesets_usage_;
+}
+
+inline
+W3MapSection::TilesetUsage*
+W3MapSection::geo_usage_ptr() const
+{
+    //NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+    return tilesets_usage_ + ground_tilesets_size_;
+}
+
+inline
+W3MapSection::TilesetUsage*
+W3MapSection::water_usage_ptr() const
+{
+    //NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-pointer-arithmetic)
+    return tilesets_usage_ + ground_tilesets_size_ + geo_tilesets_size_;
+}
+
+inline
+std::span<uint32_t>
+W3MapSection::get_ground_tileset_to_layer_map() const
+{
+    return {ground_tileset_to_layer_map_, ground_tilesets_size_};
+}
+
+
+inline
+std::span<const W3MapSection::TilesetUsage>
+W3MapSection::get_ground_tileset_usage() const
+{
+    return { ground_usage_ptr(), ground_tilesets_size_ };
+}
+
+inline
+std::span<const W3MapSection::TilesetUsage>
+W3MapSection::get_geo_tileset_usage() const
+{
+    return { geo_usage_ptr(), geo_tilesets_size_ };
+}
+
+inline
+const W3MapSection::TilesetUsage&
+W3MapSection::get_water_usage() const
+{
+    return *water_usage_ptr();
+}
 
 inline
 void

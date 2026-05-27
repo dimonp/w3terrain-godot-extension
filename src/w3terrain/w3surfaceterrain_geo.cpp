@@ -2,6 +2,7 @@
 
 #include "w3mapruntimemanager_impl.h"
 #include "w3mapsectionmanager_impl.h"
+#include "w3mapsectionrenderedcache.h"
 #include "w3mapsection.h"
 #include "w3mapnode.h"
 
@@ -11,13 +12,19 @@ namespace w3terr {
 void
 W3SurfaceTerrain::render_section_geo(uint32_t section_id)
 {
-    const auto* section_manager = get_section_manager();
-    const auto* assets = get_assets();
+    auto* rendered_sections_cache = get_rendered_sections_cache();
+    auto* rendered_section = rendered_sections_cache->get_rendered(section_id);
+    if (rendered_section != nullptr && rendered_section->surface_idx_geo >= 0) {
+        return;
+    }
 
+    const auto* section_manager = get_section_manager();
     const W3MapSection& section = section_manager->get_section_by_id(section_id);
 
+    auto geo_tileset_usage = section.get_geo_tileset_usage();
+
     bool has_any_active = std::ranges::any_of(
-        section.geo_tileset_usage,
+        geo_tileset_usage,
         [](const auto& bits) {
             return bits.any();
         });
@@ -25,24 +32,12 @@ W3SurfaceTerrain::render_section_geo(uint32_t section_id)
         return;
     }
 
-    if (rendered_sections_.has(section_id)) {
-        if (section.rendered_mesh.surface_idx_geo < 0) {
-            rendered_sections_.remove(section_id);
-        } else {
-            rendered_sections_.touch(section_id);
-            return;
-        }
-    }
-
-    const auto& mesh_rid = section.rendered_mesh.get_mesh_rid();
-    int32_t surface_idx = RS->mesh_get_surface_count(mesh_rid);
-    section.rendered_mesh.surface_idx_geo = static_cast<int8_t>(surface_idx);
-
-    begin_render(section_id);
+    int8_t surface_idx = begin_render(section_id);
 
     // for each geo tileset layer
-    for(int64_t tileset_id = 0; tileset_id < assets->geo_assets_size_rt(); ++tileset_id ) {
-        if (!section.geo_tileset_usage[tileset_id].any()) {
+
+    for(int64_t tileset_id = 0; tileset_id < geo_tileset_usage.size(); ++tileset_id ) {
+        if (!geo_tileset_usage[tileset_id].any()) {
             continue;
         }
 
@@ -52,10 +47,10 @@ W3SurfaceTerrain::render_section_geo(uint32_t section_id)
         render_geo_cells(section_id, tileset_id);
     }
 
-    end_render(section_id);
-
+    rendered_section = end_render(section_id);
+    rendered_section->surface_idx_geo = surface_idx;
     if (geo_material_asset_.is_valid()) {
-        RS->mesh_surface_set_material(mesh_rid, surface_idx, geo_material_asset_->get_rid());
+        RS->mesh_surface_set_material(rendered_section->get_mesh_rid(), surface_idx, geo_material_asset_->get_rid());
     }
 }
 
@@ -67,10 +62,11 @@ W3SurfaceTerrain::render_geo_cells(uint32_t section_id, size_t tileset_id) // NO
     const auto* runtime_manager = get_runtime_manager();
 
     const W3MapSection& section = section_manager->get_section_by_id(section_id);
+    auto geo_tileset_usage = section.get_geo_tileset_usage();
 
     // for each cell in this section
     for(size_t cell_idx = 0; cell_idx < W3MapSection::kNumberOfCells; ++cell_idx) {
-        if (!section.geo_tileset_usage[tileset_id][cell_idx]) { // Is there water in the cell?
+        if (!geo_tileset_usage[tileset_id][cell_idx]) { // Is there water in the cell?
             continue;
         }
 

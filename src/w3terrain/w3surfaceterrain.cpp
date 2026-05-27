@@ -4,8 +4,6 @@
 
 #include "w3mapnode.h"
 #include "w3mapcollector_impl.h"
-#include "w3mapsectionmanager_impl.h"
-#include "w3mapsection.h"
 
 namespace w3terr {
 
@@ -151,16 +149,12 @@ W3SurfaceTerrain::_process(double  /*delta*/)
 void
 W3SurfaceTerrain::render(const W3Array<uint32_t>& sections)
 {
-    const auto* section_manager = get_section_manager();
-
 #ifdef W3MAP_STATS_ENABLE
     stat_ground_tiles_rendered_ = 0;
     stat_geo_tiles_rendered_ = 0;
 #endif
 
     for(const uint32_t section_id : sections) {
-        const W3MapSection& section = section_manager->get_section_by_id(section_id);
-
         render_section_ground(section_id);
         render_section_geo(section_id);
 

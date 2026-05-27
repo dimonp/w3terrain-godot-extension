@@ -2,18 +2,18 @@
 
 #include "w3mapinformator_impl.h" // IWYU pragma: keep
 #include "w3mapruntimemanager_impl.h"
-#include "w3mapcollector_impl.h"
 #include "w3mapsectionmanager_impl.h"
+#include "w3mapcollector_impl.h"
 
 namespace w3terr {
 
 bool
-W3MapNode::create_empty_map(int32_t dim_2d_x, int32_t dim_2d_y)
+W3MapNode::create_empty_map(int32_t dim_2d_x, int32_t dim_2d_y, uint32_t ground_tilesets, uint32_t geo_tilesets)
 {
     reset_runtime();
     get_w3e_resource().unref();
     get_w3e_resource().instantiate();
-    return get_w3e_resource()->create_empty(dim_2d_x, dim_2d_y, 1, 1);
+    return get_w3e_resource()->create_empty(dim_2d_x, dim_2d_y, ground_tilesets, geo_tilesets);
 }
 
 void
@@ -108,6 +108,7 @@ W3MapNode::load_map()
 
     is_loading_ = false;
     w3_log_info("W3MapNode::load_map map loaded: %s", map_w3e_->get_path());
+
     call_deferred("emit_signal", kSignalMapInitialized, this);
 }
 

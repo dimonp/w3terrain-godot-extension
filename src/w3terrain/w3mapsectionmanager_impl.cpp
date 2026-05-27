@@ -58,7 +58,7 @@ void
 W3MapSectionManagerImpl::refresh_section(SectionId section_id)
 {
     Coord2D origin = calc_section_origin(section_id);
-    get_section_by_id(section_id).refresh(origin);
+    get_section_by_id(section_id).refresh(origin, runtime_);
 }
 
 void
@@ -68,15 +68,15 @@ W3MapSectionManagerImpl::initialize_all_sections()
     sections_2d_x_size_ = map_w3e->get_map_2d_size_x() / static_cast<int32_t>(kSectionDimension);
     sections_2d_y_size_ = map_w3e->get_map_2d_size_y() / static_cast<int32_t>(kSectionDimension);
 
-    const size_t sections_array_size = static_cast<size_t>(sections_2d_x_size_) * sections_2d_y_size_;
-    sections_array_.assign(sections_array_size, W3MapSection { runtime_ } );
+    sections_array_.clear();
 
-    // loop and initialize all sections
-    for(const auto section_id : *this) {
-        W3MapSection& section = get_section_by_id(section_id);
-        section.initialize(
+    const size_t sections_array_size = static_cast<size_t>(sections_2d_x_size_) * sections_2d_y_size_;
+    sections_array_.reserve(sections_array_size);
+    for (size_t i = 0; i < sections_array_size; ++i) {
+        sections_array_.emplace_back(
             map_w3e->get_ground_tilesets_count(),
-            map_w3e->get_geo_tilesets_count());
+            map_w3e->get_geo_tilesets_count()
+        );
     }
 }
 
@@ -117,13 +117,5 @@ W3MapSectionManagerImpl::invalidate_sections_at_cellpoint(const Coord2D& coords)
         }
     }
 }
-
-uint64_t
-W3MapSectionManagerImpl::get_cache_allocation_size()
-{
-    // return get_lrumm_instance()->get_allocated_memory_size();
-    return 0;
-}
-
 
 }  // namespace w3terr

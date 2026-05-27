@@ -17,7 +17,7 @@ public:
 protected:
     static void _bind_methods();
 
-    void create_map(const godot::Vector2i& size) const;
+    void create_map(const godot::Vector2i& size, uint8_t ground_tilesets, uint8_t geo_tilesets) const;
 
     void increase_cellpoint_layer(const godot::Vector2i& coords) const;
     void decrease_cellpoint_layer(const godot::Vector2i& coords) const;

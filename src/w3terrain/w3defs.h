@@ -39,6 +39,8 @@ using W3Color = godot::Color;
     using W3FlatMap = std::unordered_map<Key,Tp>;
 #endif
 
+template <typename T>
+using W3Array = std::vector<T>;
 
 template <typename T>
 using W3Ref = godot::Ref<T>;
@@ -46,11 +48,7 @@ using W3Ref = godot::Ref<T>;
 template <typename T1, typename T2>
 using W3Pair = std::pair<T1, T2>;
 
-template <typename T>
-using W3Array = std::vector<T>;
-
 using W3UInt8Pair = W3Pair<uint8_t, uint8_t>;
-using W3UInt16Pair = W3Pair<uint16_t, uint16_t>;
 
 inline void w3_assert(bool p_condition) {
     assert(p_condition);

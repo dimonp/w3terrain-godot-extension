@@ -16,6 +16,11 @@ public:
     W3MapSectionManagerImpl(const W3MapAssets* assets, W3MapRuntimeManager* runtime);
     ~W3MapSectionManagerImpl() noexcept override;
 
+    W3MapSectionManagerImpl(W3MapSectionManagerImpl&&) = default;
+    W3MapSectionManagerImpl& operator=(W3MapSectionManagerImpl&&) = default;
+    W3MapSectionManagerImpl(const W3MapSectionManagerImpl&) = delete;
+    W3MapSectionManagerImpl& operator=(const W3MapSectionManagerImpl&) = delete;
+
     SectionIdIterator begin() const override;
     SectionIdIterator end() const override;
 
@@ -31,8 +36,6 @@ public:
     void invalidate_sections_at_cellpoint(const Coord2D& coords);
     void refresh_section(SectionId section_id);
     void set_dirty_all();
-
-    static uint64_t get_cache_allocation_size();
 
 private:
     int32_t sections_2d_x_size_ = 0;
