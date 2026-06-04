@@ -34,19 +34,6 @@ W3SurfaceTerrain::set_geo_materials(const W3Ref<W3Marerial>& material)
     geo_assets_dirty_flag_ = true;
 }
 
-bool
-W3SurfaceTerrain::get_render_normals() const
-{
-    return render_normals_;
-}
-
-void
-W3SurfaceTerrain::set_render_normals(bool flag)
-{
-    clear_rendered();
-    render_normals_ = flag;
-}
-
 W3Ref<W3Marerial>
 W3SurfaceTerrain::get_debug_material() const
 {

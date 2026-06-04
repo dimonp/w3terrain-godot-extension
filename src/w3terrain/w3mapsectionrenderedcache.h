@@ -157,6 +157,7 @@ public:
     int8_t surface_idx_ground = -1;
     int8_t surface_idx_geo = -1;
     int8_t surface_idx_water = -1;
+    int8_t surface_idx_normal = -1;
 
     const auto& get_mesh_rid() const { return mesh_rid_; }
     const auto& get_instance_rid() const { return instance_rid_; }
@@ -174,6 +175,7 @@ public:
         surface_idx_ground = -1;
         surface_idx_geo = -1;
         surface_idx_water = -1;
+        surface_idx_normal = -1;
     }
 
     friend class W3SectionRenderedCache;

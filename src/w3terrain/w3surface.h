@@ -31,6 +31,8 @@ public:
 protected:
     static void _bind_methods();
 
+    W3Ref<godot::SurfaceTool> get_surface_tool() const;
+
     bool get_render_debug() const;
     void set_render_debug(bool flag);
 

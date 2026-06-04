@@ -4,6 +4,8 @@
 
 #include "w3mapnode.h"
 #include "w3mapcollector_impl.h"
+#include "w3mapsectionrenderedcache.h"
+#include "w3mapsection.h"
 
 namespace w3terr {
 
@@ -33,12 +35,6 @@ W3SurfaceTerrain::_bind_methods()
             godot::PROPERTY_HINT_RESOURCE_TYPE,
             "Material"),
         "set_debug_material", "get_debug_material");
-
-    godot::ClassDB::bind_method(godot::D_METHOD("get_render_normals"), &W3SurfaceTerrain::get_render_normals);
-    godot::ClassDB::bind_method(godot::D_METHOD("set_render_normals", "p_camera"), &W3SurfaceTerrain::set_render_normals);
-    ADD_PROPERTY(godot::PropertyInfo(godot::Variant::BOOL, "render_normals"),
-        "set_render_normals", "get_render_normals"
-    );
 }
 
 void
@@ -159,8 +155,32 @@ W3SurfaceTerrain::render(const W3Array<uint32_t>& sections)
         render_section_geo(section_id);
 
         // Rendering normals for debugging purposes
-        if (render_normals_) {
+        if (render_debug_) {
+            render_section_normals(section_id);
         }
+    }
+}
+
+void
+W3SurfaceTerrain::render_section_normals(uint32_t section_id)
+{
+    auto* rendered_sections_cache = get_rendered_sections_cache();
+    auto* rendered_section = rendered_sections_cache->get_rendered(section_id);
+
+    // if not rendered yet
+    if (rendered_section != nullptr && rendered_section->surface_idx_normal >= 0) {
+        return;
+    }
+
+    int8_t surface_idx = begin_render(section_id, true);
+    render_ground_cells_normals(section_id);
+    render_geo_cells_normals(section_id);
+
+    rendered_section = end_render(section_id);
+    rendered_section->surface_idx_normal = surface_idx;
+
+    if (debug_material_.is_valid()) {
+        RS->mesh_surface_set_material(rendered_section->get_mesh_rid(), surface_idx, debug_material_->get_rid());
     }
 }
 

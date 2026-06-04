@@ -14,6 +14,7 @@ W3SurfaceTerrain::render_section_ground(uint32_t section_id)
     auto* rendered_sections_cache = get_rendered_sections_cache();
     auto* rendered_section = rendered_sections_cache->get_rendered(section_id);
 
+    // if not rendered yet
     if (rendered_section != nullptr && rendered_section->surface_idx_ground >= 0) {
         return;
     }
@@ -127,6 +128,36 @@ W3SurfaceTerrain::render_ground_cells(uint32_t section_id, size_t tileset_id)
         stat_ground_tiles_rendered_++;
 #endif
         layer >>= 2U;
+    }
+}
+
+void
+W3SurfaceTerrain::render_ground_cells_normals(uint32_t section_id)
+{
+    constexpr float kNormalScaleFactor = 10.0;
+
+    const auto* assets = get_assets();
+    const auto* section_manager = get_section_manager();
+    const auto* runtime_manager = get_runtime_manager();
+
+    // for each cell in this section
+    for(size_t cell_idx = 0; cell_idx < W3MapSection::kNumberOfCells; ++cell_idx) {
+        const auto section_origin = section_manager->calc_section_origin(section_id);
+        const auto cell_coord = W3MapSection::calc_cell_coord_from_idx(section_origin, cell_idx);
+
+        const W3MapRuntimeManager::CellPointRT& cell_rt00 = runtime_manager->get_cellpoint_rt(cell_coord);
+        const W3MapRuntimeManager::CellPointRT& cell_rt10 = runtime_manager->get_cellpoint_rt({ cell_coord.x + 1, cell_coord.y });
+        const W3MapRuntimeManager::CellPointRT& cell_rt01 = runtime_manager->get_cellpoint_rt({ cell_coord.x,     cell_coord.y + 1 });
+        const W3MapRuntimeManager::CellPointRT& cell_rt11 = runtime_manager->get_cellpoint_rt({ cell_coord.x + 1, cell_coord.y + 1 });
+
+        // vertex 00
+        auto vertex = runtime_manager->get_cellpoint_position(cell_coord);
+        auto normal = math::unpack_vector3_from_32bit(cell_rt00.packed_normal);
+
+        surface_tool_->add_vertex(vertex);
+        surface_tool_->add_vertex(vertex + normal * kNormalScaleFactor);
+
+        vertices_counter_++;
     }
 }
 

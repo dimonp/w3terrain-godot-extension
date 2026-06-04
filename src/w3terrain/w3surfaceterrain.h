@@ -19,9 +19,6 @@ public:
     W3Ref<W3Marerial> get_geo_materials() const;
     void set_geo_materials(const W3Ref<W3Marerial>& material);
 
-    bool get_render_normals() const;
-    void set_render_normals(bool flag);
-
     void on_ground_assets_changed();
     void on_geo_assets_changed();
 
@@ -43,18 +40,18 @@ private:
 
     void render_section_ground(uint32_t section_id);
     void render_section_geo(uint32_t section_id);
+    void render_section_normals(uint32_t section_id);
 
     void render_ground_cells(uint32_t section_id, size_t tileset_id);
+    void render_ground_cells_normals(uint32_t section_id);
     void render_geo_cells(uint32_t section_id, size_t tileset_id);
+    void render_geo_cells_normals(uint32_t section_id);
 
     bool load_ground_materials();
     bool load_geo_materials();
 
     W3Ref<W3Marerial> get_debug_material() const;
     void set_debug_material(const W3Ref<W3Marerial>& material);
-
-    bool render_normals_ = false;
-    W3Ref<W3Marerial> debug_material_;
 
     W3Ref<godot::ShaderMaterial> ground_material_asset_;
     W3Ref<godot::Texture2DArray> ground_textures_array_;

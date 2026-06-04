@@ -86,6 +86,12 @@ W3Surface::set_debug_material(const W3Ref<W3Marerial>& material)
     debug_material_ = material;
 }
 
+W3Ref<godot::SurfaceTool>
+W3Surface::get_surface_tool() const
+{
+    return surface_tool_;
+}
+
 int8_t
 W3Surface::begin_render(const uint32_t section_id, bool render_lines)
 {
@@ -109,34 +115,46 @@ W3Surface::end_render(const uint32_t section_id)
 {
     auto mesh_array =  surface_tool_->commit_to_arrays();
 
-    static const uint64_t kCustom0Type = godot::Mesh::ARRAY_CUSTOM_R_FLOAT;
-    static const uint64_t kFormat = godot::Mesh::ARRAY_FORMAT_VERTEX |
-        godot::Mesh::ARRAY_FORMAT_TEX_UV |
-        godot::Mesh::ARRAY_FORMAT_NORMAL |
-        godot::Mesh::ARRAY_FORMAT_CUSTOM0 |
-        godot::Mesh::ARRAY_FORMAT_INDEX |
-        (kCustom0Type << godot::Mesh::ARRAY_FORMAT_CUSTOM0_SHIFT);
-
     auto* rendered_sections_cache = get_rendered_sections_cache();
     auto* mesh = rendered_sections_cache->get_rendered(section_id);
     assert(mesh != nullptr);
 
     const auto& mesh_rid = mesh->get_mesh_rid();
-    RS->mesh_add_surface_from_arrays(
-        mesh_rid,
-        godot::RenderingServer::PRIMITIVE_TRIANGLES,
-        mesh_array,
-        godot::Array(),
-        godot::Dictionary(),
-        static_cast<int64_t>(kFormat)
-    );
+
+    auto primitive_type = surface_tool_->get_primitive_type();
+    if (primitive_type == godot::Mesh::PrimitiveType::PRIMITIVE_TRIANGLES) {
+        static const uint64_t kCustom0Type = godot::Mesh::ARRAY_CUSTOM_R_FLOAT;
+        static const uint64_t kFormat = godot::Mesh::ARRAY_FORMAT_VERTEX |
+            godot::Mesh::ARRAY_FORMAT_TEX_UV |
+            godot::Mesh::ARRAY_FORMAT_NORMAL |
+            godot::Mesh::ARRAY_FORMAT_CUSTOM0 |
+            godot::Mesh::ARRAY_FORMAT_INDEX |
+            (kCustom0Type << godot::Mesh::ARRAY_FORMAT_CUSTOM0_SHIFT);
+
+        RS->mesh_add_surface_from_arrays(
+            mesh_rid,
+            godot::RenderingServer::PRIMITIVE_TRIANGLES,
+            mesh_array,
+            godot::Array(),
+            godot::Dictionary(),
+            static_cast<int64_t>(kFormat)
+        );
+    } else {
+        RS->mesh_add_surface_from_arrays(
+            mesh_rid,
+            godot::RenderingServer::PRIMITIVE_LINES,
+            mesh_array,
+            godot::Array(),
+            godot::Dictionary(),
+            static_cast<int64_t>(godot::Mesh::ARRAY_FORMAT_VERTEX)
+        );
+    }
 
     const auto& instance_rid = mesh->get_instance_rid();
     RS->instance_set_base(instance_rid, mesh_rid);
     RS->instance_set_transform(instance_rid, get_global_transform());
     RS->instance_set_scenario(instance_rid, get_world_3d()->get_scenario());
     RS->instance_set_layer_mask(instance_rid, get_layer_mask());
-
     return mesh;
 }
 
