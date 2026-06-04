@@ -22,9 +22,7 @@
 [ext_resource type="Shader" uid="uid://dapke3xfnlcxa" path="res://assets/shaders/water.gdshader" id="23_qe25m"]
 [ext_resource type="Texture2D" uid="uid://cgj68kqe14v38" path="res://assets/textures/water_foam.png" id="24_b6pdu"]
 [ext_resource type="Script" uid="uid://clefr3i4v05fs" path="res://w3map_node.gd" id="25_s2tdf"]
-[ext_resource type="Script" uid="uid://di0g2wcmhv174" path="res://map_cell_selector.gd" id="26_3m3ah"]
 [ext_resource type="Texture2D" uid="uid://ck4jeri3rja1b" path="res://godot.png" id="26_otsph"]
-[ext_resource type="Shader" uid="uid://dsot73q548dj" path="res://assets/shaders/wireframe.gdshader" id="27_k5r1i"]
 [ext_resource type="Script" uid="uid://ch0rfoo3ylumt" path="res://static_body_3d.gd" id="28_pjguf"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_fnoqs"]
@@ -39,7 +37,6 @@ background_mode = 2
 sky = SubResource("Sky_w0q0e")
 ambient_light_color = Color(1, 1, 1, 1)
 tonemap_mode = 2
-glow_enabled = true
 
 [sub_resource type="W3GeoResource" id="W3GeoResource_b8x2j"]
 geoset_config = ExtResource("13_urnxt")
@@ -183,10 +180,6 @@ shader_parameter/albedo = Color(1, 1, 1, 1)
 shading_mode = 0
 albedo_color = Color(1, 1, 0, 1)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_bnct2"]
-render_priority = 0
-shader = ExtResource("27_k5r1i")
-
 [sub_resource type="HeightMapShape3D" id="HeightMapShape3D_260s1"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_n51mc"]
@@ -298,13 +291,12 @@ value = 100.0
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=988277321]
 transform = Transform3D(0.73845536, -0.16427019, 0.653987, 0, 0.969872, 0.24361502, -0.6743024, -0.17989881, 0.71620715, 89.6339, 1302.8066, 98.16165)
 light_angular_distance = 30.0
-shadow_enabled = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1288721999]
 environment = SubResource("Environment_bnct2")
 
 [node name="FreeLookCamera" type="Camera3D" parent="." unique_id=1738304446]
-transform = Transform3D(0.6626731, -0.148699, 0.7339979, -0.051370766, 0.968756, 0.24263708, -0.7471447, -0.19849508, 0.6343298, 1222.7849, 1344.78, 633.17365)
+transform = Transform3D(-0.20430917, -0.24801381, 0.9469673, -0.051370766, 0.9687561, 0.2426371, -0.9775576, 0.00092654687, -0.2106664, 918.2615, 1747.1891, -388.672)
 top_level = true
 visible = false
 keep_aspect = 0
@@ -334,11 +326,7 @@ ground_material = SubResource("ShaderMaterial_fnoqs")
 geo_material = SubResource("ShaderMaterial_w0q0e")
 debug_material = SubResource("StandardMaterial3D_bnct2")
 map_node = NodePath("..")
-
-[node name="W3MapCellSelector" type="W3Surface" parent="W3MapNode" unique_id=491563736 node_paths=PackedStringArray("map_node")]
-map_node = NodePath("..")
-script = ExtResource("26_3m3ah")
-shader_material = SubResource("ShaderMaterial_bnct2")
+debug_material = SubResource("StandardMaterial3D_bnct2")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="W3MapNode" unique_id=2001769822]
 transform = Transform3D(128, 0, 0, 0, 128, 0, 0, 0, 128, 8256, 0, -8256)
@@ -361,6 +349,6 @@ mesh = SubResource("CapsuleMesh_fnoqs")
 surface_material_override/0 = SubResource("StandardMaterial3D_d7rpo")
 
 [connection signal="create_new_map" from="CanvasLayer/MapInfoUI" to="W3MapNode" method="_on_map_info_ui_create_new_map"]
+[connection signal="toggle_normals" from="CanvasLayer/MapInfoUI" to="W3MapNode" method="_on_map_info_ui_toggle_normals"]
 [connection signal="map_initialization_progress" from="W3MapNode" to="W3MapNode" method="_on_map_initialization_progress"]
 [connection signal="map_initialized" from="W3MapNode" to="W3MapNode" method="_on_map_initialized"]
-[connection signal="selector_changed" from="W3MapNode" to="W3MapNode/W3MapCellSelector" method="_on_w3_map_node_selector_changed"]

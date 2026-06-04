@@ -8,7 +8,7 @@
 [ext_resource type="Script" uid="uid://cgdmqnmjqc686" path="res://debug_camera.gd" id="6_bo0wn"]
 [ext_resource type="W3eResource" uid="uid://k6dqpjhu5m6x" path="res://assets/test/Maps/test_9x9.w3e" id="7_al6xn"]
 [ext_resource type="Texture2D" uid="uid://dur4qnv8xgdp7" path="res://assets/test/Ground/Ground1.png" id="8_mym4y"]
-[ext_resource type="Texture2D" uid="uid://b71jk1hmt24j6" path="res://assets/test/Ground/Ground0.png" id="9_i5774"]
+[ext_resource type="Texture2D" uid="uid://c7umj4uiacdkl" path="res://assets/test/Ground/Ground0.png" id="9_i5774"]
 [ext_resource type="ArrayMesh" uid="uid://duus3haeuivrd" path="res://assets/test/Geosets/city_cliffs.obj" id="10_al6xn"]
 [ext_resource type="JSON" path="res://assets/test/Geosets/city_keys.json" id="11_8kyml"]
 [ext_resource type="ArrayMesh" uid="uid://d04y68hgom6nw" path="res://assets/test/Geosets/city_ramps.obj" id="12_02ioy"]
@@ -21,8 +21,6 @@
 [ext_resource type="Texture2D" uid="uid://cgj68kqe14v38" path="res://assets/textures/water_foam.png" id="20_lv5hp"]
 [ext_resource type="Shader" uid="uid://btgygwwtwjpcm" path="res://assets/shaders/terrain_ground.gdshader" id="21_gllfv"]
 [ext_resource type="Shader" uid="uid://bwccr61ip4qcc" path="res://assets/shaders/terrain_cliff.gdshader" id="22_2fqqb"]
-[ext_resource type="Script" uid="uid://di0g2wcmhv174" path="res://map_cell_selector.gd" id="23_ae6d7"]
-[ext_resource type="Shader" uid="uid://dsot73q548dj" path="res://assets/shaders/wireframe.gdshader" id="24_hw18s"]
 [ext_resource type="Script" uid="uid://ch0rfoo3ylumt" path="res://static_body_3d.gd" id="25_mweno"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hrm1c"]
@@ -41,7 +39,6 @@ background_mode = 2
 sky = SubResource("Sky_w0q0e")
 ambient_light_color = Color(1, 1, 1, 1)
 tonemap_mode = 2
-glow_enabled = true
 
 [sub_resource type="W3GeoResource" id="W3GeoResource_6qlrc"]
 geoset_config = ExtResource("11_8kyml")
@@ -185,13 +182,9 @@ shader_parameter/albedo = Color(1, 1, 1, 1)
 shading_mode = 0
 albedo_color = Color(1, 1, 0, 1)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_bnct2"]
-render_priority = 0
-shader = ExtResource("24_hw18s")
-
 [sub_resource type="HeightMapShape3D" id="HeightMapShape3D_260s1"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6qrac"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_w1int"]
 shading_mode = 0
 vertex_color_use_as_albedo = true
 
@@ -212,6 +205,8 @@ anchor_right = 0.0
 anchor_bottom = 0.0
 grow_horizontal = 1
 grow_vertical = 1
+map_name = "test_9x9.w3e"
+map_size = Vector2i(9, 9)
 
 [node name="CellInfoUI" parent="." unique_id=1035806712 instance=ExtResource("3_ds1kj")]
 unique_name_in_owner = true
@@ -277,13 +272,8 @@ map_node = NodePath("..")
 ground_material = SubResource("ShaderMaterial_fnoqs")
 geo_material = SubResource("ShaderMaterial_w0q0e")
 debug_material = SubResource("StandardMaterial3D_bnct2")
-render_normals = true
 map_node = NodePath("..")
-
-[node name="W3MapCellSelector" type="W3Surface" parent="W3MapNode" unique_id=1724435020 node_paths=PackedStringArray("map_node")]
-map_node = NodePath("..")
-script = ExtResource("23_ae6d7")
-shader_material = SubResource("ShaderMaterial_bnct2")
+debug_material = SubResource("StandardMaterial3D_bnct2")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="W3MapNode" unique_id=1202683847]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 500, 0)
@@ -293,17 +283,15 @@ script = ExtResource("25_mweno")
 shape = SubResource("HeightMapShape3D_260s1")
 
 [node name="DebugAxis3D" type="MeshInstance3D" parent="W3MapNode/StaticBody3D" unique_id=1944558524]
-material_override = SubResource("StandardMaterial3D_6qrac")
+material_override = SubResource("StandardMaterial3D_w1int")
 skeleton = NodePath("../..")
 script = ExtResource("1_8kyml")
 axis_size = 1000.0
 axis_thickness = 0.1
 
-[connection signal="button_pressed_create_map" from="MapInfoUI" to="W3MapNode" method="_on_map_info_ui_button_pressed_create_map"]
 [connection signal="height_decrease_button_pressed" from="EditorInfoUI" to="W3MapNode" method="_on_editor_info_ui_height_decrease_button_pressed"]
 [connection signal="height_increase_button_pressed" from="EditorInfoUI" to="W3MapNode" method="_on_editor_info_ui_height_increase_button_pressed"]
 [connection signal="layer_decrease_button_pressed" from="EditorInfoUI" to="W3MapNode" method="_on_editor_info_ui_layer_decrease_button_pressed"]
 [connection signal="layer_increase_button_pressed" from="EditorInfoUI" to="W3MapNode" method="_on_editor_info_ui_layer_increase_button_pressed"]
 [connection signal="map_initialized" from="W3MapNode" to="W3MapNode" method="_on_map_initialized"]
 [connection signal="map_initialized" from="W3MapNode" to="W3MapNode/StaticBody3D" method="_on_w_3_map_node_map_initialized"]
-[connection signal="selector_changed" from="W3MapNode/W3MapCellSelector" to="W3MapNode" method="_on_w_3_map_cell_selector_selector_changed"]

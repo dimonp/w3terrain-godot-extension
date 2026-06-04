@@ -19,8 +19,6 @@
 [ext_resource type="Texture2D" uid="uid://cgj68kqe14v38" path="res://assets/textures/water_foam.png" id="19_me0t4"]
 [ext_resource type="Shader" uid="uid://btgygwwtwjpcm" path="res://assets/shaders/terrain_ground.gdshader" id="20_eptg5"]
 [ext_resource type="Shader" uid="uid://bwccr61ip4qcc" path="res://assets/shaders/terrain_cliff.gdshader" id="21_e7r8p"]
-[ext_resource type="Script" uid="uid://di0g2wcmhv174" path="res://map_cell_selector.gd" id="22_2h4r2"]
-[ext_resource type="Shader" uid="uid://dsot73q548dj" path="res://assets/shaders/wireframe.gdshader" id="23_0vgac"]
 [ext_resource type="Script" uid="uid://ch0rfoo3ylumt" path="res://static_body_3d.gd" id="24_x3lqj"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_fnoqs"]
@@ -180,10 +178,6 @@ shader_parameter/albedo = Color(1, 1, 1, 1)
 shading_mode = 0
 albedo_color = Color(1, 1, 0, 1)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_bnct2"]
-render_priority = 0
-shader = ExtResource("23_0vgac")
-
 [sub_resource type="HeightMapShape3D" id="HeightMapShape3D_260s1"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_n51mc"]
@@ -335,13 +329,8 @@ map_node = NodePath("..")
 ground_material = SubResource("ShaderMaterial_fnoqs")
 geo_material = SubResource("ShaderMaterial_w0q0e")
 debug_material = SubResource("StandardMaterial3D_bnct2")
-render_normals = true
 map_node = NodePath("..")
-
-[node name="W3MapCellSelector" type="W3Surface" parent="W3MapNode" unique_id=1922867328 node_paths=PackedStringArray("map_node")]
-map_node = NodePath("..")
-script = ExtResource("22_2h4r2")
-shader_material = SubResource("ShaderMaterial_bnct2")
+debug_material = SubResource("StandardMaterial3D_bnct2")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="W3MapNode" unique_id=938465191]
 transform = Transform3D(128, 0, 0, 0, 128, 0, 0, 0, 128, 8256, 0, -8256)

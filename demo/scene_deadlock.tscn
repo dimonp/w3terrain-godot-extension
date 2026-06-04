@@ -22,8 +22,6 @@
 [ext_resource type="Texture2D" uid="uid://clek2bqbss2gv" path="res://assets/imported/ReplaceableTextures/Cliff/Cliff1.dds" id="20_k2sr4"]
 [ext_resource type="Shader" uid="uid://dapke3xfnlcxa" path="res://assets/shaders/water.gdshader" id="21_jfoyk"]
 [ext_resource type="Texture2D" uid="uid://cgj68kqe14v38" path="res://assets/textures/water_foam.png" id="22_mshri"]
-[ext_resource type="Script" uid="uid://di0g2wcmhv174" path="res://map_cell_selector.gd" id="23_cude8"]
-[ext_resource type="Shader" uid="uid://dsot73q548dj" path="res://assets/shaders/wireframe.gdshader" id="24_wm84l"]
 [ext_resource type="Script" uid="uid://ch0rfoo3ylumt" path="res://static_body_3d.gd" id="25_ee8o1"]
 [ext_resource type="Texture2D" uid="uid://ck4jeri3rja1b" path="res://godot.png" id="25_eqejc"]
 
@@ -39,7 +37,6 @@ background_mode = 2
 sky = SubResource("Sky_w0q0e")
 ambient_light_color = Color(1, 1, 1, 1)
 tonemap_mode = 2
-glow_enabled = true
 
 [sub_resource type="W3GeoResource" id="W3GeoResource_fnoqs"]
 geoset_config = ExtResource("14_ysolg")
@@ -183,10 +180,6 @@ shader_parameter/albedo = Color(1, 1, 1, 1)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_bnct2"]
 shading_mode = 0
 albedo_color = Color(1, 1, 0, 1)
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_bnct2"]
-render_priority = 0
-shader = ExtResource("24_wm84l")
 
 [sub_resource type="HeightMapShape3D" id="HeightMapShape3D_260s1"]
 
@@ -341,13 +334,8 @@ map_node = NodePath("..")
 ground_material = SubResource("ShaderMaterial_fnoqs")
 geo_material = SubResource("ShaderMaterial_w0q0e")
 debug_material = SubResource("StandardMaterial3D_bnct2")
-render_normals = true
 map_node = NodePath("..")
-
-[node name="W3MapCellSelector" type="W3Surface" parent="W3MapNode" unique_id=1922867328 node_paths=PackedStringArray("map_node")]
-map_node = NodePath("..")
-script = ExtResource("23_cude8")
-shader_material = SubResource("ShaderMaterial_bnct2")
+debug_material = SubResource("StandardMaterial3D_bnct2")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="W3MapNode" unique_id=938465191]
 transform = Transform3D(128, 0, 0, 0, 128, 0, 0, 0, 128, 8256, 0, -8256)

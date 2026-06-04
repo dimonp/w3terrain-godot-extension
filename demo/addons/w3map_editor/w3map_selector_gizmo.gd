@@ -13,13 +13,14 @@ func _init():
 	add_material("main", mat)
 
 func _redraw(gizmo: EditorNode3DGizmo):
-	gizmo.clear()
 	var node = gizmo.get_node_3d()
 	var bbox = node.brush_bbox()
 	if bbox is AABB:
 		update_mesh(bbox, gizmo)
 	
 func update_mesh(aabb: AABB, gizmo: EditorNode3DGizmo):
+	gizmo.clear()
+
 	var st = SurfaceTool.new()
 	
 	var min_pos = aabb.position
@@ -75,6 +76,29 @@ func update_mesh(aabb: AABB, gizmo: EditorNode3DGizmo):
 	st.set_color(Color(1.0, 0.0, 0.0, 1.0))
 	st.add_vertex(p3)
 	st.add_vertex(p7) # Left back vertical edge
+	
+	var mesh = st.commit()
+	gizmo.add_mesh(mesh)	
+
+func update_mesh_new(node: W3MapNode, gizmo: EditorNode3DGizmo):
+	gizmo.clear()
+
+	var st = SurfaceTool.new()
+	
+	var brush_size = node.brush_size
+	var coords = node.selected_coords
+	var map = node.w3e_map
+
+	
+	for y in range(brush_size):
+		for x in range(brush_size):
+			var curr_coords = Vector2i(
+				coords.x + x - brush_size / 2, 
+				coords.y + y - brush_size / 2,
+			)
+
+			var position = map.get_cellpoint_get_cellpoint_position(curr_coords)
+	
 	
 	var mesh = st.commit()
 	gizmo.add_mesh(mesh)	

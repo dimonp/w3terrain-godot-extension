@@ -22,8 +22,6 @@
 [ext_resource type="Texture2D" uid="uid://cgj68kqe14v38" path="res://assets/textures/water_foam.png" id="24_dhcr8"]
 [ext_resource type="Shader" uid="uid://btgygwwtwjpcm" path="res://assets/shaders/terrain_ground.gdshader" id="25_ciwsl"]
 [ext_resource type="Shader" uid="uid://bwccr61ip4qcc" path="res://assets/shaders/terrain_cliff.gdshader" id="26_e5csi"]
-[ext_resource type="Script" uid="uid://di0g2wcmhv174" path="res://map_cell_selector.gd" id="27_xqcaf"]
-[ext_resource type="Shader" uid="uid://dsot73q548dj" path="res://assets/shaders/wireframe.gdshader" id="28_yt7md"]
 [ext_resource type="Script" uid="uid://ch0rfoo3ylumt" path="res://static_body_3d.gd" id="29_rka03"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hrm1c"]
@@ -42,7 +40,6 @@ background_mode = 2
 sky = SubResource("Sky_w0q0e")
 ambient_light_color = Color(1, 1, 1, 1)
 tonemap_mode = 2
-glow_enabled = true
 
 [sub_resource type="W3GeoResource" id="W3GeoResource_6qlrc"]
 geoset_config = ExtResource("15_pyirb")
@@ -186,10 +183,6 @@ shader_parameter/albedo = Color(1, 1, 1, 1)
 shading_mode = 0
 albedo_color = Color(1, 1, 0, 1)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_bnct2"]
-render_priority = 0
-shader = ExtResource("28_yt7md")
-
 [sub_resource type="HeightMapShape3D" id="HeightMapShape3D_260s1"]
 
 [node name="Main" type="Node3D" unique_id=588960887]
@@ -276,13 +269,8 @@ map_node = NodePath("..")
 ground_material = SubResource("ShaderMaterial_fnoqs")
 geo_material = SubResource("ShaderMaterial_w0q0e")
 debug_material = SubResource("StandardMaterial3D_bnct2")
-render_normals = true
 map_node = NodePath("..")
-
-[node name="W3MapCellSelector" type="W3Surface" parent="W3MapNode" unique_id=38142422 node_paths=PackedStringArray("map_node")]
-map_node = NodePath("..")
-script = ExtResource("27_xqcaf")
-shader_material = SubResource("ShaderMaterial_bnct2")
+debug_material = SubResource("StandardMaterial3D_bnct2")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="W3MapNode" unique_id=1557958213]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 500, 0)
@@ -291,7 +279,6 @@ script = ExtResource("29_rka03")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="W3MapNode/StaticBody3D" unique_id=894093366]
 shape = SubResource("HeightMapShape3D_260s1")
 
-[connection signal="button_pressed_create_map" from="MapInfoUI" to="W3MapNode" method="_on_map_info_ui_button_pressed_create_map"]
 [connection signal="height_decrease_button_pressed" from="EditorInfoUI" to="W3MapNode" method="_on_editor_info_ui_height_decrease_button_pressed"]
 [connection signal="height_increase_button_pressed" from="EditorInfoUI" to="W3MapNode" method="_on_editor_info_ui_height_increase_button_pressed"]
 [connection signal="layer_decrease_button_pressed" from="EditorInfoUI" to="W3MapNode" method="_on_editor_info_ui_layer_decrease_button_pressed"]

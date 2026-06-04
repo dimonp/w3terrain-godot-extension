@@ -22,8 +22,6 @@
 [ext_resource type="Texture2D" uid="uid://cgj68kqe14v38" path="res://assets/textures/water_foam.png" id="20_awc2e"]
 [ext_resource type="Shader" uid="uid://btgygwwtwjpcm" path="res://assets/shaders/terrain_ground.gdshader" id="21_7ql47"]
 [ext_resource type="Shader" uid="uid://bwccr61ip4qcc" path="res://assets/shaders/terrain_cliff.gdshader" id="22_ao3jg"]
-[ext_resource type="Script" uid="uid://di0g2wcmhv174" path="res://map_cell_selector.gd" id="23_i02yq"]
-[ext_resource type="Shader" uid="uid://dsot73q548dj" path="res://assets/shaders/wireframe.gdshader" id="24_j11wc"]
 [ext_resource type="Script" uid="uid://ch0rfoo3ylumt" path="res://static_body_3d.gd" id="25_83cl1"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hrm1c"]
@@ -42,7 +40,6 @@ background_mode = 2
 sky = SubResource("Sky_w0q0e")
 ambient_light_color = Color(1, 1, 1, 1)
 tonemap_mode = 2
-glow_enabled = true
 
 [sub_resource type="W3GeoResource" id="W3GeoResource_i02fq"]
 geoset_config = ExtResource("11_scs4k")
@@ -186,13 +183,9 @@ shader_parameter/albedo = Color(1, 1, 1, 1)
 shading_mode = 0
 albedo_color = Color(1, 1, 0, 1)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_bnct2"]
-render_priority = 0
-shader = ExtResource("24_j11wc")
-
 [sub_resource type="HeightMapShape3D" id="HeightMapShape3D_260s1"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_auh1n"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_thdgx"]
 shading_mode = 0
 vertex_color_use_as_albedo = true
 
@@ -243,9 +236,10 @@ light_angular_distance = 30.0
 shadow_enabled = true
 
 [node name="FreeLookCamera" type="Camera3D" parent="." unique_id=1266543544]
-transform = Transform3D(0.97612214, -0.002640671, 0.21720634, 0.0027052572, 0.99999636, 5.8207484e-11, -0.21720555, 0.00058759894, 0.9761257, 324.88586, 974.1731, 696.5388)
+transform = Transform3D(0.97612214, -0.002640671, 0.21720634, 0.0027052572, 0.99999636, 5.8207484e-11, -0.21720555, 0.00058759894, 0.9761257, 2040.8733, 472.39673, -3415.0703)
 top_level = true
 keep_aspect = 0
+cull_mask = 2
 current = true
 fov = 55.0
 far = 5000.0
@@ -269,18 +263,14 @@ script = ExtResource("18_8roii")
 [node name="W3SurfaceWater" type="W3SurfaceWater" parent="W3MapNode" unique_id=2114392250 node_paths=PackedStringArray("map_node")]
 water_material = SubResource("ShaderMaterial_1spff")
 map_node = NodePath("..")
+layers = 2
 
 [node name="W3SurfaceTerrain" type="W3SurfaceTerrain" parent="W3MapNode" unique_id=776721820 node_paths=PackedStringArray("map_node")]
 ground_material = SubResource("ShaderMaterial_fnoqs")
 geo_material = SubResource("ShaderMaterial_w0q0e")
 debug_material = SubResource("StandardMaterial3D_bnct2")
-render_normals = true
 map_node = NodePath("..")
-
-[node name="W3MapCellSelector" type="W3Surface" parent="W3MapNode" unique_id=2036195894 node_paths=PackedStringArray("map_node")]
-map_node = NodePath("..")
-script = ExtResource("23_i02yq")
-shader_material = SubResource("ShaderMaterial_bnct2")
+debug_material = SubResource("StandardMaterial3D_bnct2")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="W3MapNode" unique_id=2089522970]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 500, 0)
@@ -291,7 +281,7 @@ shape = SubResource("HeightMapShape3D_260s1")
 
 [node name="DebugAxis3D" type="MeshInstance3D" parent="W3MapNode/StaticBody3D" unique_id=1559298727]
 transform = Transform3D(1, 0, 0, 0, 1, -2.9802326e-08, 0, 2.9802326e-08, 1, 0, 0, 0)
-material_override = SubResource("StandardMaterial3D_auh1n")
+material_override = SubResource("StandardMaterial3D_thdgx")
 skeleton = NodePath("../..")
 script = ExtResource("1_07g38")
 axis_size = 1000.0

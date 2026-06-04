@@ -1,5 +1,6 @@
 extends Control
 
+signal toggle_normals()
 signal create_new_map(size_x: int, size_y: int)
 
 @onready var cell_name_ctrl = $FoldableContainer/MarginContainer/VBoxContainer/HBoxContainerCellName/Text
@@ -20,3 +21,6 @@ func _on_button_create_32_pressed() -> void:
 
 func _on_button_create_1024_pressed() -> void:
 	emit_signal("create_new_map", 1025, 1025)
+
+func _on_button_toggle_normals_pressed() -> void:
+	emit_signal("toggle_normals")

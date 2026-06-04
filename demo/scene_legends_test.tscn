@@ -20,8 +20,6 @@
 [ext_resource type="Shader" uid="uid://btgygwwtwjpcm" path="res://assets/shaders/terrain_ground.gdshader" id="20_s6ksf"]
 [ext_resource type="Shader" uid="uid://bwccr61ip4qcc" path="res://assets/shaders/terrain_cliff.gdshader" id="21_02nfn"]
 [ext_resource type="Texture2D" uid="uid://uks8qsay3qa5" path="res://assets/test/Cliff/Cliff1.png" id="21_y01pv"]
-[ext_resource type="Script" uid="uid://di0g2wcmhv174" path="res://map_cell_selector.gd" id="22_qfmwi"]
-[ext_resource type="Shader" uid="uid://dsot73q548dj" path="res://assets/shaders/wireframe.gdshader" id="23_i4jk5"]
 [ext_resource type="Script" uid="uid://ch0rfoo3ylumt" path="res://static_body_3d.gd" id="24_laj5i"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hrm1c"]
@@ -40,7 +38,6 @@ background_mode = 2
 sky = SubResource("Sky_w0q0e")
 ambient_light_color = Color(1, 1, 1, 1)
 tonemap_mode = 2
-glow_enabled = true
 
 [sub_resource type="W3GeoResource" id="W3GeoResource_i02fq"]
 geoset_config = ExtResource("15_rbnhm")
@@ -184,11 +181,7 @@ shader_parameter/albedo = Color(1, 1, 1, 1)
 shading_mode = 0
 albedo_color = Color(1, 1, 0, 1)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_bnct2"]
-render_priority = 0
-shader = ExtResource("23_i4jk5")
-
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_fqub1"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_jfbu5"]
 shading_mode = 0
 vertex_color_use_as_albedo = true
 
@@ -352,20 +345,15 @@ map_node = NodePath("..")
 ground_material = SubResource("ShaderMaterial_fnoqs")
 geo_material = SubResource("ShaderMaterial_w0q0e")
 debug_material = SubResource("StandardMaterial3D_bnct2")
-render_normals = true
 map_node = NodePath("..")
-
-[node name="W3MapCellSelector" type="W3Surface" parent="W3MapNode" unique_id=2036195894 node_paths=PackedStringArray("map_node")]
-map_node = NodePath("..")
-script = ExtResource("22_qfmwi")
-shader_material = SubResource("ShaderMaterial_bnct2")
+debug_material = SubResource("StandardMaterial3D_bnct2")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="W3MapNode" unique_id=2089522970]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 500, 0)
 script = ExtResource("24_laj5i")
 
 [node name="DebugAxis3D2" type="MeshInstance3D" parent="W3MapNode/StaticBody3D" unique_id=1321353043]
-material_override = SubResource("StandardMaterial3D_fqub1")
+material_override = SubResource("StandardMaterial3D_jfbu5")
 ignore_occlusion_culling = true
 skeleton = NodePath("../../../FreeLookCamera")
 script = ExtResource("18_hrm1c")

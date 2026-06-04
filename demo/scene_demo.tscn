@@ -16,10 +16,8 @@
 [ext_resource type="Shader" uid="uid://btgygwwtwjpcm" path="res://assets/shaders/terrain_ground.gdshader" id="16_7ks05"]
 [ext_resource type="Texture2D" uid="uid://4h7jch54vvai" path="res://assets/imported/ReplaceableTextures/Cliff/Cliff0.dds" id="17_5qh2x"]
 [ext_resource type="Shader" uid="uid://bwccr61ip4qcc" path="res://assets/shaders/terrain_cliff.gdshader" id="17_7v6eo"]
-[ext_resource type="Script" uid="uid://di0g2wcmhv174" path="res://map_cell_selector.gd" id="18_0sq0u"]
 [ext_resource type="Script" uid="uid://clefr3i4v05fs" path="res://w3map_node.gd" id="18_7ks05"]
 [ext_resource type="ArrayMesh" uid="uid://ddpo8en18s2tx" path="res://assets/imported/Geosets/ground_cliffs.obj" id="18_vuprs"]
-[ext_resource type="Shader" uid="uid://dsot73q548dj" path="res://assets/shaders/wireframe.gdshader" id="19_5qh2x"]
 [ext_resource type="JSON" path="res://assets/imported/Geosets/ground_keys.json" id="19_qw60h"]
 [ext_resource type="ArrayMesh" uid="uid://d3wc5586kb13g" path="res://assets/imported/Geosets/ground_ramps.obj" id="20_2cxwy"]
 [ext_resource type="Script" uid="uid://ch0rfoo3ylumt" path="res://static_body_3d.gd" id="20_vuprs"]
@@ -41,7 +39,6 @@ background_mode = 2
 sky = SubResource("Sky_w0q0e")
 ambient_light_color = Color(1, 1, 1, 1)
 tonemap_mode = 2
-glow_enabled = true
 
 [sub_resource type="W3GeoResource" id="W3GeoResource_i02fq"]
 geoset_config = ExtResource("19_qw60h")
@@ -185,13 +182,9 @@ shader_parameter/albedo = Color(1, 1, 1, 1)
 shading_mode = 0
 albedo_color = Color(1, 1, 0, 1)
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_bnct2"]
-render_priority = 0
-shader = ExtResource("19_5qh2x")
-
 [sub_resource type="HeightMapShape3D" id="HeightMapShape3D_260s1"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wirlx"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hh2g8"]
 shading_mode = 0
 vertex_color_use_as_albedo = true
 
@@ -272,13 +265,8 @@ map_node = NodePath("..")
 ground_material = SubResource("ShaderMaterial_fnoqs")
 geo_material = SubResource("ShaderMaterial_w0q0e")
 debug_material = SubResource("StandardMaterial3D_bnct2")
-render_normals = true
 map_node = NodePath("..")
-
-[node name="W3MapCellSelector" type="W3Surface" parent="W3MapNode" unique_id=2036195894 node_paths=PackedStringArray("map_node")]
-map_node = NodePath("..")
-script = ExtResource("18_0sq0u")
-shader_material = SubResource("ShaderMaterial_bnct2")
+debug_material = SubResource("StandardMaterial3D_bnct2")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="W3MapNode" unique_id=2089522970]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 500, 0)
@@ -289,7 +277,7 @@ shape = SubResource("HeightMapShape3D_260s1")
 
 [node name="DebugAxis3D" type="MeshInstance3D" parent="W3MapNode/StaticBody3D" unique_id=1559298727]
 transform = Transform3D(1, 0, 0, 0, 1, -2.9802326e-08, 0, 2.9802326e-08, 1, 0, 0, 0)
-material_override = SubResource("StandardMaterial3D_wirlx")
+material_override = SubResource("StandardMaterial3D_hh2g8")
 skeleton = NodePath("../..")
 script = ExtResource("1_hh2g8")
 axis_size = 1000.0

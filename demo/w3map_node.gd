@@ -27,8 +27,7 @@ func _on_map_initialized(_map_node: Object) -> void:
 
 func _on_map_info_ui_create_new_map(size_x: int, size_y: int) -> void:
 	var size := Vector2i(size_x, size_y)
-	editor.create_map(size)
-
+	editor.create_map(size, 1, 1)
 
 func _on_map_initialization_progress(map_node: Object, percent: int) -> void:
 	var pb = %ProgressBarMapLoad
@@ -38,3 +37,7 @@ func _on_map_initialization_progress(map_node: Object, percent: int) -> void:
 		pb.visible = true
 	else:
 		pb.visible = false
+
+func _on_map_info_ui_toggle_normals() -> void:
+	var terrain_surface = $W3SurfaceTerrain
+	terrain_surface.render_debug = !terrain_surface.render_debug

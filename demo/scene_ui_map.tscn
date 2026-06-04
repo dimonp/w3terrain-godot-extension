@@ -62,6 +62,11 @@ theme_override_colors/font_color = Color(1, 1, 0, 1)
 [node name="HSeparator2" type="HSeparator" parent="FoldableContainer/MarginContainer/VBoxContainer" unique_id=450756436]
 layout_mode = 2
 
+[node name="ButtonToggleNormals" type="Button" parent="FoldableContainer/MarginContainer/VBoxContainer" unique_id=765088359]
+layout_mode = 2
+text = "Toggle normals"
+alignment = 0
+
 [node name="ButtonCreate32" type="Button" parent="FoldableContainer/MarginContainer/VBoxContainer" unique_id=306632937]
 layout_mode = 2
 text = "Create empty 32x32"
@@ -72,5 +77,6 @@ layout_mode = 2
 text = "Create empty 1024x1024"
 alignment = 0
 
+[connection signal="pressed" from="FoldableContainer/MarginContainer/VBoxContainer/ButtonToggleNormals" to="." method="_on_button_toggle_normals_pressed"]
 [connection signal="pressed" from="FoldableContainer/MarginContainer/VBoxContainer/ButtonCreate32" to="." method="_on_button_create_32_pressed"]
 [connection signal="pressed" from="FoldableContainer/MarginContainer/VBoxContainer/ButtonCreate1024" to="." method="_on_button_create_1024_pressed"]
