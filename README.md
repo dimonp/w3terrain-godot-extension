@@ -86,7 +86,7 @@ Water shader taken from <https://godotshaders.com/shader/foam-edge-water-shader>
 
 ## Requirements
 
-- **Godot 4.2+** (built with GDExtension support)
+- **Godot 4.7+** (built with GDExtension support)
 - **CMake 3.17+**
 - **C++23 compiler** (GCC 13+, Clang 16+, MSVC 2022+)
 - **vcpkg** (for dependency management)

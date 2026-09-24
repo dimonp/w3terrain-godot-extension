@@ -57,6 +57,7 @@ if(NOT EXISTS "${CMAKE_CURRENT_LIST_DIR}/godot-cpp/src")
         COMMAND_ERROR_IS_FATAL ANY)
 endif()
 set(GODOTCPP_TARGET "$<IF:$<CONFIG:Debug>,template_debug,template_release>")
+set(GODOTCPP_API_VERSION "4.7" CACHE STRING "Godot API version")
 add_subdirectory(godot-cpp SYSTEM)
 target_link_libraries(godot-cpp PRIVATE ${LIBNAME}_options)
 
