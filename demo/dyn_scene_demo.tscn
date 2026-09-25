@@ -1,0 +1,72 @@
+[gd_scene format=3 uid="uid://b45m6tdmhapph"]
+
+[ext_resource type="Script" uid="uid://bflgbcgbh12nu" path="res://dyn_scene_demo.gd" id="1_2rqqf"]
+[ext_resource type="PackedScene" uid="uid://bkdf7cjgqflpn" path="res://scene_ui_map.tscn" id="1_ht1n4"]
+[ext_resource type="Script" uid="uid://5b4p0xvske7f" path="res://camera.gd" id="3_u8yxw"]
+[ext_resource type="Script" uid="uid://cgdmqnmjqc686" path="res://debug_camera.gd" id="4_ahqxi"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_fnoqs"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_w0q0e"]
+sky_material = SubResource("ProceduralSkyMaterial_fnoqs")
+
+[sub_resource type="Environment" id="Environment_bnct2"]
+background_mode = 2
+sky = SubResource("Sky_w0q0e")
+ambient_light_color = Color(1, 1, 1, 1)
+tonemap_mode = 2
+
+[node name="Main" type="Node3D" unique_id=370783374]
+script = ExtResource("1_2rqqf")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=328647670]
+
+[node name="MapInfoUI" parent="CanvasLayer" unique_id=187275123 instance=ExtResource("1_ht1n4")]
+unique_name_in_owner = true
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+grow_horizontal = 1
+grow_vertical = 1
+map_name = "Demo01.w3e"
+map_size = Vector2i(129, 97)
+
+[node name="ProgressBarMapLoad" type="ProgressBar" parent="CanvasLayer" unique_id=410490120]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(200, 0)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -2.0
+offset_top = -13.5
+offset_right = 198.0
+offset_bottom = 13.5
+value = 100.0
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=462441277]
+environment = SubResource("Environment_bnct2")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1872159160]
+transform = Transform3D(0.73845536, -0.16427019, 0.653987, 0, 0.969872, 0.24361502, -0.6743024, -0.17989881, 0.71620715, 89.6339, 1302.8066, 98.16165)
+light_color = Color(0.9019608, 0.9019608, 0.9019608, 1)
+light_angular_distance = 30.0
+shadow_enabled = true
+
+[node name="FreeLookCamera" type="Camera3D" parent="." unique_id=1266543544]
+transform = Transform3D(0.97612214, -0.002640671, 0.21720634, 0.0027052572, 0.99999636, 5.8207484e-11, -0.21720555, 0.00058759894, 0.9761257, -198.75153, 1153.0969, 554.66956)
+top_level = true
+keep_aspect = 0
+current = true
+fov = 55.0
+far = 5000.0
+script = ExtResource("3_u8yxw")
+metadata/_custom_type_script = "uid://5b4p0xvske7f"
+
+[node name="CameraDebug" type="Node3D" parent="FreeLookCamera" unique_id=1584251417]
+transform = Transform3D(1, 3.2014214e-10, 0, 8.731149e-11, 1, 0, 1.4901161e-08, 0, 1, 0, 0, 0)
+script = ExtResource("4_ahqxi")

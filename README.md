@@ -97,8 +97,8 @@ Water shader taken from <https://godotshaders.com/shader/foam-edge-water-shader>
 ### 1. Clone the repository with submodules
 
 ```bash
-git clone --recursive https://github.com/dimonp/my_gdextension-3d-terrain-10.git
-cd my_gdextension-3d-terrain-10
+git clone --recursive https://github.com/dimonp/w3terrain-godot-extension.git
+cd w3terrain-godot-extension
 ```
 
 If you already cloned without `--recursive`, run:
@@ -156,8 +156,9 @@ Or open `scene_demo.tscn` if you previously imported resources from the MPQ.
 7. Run the scene – the terrain should appear.
 
 ### Scripting example
+See dyn_scene_demo.gd in the demo folder.
 
-```gdscript
+```python
 extends Node3D
 
 @onready var terrain = $W3MapNode
@@ -174,8 +175,40 @@ func _ready():
     ]
     terrain.ground_textures = textures
 
+    # Set cliff resources
+	var resource = W3GeoResource.new()
+	resource.geoset_config = load("res://assets/geosets/ground_keys.json")
+	resource.texture = load("res://assets/textures/cliff.png")
+	resource.cliff_geoset_mesh = load("res://assets/geosets/ground_cliffs.obj")
+	resource.ramp_geoset_mesh = load("res://assets/geosets/ground_ramps.obj")
+    terrain.geo_resources = [ resource ]
+
     # Set camera for culling
     terrain.camera = $Camera3D
+
+	# Set surfaces
+	var terrain_surface = W3SurfaceTerrain.new()
+	terrain.add_child(terrain_surface)
+
+	var ground_material = ShaderMaterial.new()
+	ground_material.shader = load("res://assets/shaders/terrain_ground.gdshader")
+	ground_material.render_priority = 0
+	ground_material.set_shader_parameter("albedo",Color(1, 1, 1, 1))
+	ground_material.set_shader_parameter("alpha_scissor_threshold", 0.5)
+	terrain_surface.ground_material = ground_material
+
+	var geo_material = ShaderMaterial.new()
+	geo_material.shader = load("res://assets/shaders/terrain_ground.gdshader")
+	geo_material.render_priority = 0
+	geo_material.set_shader_parameter("albedo",Color(1, 1, 1, 1))
+	terrain_surface.geo_material = geo_material
+
+	var water_surface = W3SurfaceWater.new()
+	terrain.add_child(water_surface)
+
+	var water_material = ShaderMaterial.new()
+	water_material.shader = load("res://assets/shaders/water_simple.gdshader")
+	water_surface.water_material = water_material
 ```
 
 ### Editing terrain at runtime
