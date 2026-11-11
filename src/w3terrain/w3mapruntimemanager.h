@@ -1,5 +1,5 @@
-#ifndef _W3MAPRUNTIME__H
-#define _W3MAPRUNTIME__H
+#ifndef W3MAPRUNTIME_H_
+#define W3MAPRUNTIME_H_
 
 #include <optional>
 #include <gsl/gsl>
@@ -90,4 +90,4 @@ public:
 
 }  // namespace w3terr
 
-#endif // _W3MAPRUNTIME__H
+#endif // W3MAPRUNTIME_H_

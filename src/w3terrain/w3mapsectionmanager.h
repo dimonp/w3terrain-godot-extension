@@ -1,5 +1,5 @@
-#ifndef _W3MAPSECTIONS__H
-#define _W3MAPSECTIONS__H
+#ifndef W3MAPSECTIONS_H_
+#define W3MAPSECTIONS_H_
 
 #include "w3defs.h"
 #include "w3math.h"
@@ -33,4 +33,4 @@ public:
 
 }  // namespace w3terr
 
-#endif // _W3MAPSECTIONS__H
+#endif // W3MAPSECTIONS_H_

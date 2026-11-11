@@ -1,5 +1,5 @@
-#ifndef _W3MAPSECTION__H
-#define _W3MAPSECTION__H
+#ifndef W3MAPSECTION_H_
+#define W3MAPSECTION_H_
 
 #include <bitset>
 #include <span>
@@ -136,5 +136,5 @@ W3MapSection::calc_cell_coord_from_idx(const Coord2D& section_origin, size_t cel
 
 }  // namespace w3terr
 
-#endif  /// _W3MAPSECTION__H
+#endif  /// W3MAPSECTION_H_
 

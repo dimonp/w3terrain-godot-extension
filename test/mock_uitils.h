@@ -1,5 +1,5 @@
-#ifndef _MOCK_UTILS__H
-#define _MOCK_UTILS__H
+#ifndef MOCK_UTILS_H_
+#define MOCK_UTILS_H_
 
 #include <fstream>
 #include <gtest/gtest.h>
@@ -239,4 +239,4 @@ auto create_test_w3e_5x9(
 
 }  // namespace w3terr::test
 
-#endif // _MOCK_UTILS__H
+#endif // MOCK_UTILS_H_

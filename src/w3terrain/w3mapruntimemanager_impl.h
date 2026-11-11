@@ -1,5 +1,5 @@
-#ifndef _W3MAPRUNTIME_IMPL__H
-#define _W3MAPRUNTIME_IMPL__H
+#ifndef W3MAPRUNTIME_IMPL_H_
+#define W3MAPRUNTIME_IMPL_H_
 
 #include <optional>
 #include <gsl/gsl>
@@ -79,4 +79,4 @@ W3MapRuntimeManagerImpl::set_dirty(bool flag)
 
 }  // namespace w3terr
 
-#endif // _W3MAPRUNTIME_IMPL__H
+#endif // W3MAPRUNTIME_IMPL_H_

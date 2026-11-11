@@ -1,5 +1,5 @@
-#ifndef _W3MAPBINDINGS__H
-#define _W3MAPBINDINGS__H
+#ifndef W3MAPBINDINGS_H_
+#define W3MAPBINDINGS_H_
 
 #include <godot_cpp/classes/object.hpp>
 
@@ -43,4 +43,4 @@ private:
 
 }  // namespace w3terr
 
-#endif // _W3MAPBINDINGS__H
+#endif // W3MAPBINDINGS_H_

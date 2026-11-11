@@ -1,5 +1,5 @@
-#ifndef _W3MAPASSETS__H
-#define _W3MAPASSETS__H
+#ifndef W3MAPASSETS_H_
+#define W3MAPASSETS_H_
 
 #include <godot_cpp/classes/json.hpp>
 
@@ -106,5 +106,5 @@ W3MapAssets::geo_asset_rt(size_t index) const
 
 }  // namespace w3terr
 
-#endif  /// _W3MAPASSETS__H
+#endif  /// W3MAPASSETS_H_
 

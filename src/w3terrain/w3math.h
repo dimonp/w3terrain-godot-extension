@@ -1,5 +1,5 @@
-#ifndef _W3MATH__H
-#define _W3MATH__H
+#ifndef W3MATH_H_
+#define W3MATH_H_
 
 #include <array>
 #include <algorithm>
@@ -424,5 +424,5 @@ lower_bound_power_of_two(int32_t num)
 
 }  // namespace w3terr::math
 
-#endif // _W3MAP_MATH__H
+#endif // W3MATH_H_
 

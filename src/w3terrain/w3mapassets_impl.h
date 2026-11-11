@@ -1,5 +1,5 @@
-#ifndef _W3MAPASSETS_IMPL__H
-#define _W3MAPASSETS_IMPL__H
+#ifndef W3MAPASSETS_IMPL_H_
+#define W3MAPASSETS_IMPL_H_
 
 #include <godot_cpp/classes/json.hpp>
 
@@ -70,5 +70,5 @@ W3MapAssetsImpl::get_w3e() const
 
 }  // namespace w3terr
 
-#endif  /// _W3MAPASSETS_IMPL__H
+#endif  /// W3MAPASSETS_IMPL_H_
 

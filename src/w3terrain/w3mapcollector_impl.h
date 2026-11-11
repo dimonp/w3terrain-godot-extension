@@ -1,5 +1,5 @@
-#ifndef _W3MAPCOLLECTOR_IMPL__H
-#define _W3MAPCOLLECTOR_IMPL__H
+#ifndef W3MAPCOLLECTOR_IMPL_H_
+#define W3MAPCOLLECTOR_IMPL_H_
 
 #include <quadtree/quadtree.h>
 #include <quadtree/quadtree_collector.h>
@@ -68,4 +68,4 @@ W3MapCollectorImpl::get_bbox() const
 
 }  // namespace w3terr
 
-#endif // _W3MAPCOLLECTOR_IMPL__H
+#endif // W3MAPCOLLECTOR_IMPL_H_

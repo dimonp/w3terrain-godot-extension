@@ -1,5 +1,5 @@
-#ifndef _W3MAP__H
-#define _W3MAP__H
+#ifndef W3MAP_H_
+#define W3MAP_H_
 
 #include <cstdint>
 
@@ -69,5 +69,5 @@ get_3d_coord_from_2d_z(int32_t idx)
 
 }  // namespace w3terr
 
-#endif  /// _W3MAP__H
+#endif  /// W3MAP_H_
 

@@ -1,5 +1,5 @@
-#ifndef _W3MAPCOLLECTOR__H
-#define _W3MAPCOLLECTOR__H
+#ifndef W3MAPCOLLECTOR_H_
+#define W3MAPCOLLECTOR_H_
 
 #include "w3defs.h"
 #include "w3math.h"
@@ -21,4 +21,4 @@ public:
 
 }  // namespace w3terr
 
-#endif // _W3MAPCOLLECTOR__H
+#endif // W3MAPCOLLECTOR_H_

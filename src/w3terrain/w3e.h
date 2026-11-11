@@ -1,5 +1,5 @@
-#ifndef _W3E__H
-#define _W3E__H
+#ifndef W3E_H_
+#define W3E_H_
 
 #include "w3defs.h"
 #include "w3math.h"
@@ -294,5 +294,5 @@ W3e::set_cellpoint_water_height(int32_t coord_2d_x, int32_t coord_2d_y, float he
 
 }  // namespace w3terr
 
-#endif  /// _W3E__H
+#endif  /// W3E_H_
 

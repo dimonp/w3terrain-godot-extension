@@ -1,5 +1,5 @@
-#ifndef _W3MAPSECTIONS_IMPL__H
-#define _W3MAPSECTIONS_IMPL__H
+#ifndef W3MAPSECTIONS_IMPL_H_
+#define W3MAPSECTIONS_IMPL_H_
 
 #include <gsl/gsl>
 #include "w3defs.h"
@@ -106,4 +106,4 @@ W3MapSectionManagerImpl::is_valid_section_id(SectionId section_id) const
 
 }  // namespace w3terr
 
-#endif // _W3MAPSECTIONS_IMPL__H
+#endif // W3MAPSECTIONS_IMPL_H_

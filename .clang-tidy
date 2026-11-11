@@ -25,6 +25,7 @@ Checks: "*,\
   -bugprone-easily-swappable-parameters, \
   -bugprone-argument-comment, \
   -readability-use-anyofallof, \
+  -readability-trailing-comma, \
   -readability-magic-numbers"
 WarningsAsErrors: ''
 CheckOptions:
@@ -74,6 +75,7 @@ CheckOptions:
   - { key: 'readability-identifier-naming.LocalPointerCase',          value: 'lower_case'}
   - { key: 'readability-identifier-naming.LocalVariableCase',         value: 'lower_case'}
   - { key: 'readability-identifier-naming.MacroDefinitionCase',       value: 'UPPER_CASE'}
+  - { key: 'readability-identifier-naming.MacroDefinitionIgnoredRegexp', value: '^[A-Z0-9_]+_?$'}
   - { key: 'readability-identifier-naming.MemberCase',                value: 'lower_case' }
   - { key: readability-identifier-naming.MemberConstantCase,          value: CamelCase }
   - { key: readability-identifier-naming.MemberConstantPrefix,        value: k         }

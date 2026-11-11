@@ -1,5 +1,5 @@
-#ifndef _W3MAPSURFACE_WATER__H
-#define _W3MAPSURFACE_WATER__H
+#ifndef W3MAPSURFACE_WATER_H_
+#define W3MAPSURFACE_WATER_H_
 
 #include "w3surface.h"
 
@@ -42,4 +42,4 @@ private:
 
 }  // namespace w3terr
 
-#endif // _W3MAPSURFACE_WATER__H
+#endif // W3MAPSURFACE_WATER_H_

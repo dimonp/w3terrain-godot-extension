@@ -1,12 +1,10 @@
-#ifndef _W3MAPSURFACE_GROUND__H
-#define _W3MAPSURFACE_GROUND__H
+#ifndef W3MAPSURFACE_GROUND_H_
+#define W3MAPSURFACE_GROUND_H_
 
-#include <span>
 #include <godot_cpp/classes/texture2d_array.hpp>
 #include <godot_cpp/classes/shader_material.hpp>
 
 #include "w3surface.h"
-#include "w3math.h"
 
 namespace w3terr {
 
@@ -77,4 +75,4 @@ private:
 
 }  // namespace w3terr
 
-#endif // _W3MAPSURFACE_GROUND__H
+#endif // W3MAPSURFACE_GROUND_H_

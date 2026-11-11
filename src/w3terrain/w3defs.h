@@ -1,5 +1,5 @@
-#ifndef _W3_DEFS__H
-#define _W3_DEFS__H
+#ifndef W3_DEFS_H_
+#define W3_DEFS_H_
 
 #include <cassert>
 #include <cstdint>
@@ -117,5 +117,5 @@ struct GodotObjectDeleter {
 
 }  // namespace w3terr
 
-#endif // _W3_DEFS__H
+#endif // W3_DEFS__H_
 

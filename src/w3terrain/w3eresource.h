@@ -1,5 +1,5 @@
-#ifndef _W3MAPRESOURCE__H
-#define _W3MAPRESOURCE__H
+#ifndef W3MAPRESOURCE_H_
+#define W3MAPRESOURCE_H_
 
 #include <godot_cpp/classes/file_access.hpp>
 #include <godot_cpp/classes/resource_format_loader.hpp>
@@ -111,5 +111,5 @@ public:
 
 }  // namespace w3terr
 
-#endif  /// _W3MAPRESOURCE__H
+#endif  /// W3MAPRESOURCE_H_
 

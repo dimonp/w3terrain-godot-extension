@@ -1,5 +1,5 @@
-#ifndef _W3MAPSURFACE__H
-#define _W3MAPSURFACE__H
+#ifndef W3MAPSURFACE_H_
+#define W3MAPSURFACE_H_
 
 #include <cstdint>
 
@@ -67,4 +67,4 @@ private:
 
 }  // namespace w3terr
 
-#endif // _W3MAP_SURFACE__H
+#endif // W3MAPSURFACE_H_

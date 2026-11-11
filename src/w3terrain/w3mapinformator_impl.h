@@ -1,5 +1,5 @@
-#ifndef _W3MAPINFORMATOR_IMPL__H
-#define _W3MAPINFORMATOR_IMPL__H
+#ifndef W3MAPINFORMATOR_IMPL_H_
+#define W3MAPINFORMATOR_IMPL_H_
 
 #include <gsl/gsl>
 
@@ -56,4 +56,4 @@ private:
 
 }  // namespace w3terr
 
-#endif // _W3MAPINFORMATOR_IMPL__H
+#endif // W3MAPINFORMATOR_IMPL_H_

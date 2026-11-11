@@ -1,5 +1,5 @@
-#ifndef _W3MAPNODE__H
-#define _W3MAPNODE__H
+#ifndef W3MAPNODE_H_
+#define W3MAPNODE_H_
 
 #include <memory>
 #include <optional>
@@ -175,5 +175,5 @@ W3MapNode::is_camera_valid() const
 
 }  // namespace w3terr
 
-#endif  /// _W3MAPNODE__H
+#endif  /// W3MAPNODE_H_
 
