@@ -23,6 +23,8 @@ class W3MapSectionManager;
 
 class W3_API W3MapCollectorImpl final : public W3MapCollector {
 public:
+    static constexpr int kMaxVisibleSections = 256;
+
     W3MapCollectorImpl(
         const W3MapSectionManager* sections,
         const math::bbox3& root_bbox,

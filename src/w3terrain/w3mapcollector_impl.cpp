@@ -13,7 +13,7 @@ W3MapCollectorImpl::W3MapCollectorImpl(
     uint8_t tree_depth
 ) : sections_(sections)
 {
-    visible_sections_.reserve(256);
+    visible_sections_.reserve(kMaxVisibleSections);
     build_quad_tree(root_bbox, tree_depth);
 }
 

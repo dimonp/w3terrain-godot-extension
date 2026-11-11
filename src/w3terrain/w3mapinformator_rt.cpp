@@ -90,9 +90,9 @@ W3MapInformatorImpl::collect_cellpoint_ground_info(const Coord2D& coords, W3CPIn
         return false;
     }
 
-    for (size_t layer_idx = 0; layer_idx < info.ground_layers.size(); ++layer_idx) {
-        // NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-constant-array-index)
-        auto& layer = info.ground_layers[layer_idx];
+    for (size_t layer_idx = -1; auto& layer : info.ground_layers) {
+        ++layer_idx;
+
         layer = {
             .mask = calc_ground_layer_tilesets_mask(info.key, layer_idx),
             .tileset_id = extract_ground_tileset_id(info.key, layer_idx)

@@ -234,26 +234,26 @@ W3MapRuntimeManagerImpl::update_runtime_ground(const auto& cell_info, CellPointR
     cell_rt.tileset_ids = 0;
 
     uint32_t current_layer_mask = 0;
-    for(size_t i = 0; i < cell_info.ground_layers.size(); ++i) {
-        const auto& layer = cell_info.ground_layers[i];
+    for(size_t index = -1; const auto& layer : cell_info.ground_layers) {
+        ++index;
 
         if ((current_layer_mask & layer.mask) != 0) {
-            cell_rt.set_ground_tileset_id(i);
+            cell_rt.set_ground_tileset_id(index);
             continue;
         }
 
         current_layer_mask |= layer.mask;
 
-        cell_rt.set_ground_tileset_id(i, layer.tileset_id);
+        cell_rt.set_ground_tileset_id(index, layer.tileset_id);
         cell_rt.flags |= CellPointRT::GROUND;
 
         const uint32_t tileset_id = layer.tileset_id;
         const bool is_extended = map_asset_->ground_asset_rt(tileset_id).is_extended;
-        const uint8_t layer_mask = i != 0 ? layer.mask : 15; // fixed tile at first layer
+        const uint8_t layer_mask = index != 0 ? layer.mask : 15; // fixed tile at first layer
         const uint32_t variation = (cell_info.key >> 16U) & 0b11111U;
 
         auto [tile_idx_u, tile_idx_v] = calc_tile_texture_indices_from_layer_code(is_extended, layer_mask, variation);
-        cell_rt.set_ground_tile_uv_indices(i, tile_idx_u, tile_idx_v);
+        cell_rt.set_ground_tile_uv_indices(index, tile_idx_u, tile_idx_v);
     }
 }
 
