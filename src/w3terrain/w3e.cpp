@@ -1,6 +1,7 @@
 #include "w3e.h"
 
 #include <cstddef>
+#include <cmath>
 #include <gsl/gsl>
 
 namespace w3terr {
@@ -123,17 +124,9 @@ W3e::calc_cellpoints_bbox(int32_t from_2d_x, int32_t from_2d_y, int32_t dim) con
     return bbox;
 }
 
-
 //------------------------------------------------------------------------------
 /**
  *   @brief Calculate cellpoint normal.
- *   Uses Sobel filter.  Two kernels, for x and z:
- *
- *   X                   Z
- *   -1   0   1           1   2   1
- *   -2   0   2           0   0   0
- *   -1   0   1          -1  -2  -1
- *
  */
 math::vector3
 W3e::calc_cellpoint_normal(const int32_t coord_2d_x, const int32_t coord_2d_y) const
@@ -158,19 +151,32 @@ W3e::calc_cellpoint_normal(const int32_t coord_2d_x, const int32_t coord_2d_y) c
     const float y21 = get_cellpoint(x_inc, coord_2d_y).get_ground_height();
     const float y22 = get_cellpoint(x_inc, y_inc).get_ground_height();
 
-    // Calculate gradients
-    float j_grad = -y00 - (2.0F * y01) - y02 + y20 + (2.0F * y21) + y22;
-    j_grad /= 8.0F * kW3MapTile2DSize;
+    // Integrated Gauss-Sobel operator (combines Gaussian smoothing and Sobel differentiation).
+    // Multiplying by 2.0F is replaced with addition (y + y) for better SIMD register packing.
 
-    float i_grad = -y00 - (2.0F * y10) - y20 + y02 + (2.0F * y12) + y22;
-    i_grad /= 8.0F * kW3MapTile2DSize;
+    // Horizontal height delta along the X axis (weighted by Gaussian coefficients)
+    float j_grad = (y20 + y21 + y21 + y22) - (y00 + y01 + y01 + y02);
 
-    float mag = (j_grad * j_grad) + (i_grad * i_grad) + 1.0F;
-    mag = 1.0F / std::sqrt(mag);
+    // Vertical height delta along the Z axis (weighted by Gaussian coefficients)
+    float i_grad = (y02 + y12 + y12 + y22) - (y00 + y10 + y10 + y20);
 
-    math::vector3 normal = { -j_grad * mag, mag, i_grad * mag };
-    normal.normalize();
-    return normal;
+    // Convert height deltas to actual gradients based on grid spacing (tile size)
+    // and divide by the Sobel kernel weight sum (8.0F).
+    // Evaluated at compile-time as a single constant multiplier.
+    j_grad *= (kW3MapTile2DInvSize / 8.0F);
+    i_grad *= (kW3MapTile2DInvSize / 8.0F);
+
+    // Calculate the squared length of the unnormalized vector
+    const float mag_sq = (j_grad * j_grad) + (i_grad * i_grad) + 1.0F;
+    const float mag = 1.0F / std::sqrt(mag_sq);
+
+    // Return the final vector. Manual normalization (.normalize()) is not needed,
+    // as multiplying individual components by 'mag' yields a vector of exact length 1.0.
+    return {
+        -j_grad * mag,
+        mag,
+        i_grad * mag
+    };
 }
 
 }  // namespace w3terr

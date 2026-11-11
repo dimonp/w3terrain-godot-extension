@@ -16,9 +16,7 @@ inline
 std::size_t
 calc_map_array_size(uint32_t map_size_x, uint32_t map_size_y)
 {
-    const std::size_t array_size = static_cast<std::size_t>(
-        map_size_x + kSectionDimension - 1) * (map_size_y + kSectionDimension - 1 // + 1 padding cells
-    );
+    const std::size_t array_size = (map_size_x + kSectionDimension - 1) * (map_size_y + kSectionDimension - 1); // + 1 padding cells
     return array_size;
 }
 
